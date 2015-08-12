@@ -1,5 +1,7 @@
 # Branch Metrics Android Invite SDK
 
+## [New documentation portal](https://dev.branch.io) and [support portal with user forums](http://support.branch.io)
+
 This is the repository of our open source Android Invite SDK. There's a full demo app embedded in this repository.
 The purpose of this SDK is to provide an out-of-the-box functional 'invite feature' for apps consuming the Branch SDK that want to utilize a standard invite feature in their app.
 
