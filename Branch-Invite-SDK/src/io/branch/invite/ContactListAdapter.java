@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.method.HideReturnsTransformationMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.TypedValue;
@@ -22,7 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Abstract class for contact list adapter. Handles the contact listing and selecting form the list.
@@ -65,6 +68,15 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
         mAlphabetIndexer = new AlphabetIndexer(c,c.getColumnIndex(getIndexerColumnName()),
                                         "ABCDEFGHIJKLMNOPQRTSUVWXYZ");
         mAlphabetIndexer.setCursor(c);//Sets a new cursor as the data set and resets the cache of indices.
+    }
+
+    public ArrayList<String> getSelectedContacts(){
+        ArrayList<String> selectedContactArray = new ArrayList<String>();
+        Set<String> keys = selectedContactMap_.keySet();
+        for(String key : keys){
+            selectedContactArray.add(selectedContactMap_.get(key).getContactInfo());
+        }
+        return selectedContactArray;
     }
 
     /**

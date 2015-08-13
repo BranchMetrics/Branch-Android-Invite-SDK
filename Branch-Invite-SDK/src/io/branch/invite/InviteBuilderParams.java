@@ -36,12 +36,19 @@ class InviteBuilderParams {
     /* Name for phone contact tab */
     public String textTabText_;
 
-    /* Drawable to show when there is no profile picture. */
+    /* Drawable to show when there is no profile picture */
     public Drawable defaultContactPic_;
-    /* Drawable mark list item selected. */
+    /* Drawable mark list item selected */
     public Drawable selectedIndicator_;
-    /* Drawable to mark list item unselected. */
+    /* Drawable to mark list item unselected */
     public Drawable nonSelectedIndicator_;
+    /* Denote whether single selection enabled or not */
+    public boolean isSingleSelect_;
+    /* Message to send to the invitee */
+    public String invitationMsg_;
+    /* Subject of invitation */
+    public String invitationSubject_;
+
 
     public InviteBuilderParams(Context context) {
         tabSelectedBackground_ = new ColorDrawable(Color.parseColor("#FF000088")); //Default selected color for the tabs
@@ -61,6 +68,10 @@ class InviteBuilderParams {
         defaultContactPic_ = new ColorDrawable(Color.GRAY);
         selectedIndicator_ = context.getResources().getDrawable(android.R.drawable.checkbox_on_background);
         nonSelectedIndicator_ = context.getResources().getDrawable(android.R.drawable.checkbox_off_background);
+
+        isSingleSelect_ =false;
+        invitationSubject_ = "Check out this demo app!";
+        invitationMsg_ = "Check out my demo app with Branch:/n";
     }
 
 }

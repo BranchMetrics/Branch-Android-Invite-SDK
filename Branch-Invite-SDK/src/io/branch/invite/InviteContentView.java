@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -18,9 +19,15 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Tabbed view to show the contact list items.
@@ -32,37 +39,12 @@ class InviteContentView extends LinearLayout {
     TabHost host_;
     /* Context for creating the view */
     Context context_;
-//    /* Selected background for the tab */
-//    private Drawable tabSelectedBackground_;
-//    /* Unselected background for the tab */
-//    private Drawable tabUnselectedBackground_;
-//    private int padding_;
-//
-//    /* Tab action bar positive button text */
-//    String positiveButtonText_ = "Done";
-//    /* Tab action bar negative button text */
-//    String negativeButtonText_ = "Cancel";
-//    /* Text color for negative button */
-//    int negativeBtnTextColor = Color.BLUE;
-//    /* Text color for positive button */
-//    int positiveBtnTextColor = Color.BLUE;
-//    /* Background drawable for positive button */
-//    Drawable positiveBtnBackground = new ColorDrawable(Color.TRANSPARENT);
-//    /* Drawable background for negative button */
-//    Drawable negativeBtnBackground = new ColorDrawable(Color.TRANSPARENT);
-//    /* Background drawable for the tab view.*/
-//    Drawable backgroundDrawable_ = new ColorDrawable(Color.WHITE);
-//
-//    /* Name for email contact tab */
-//    private String emailTabText = "Email";
-//    /* Name for phone contact tab */
-//    private String textTabText = "Text";
-
     private int padding_;
 
     /* Callback for tab events */
     IContactTabViewEvents contactTabViewEventsCallback_;
     InviteBuilderParams inviteBuilderParams_;
+    final Map<String,InviteContactListView> tabContentMap_;
 
     /**
      * Creates a Invite content with action buttons and default tabs.
@@ -75,9 +57,9 @@ class InviteContentView extends LinearLayout {
         context_ = context;
         setOrientation(VERTICAL);
         inviteBuilderParams_ = inviteBuilderParams;
-        setBackgroundDrawable(this, inviteBuilderParams_.backgroundDrawable_);
+        setViewBackground(this, inviteBuilderParams_.backgroundDrawable_);
         contactTabViewEventsCallback_ = IContactTabViewEvents;
-
+        tabContentMap_ = new HashMap<String, InviteContactListView>();
 
         padding_ = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics());
         initTabView();
@@ -90,18 +72,18 @@ class InviteContentView extends LinearLayout {
         //Add action buttons
         LinearLayout controlCover = new LinearLayout(context_);
         controlCover.setOrientation(HORIZONTAL);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
-        controlCover.setPadding(padding_ * 2, padding_ * 2, padding_ * 2, padding_ * 2);
+        controlCover.setPadding(padding_ * 2, padding_ * 1, padding_ * 2, padding_ * 1);
 
         TextView negativeButton = new TextView(context_);
         negativeButton.setText(inviteBuilderParams_.negativeButtonText_);
         negativeButton.setBackgroundColor(Color.TRANSPARENT);
         negativeButton.setTextAppearance(context_, android.R.style.TextAppearance_Large);
         negativeButton.setTypeface(null, Typeface.BOLD);
-        negativeButton.setGravity(Gravity.LEFT);
+        negativeButton.setGravity(Gravity.CENTER);
         negativeButton.setTextColor(inviteBuilderParams_.negativeBtnTextColor);
-        setBackgroundDrawable(negativeButton, inviteBuilderParams_.negativeBtnBackground);
+        setViewBackground(negativeButton, inviteBuilderParams_.negativeBtnBackground);
 
         negativeButton.setOnClickListener(negativeButtonClickListener_);
 
@@ -111,15 +93,26 @@ class InviteContentView extends LinearLayout {
         positiveButton.setBackgroundColor(Color.TRANSPARENT);
         positiveButton.setTextAppearance(context_, android.R.style.TextAppearance_Large);
         positiveButton.setTypeface(null, Typeface.BOLD);
-        positiveButton.setGravity(Gravity.RIGHT);
+        positiveButton.setGravity(Gravity.CENTER);
+
         positiveButton.setTextColor(inviteBuilderParams_.positiveBtnTextColor);
-        setBackgroundDrawable(positiveButton, inviteBuilderParams_.positiveBtnBackground);
+        setViewBackground(positiveButton, inviteBuilderParams_.positiveBtnBackground);
 
         positiveButton.setOnClickListener(positiveButtonClickListener_);
 
-        controlCover.addView(negativeButton, params);
-        controlCover.addView(positiveButton, params);
-        this.addView(controlCover);
+        RelativeLayout leftLayout = new RelativeLayout(context_); //Cover layout for buttons
+        RelativeLayout rightLayout = new RelativeLayout(context_);
+
+        RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        leftLayout.addView(negativeButton,params1);
+        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        rightLayout.addView(positiveButton, params2);
+
+        controlCover.addView(leftLayout, params);
+        controlCover.addView(rightLayout, params);
+        params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        this.addView(controlCover,params);
 
 
         //Add Tab view
@@ -170,8 +163,9 @@ class InviteContentView extends LinearLayout {
 
         Cursor queryCursor = context_.getContentResolver()
                 .query(uri, projection, null, null, null);
-        addTabForCursor(inviteBuilderParams_.emailTabText_, new EmailContactListAdapter(context_, queryCursor,
-                                                            contactTabViewEventsCallback_,inviteBuilderParams_));
+        ContactListAdapter adapter = new EmailContactListAdapter(context_, queryCursor,
+                contactTabViewEventsCallback_,inviteBuilderParams_);
+        addTab(inviteBuilderParams_.emailTabText_, new ContactListView(context_, adapter));
     }
 
     /**
@@ -186,26 +180,22 @@ class InviteContentView extends LinearLayout {
                 ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI};
         Cursor queryCursor = context_.getContentResolver()
                 .query(uri, projection, null, null, null);
+        ContactListAdapter adapter = new PhoneContactListAdapter(context_, queryCursor,
+                                        contactTabViewEventsCallback_,inviteBuilderParams_);
 
-        addTabForCursor(inviteBuilderParams_.textTabText_, new PhoneContactListAdapter(context_, queryCursor,
-                                                            contactTabViewEventsCallback_,inviteBuilderParams_));
+        addTab(inviteBuilderParams_.textTabText_, new ContactListView(context_, adapter));
     }
 
-    private void addTabForCursor(String tabName, final ListAdapter adapter) {
+    private void addTab(String tabName, final InviteContactListView listView) {
         TabHost.TabSpec textTab = host_.newTabSpec(tabName).setIndicator(tabName).setContent(new TabHost.TabContentFactory() {
             @SuppressLint("NewApi")
             @Override
             public View createTabContent(String tag) {
-                ListView lv = new ListView(context_);
-                lv.setAdapter(adapter);
-                setBackgroundDrawable(lv, inviteBuilderParams_.backgroundDrawable_);
-                if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                    lv.setFastScrollAlwaysVisible(true);
-                }
-                lv.setFastScrollEnabled(true);
-                return lv;
+                tabContentMap_.put(tag,listView);
+                return listView;
             }
         });
+
         host_.addTab(textTab);
     }
 
@@ -223,7 +213,7 @@ class InviteContentView extends LinearLayout {
         @Override
         public void onClick(View view) {
             if (contactTabViewEventsCallback_ != null) {
-                contactTabViewEventsCallback_.onPositiveButtonClicked();
+                contactTabViewEventsCallback_.onPositiveButtonClicked(getSelectedContactList(), getInviteChannel(), getCustomInvitePackage());
             }
         }
     };
@@ -237,14 +227,13 @@ class InviteContentView extends LinearLayout {
         host_.getTabWidget().getChildAt(host_.getCurrentTab()).setBackgroundDrawable(inviteBuilderParams_.tabSelectedBackground_);// selected tab
     }
 
-    private void setBackgroundDrawable(View view, Drawable drawable) {
+    private void setViewBackground(View view, Drawable drawable) {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             //noinspection deprecation
-            view.setBackgroundDrawable(inviteBuilderParams_.backgroundDrawable_);
+            view.setBackgroundDrawable(drawable);
         } else {
-            view.setBackground(inviteBuilderParams_.backgroundDrawable_);
+            view.setBackground(drawable);
         }
-
     }
 
     interface IContactTabViewEvents {
@@ -252,11 +241,80 @@ class InviteContentView extends LinearLayout {
         void onNegativeButtonClicked();
 
         /* Called on user selecting the positive button */
-        void onPositiveButtonClicked();
+        void onPositiveButtonClicked(ArrayList<String> selectedContactName, InviteChannel selectedChannel, String targetPackage);
 
         /* Called when user select a tab*/
         void onContactSelected(ContactListAdapter.MyContact contact);
 
     }
+
+    private class ContactListView extends InviteContactListView {
+        final ContactListAdapter listAdapter_;
+        @SuppressLint("NewApi")
+        public ContactListView(Context context, ContactListAdapter adapter) {
+            super(context);
+            listAdapter_ = adapter;
+            setAdapter(adapter);
+            setViewBackground(this, inviteBuilderParams_.backgroundDrawable_);
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                this.setFastScrollAlwaysVisible(true);
+            }
+            this.setFastScrollEnabled(true);
+        }
+        @Override
+        public boolean isBranchInviteEnabled() {
+            return true;
+        }
+
+        @Override
+        public ArrayList<String> getSelectedContacts() {
+            return listAdapter_.getSelectedContacts();
+        }
+
+        @Override
+        public void onInvitationLinkCreated(String invitationUrl) {
+
+        }
+
+        @Override
+        public InviteChannel getInviteChannel() {
+            InviteChannel channel = InviteChannel.EMAIL;
+            if(listAdapter_ instanceof PhoneContactListAdapter ) {
+                channel =  InviteChannel.MESSAGE;
+            }
+           return channel;
+        }
+
+        @Override
+        public String getCustomInviteChannelPackageName() {
+            return null;
+        }
+    }
+
+    public ArrayList<String> getSelectedContactList(){
+        ArrayList<String> selectedContacts = new ArrayList<>();
+        InviteContactListView inviteContactListView = tabContentMap_.get(host_.getCurrentTabTag());
+        if(inviteContactListView != null) {
+            selectedContacts =  inviteContactListView.getSelectedContacts();
+        }
+        return selectedContacts;
+    }
+    public InviteChannel getInviteChannel(){
+        InviteChannel channel =  null;
+        InviteContactListView inviteContactListView = tabContentMap_.get(host_.getCurrentTabTag());
+        if(inviteContactListView != null) {
+            channel =  inviteContactListView.getInviteChannel();
+        }
+        return channel;
+    }
+    public String getCustomInvitePackage(){
+        String packageName =  "";
+        InviteContactListView inviteContactListView = tabContentMap_.get(host_.getCurrentTabTag());
+        if(inviteContactListView != null) {
+            packageName =  inviteContactListView.getCustomInviteChannelPackageName();
+        }
+        return packageName;
+    }
+
 
 }

@@ -16,6 +16,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+
 /**
  * <p>
  * Main application class for Branch invite sdk. Create and Manages the views for inviting contacts.
@@ -127,8 +129,8 @@ class InviteManager {
         }
 
         @Override
-        public void onPositiveButtonClicked() {
-            animateDismiss();
+        public void onPositiveButtonClicked(ArrayList<String> selectedContactName, InviteChannel selectedChannel, String targetPackage) {
+
         }
 
         @Override

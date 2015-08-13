@@ -30,8 +30,11 @@ public class InviteDemoActivity extends Activity {
         findViewById(R.id.invite_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new InviteBuilder(InviteDemoActivity.this).
-                        setTabStyle(new ColorDrawable(Color.RED), new ColorDrawable(Color.GREEN))
+                new InviteBuilder(InviteDemoActivity.this)
+                        .setTabStyle(new ColorDrawable(Color.RED), new ColorDrawable(Color.GREEN))
+                        .setPositiveButtonStyle(new ColorDrawable(Color.GREEN),"Invite", Color.GRAY)
+                        .setNegativeButtonStyle(new ColorDrawable(Color.YELLOW),"Close", Color.MAGENTA)
+
                         .show();
             }
         });
