@@ -3,6 +3,7 @@ package io.branch.invite;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.view.View;
 
@@ -11,7 +12,7 @@ import android.view.View;
  */
 class EmailContactListAdapter extends ContactListAdapter {
 
-    public EmailContactListAdapter(Context context, Cursor c, InviteContentView.IContactTabViewEvents callback ,InviteBuilderParams builderParams) {
+    public EmailContactListAdapter(Context context, Cursor c, InviteTabbedContentView.IContactTabViewEvents callback ,InviteTabbedBuilderParams builderParams) {
         super(context, c, callback, builderParams);
     }
 
@@ -29,7 +30,12 @@ class EmailContactListAdapter extends ContactListAdapter {
         String displayName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DISPLAY_NAME));
         String emailAddress = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
         int contactType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.TYPE));
-        photoURI = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.PHOTO_THUMBNAIL_URI));
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            photoURI = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.PHOTO_THUMBNAIL_URI));
+        }else{
+            photoURI = ContactsContract.Contacts.getLookupUri(cursor.getLong(cursor.getColumnIndex(ContactsContract.Contacts._ID)),
+                    cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))).toString();
+        }
 
         if (displayName == null || displayName.trim().length() < 1)
             displayName = emailAddress;
@@ -37,8 +43,9 @@ class EmailContactListAdapter extends ContactListAdapter {
         contact = new MyContact(id, displayName, emailAddress, contactType, photoURI);
 
         view.setBackgroundColor(Color.WHITE);
-        view.setTag(contact);
+             view.setTag(contact);
         ((contactListItem) view).updateView(contact);
         view.setOnClickListener(this);
+
     }
 }

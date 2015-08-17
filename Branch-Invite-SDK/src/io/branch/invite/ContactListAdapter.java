@@ -3,13 +3,11 @@ package io.branch.invite;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.method.HideReturnsTransformationMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.TypedValue;
@@ -36,7 +34,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
     /* Context for creating the adapter. */
     protected Context context_;
     /* Callback for notifying when user select an item in the list. */
-    protected InviteContentView.IContactTabViewEvents contactItemSelectedCallBack_;
+    protected InviteTabbedContentView.IContactTabViewEvents contactItemSelectedCallBack_;
     /* Drawable to show when there is no profile picture. */
     Drawable defaultContactPic_;
     /* Drawable mark list item selected. */
@@ -55,7 +53,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
      * @param context a {@link Context} for creating the list
      * @param c       A {@link Cursor} for creating contact list
      */
-    public ContactListAdapter(Context context, Cursor c, InviteContentView.IContactTabViewEvents contactItemSelected, InviteBuilderParams inviteBuilderParams) {
+    public ContactListAdapter(Context context, Cursor c, InviteTabbedContentView.IContactTabViewEvents contactItemSelected, InviteTabbedBuilderParams inviteBuilderParams) {
         super(context, c, false);
         context_ = context;
         defaultContactPic_ = inviteBuilderParams.defaultContactPic_;
@@ -180,6 +178,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
             selectedImage_.setScaleType(ImageView.ScaleType.FIT_CENTER);
             int selectedPicSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
             layoutParams = new LinearLayout.LayoutParams(selectedPicSize, selectedPicSize);
+            layoutParams.setMargins(0,0,padding*3,0);
             this.addView(selectedImage_, layoutParams);
 
             int alphabetIndexerSpacing = padding * 5;

@@ -10,7 +10,7 @@ import android.view.View;
  */
 class PhoneContactListAdapter extends ContactListAdapter {
 
-    public PhoneContactListAdapter(Context context, Cursor c, InviteContentView.IContactTabViewEvents callback, InviteBuilderParams builderParams) {
+    public PhoneContactListAdapter(Context context, Cursor c, InviteTabbedContentView.IContactTabViewEvents callback, InviteTabbedBuilderParams builderParams) {
         super(context, c, callback, builderParams);
     }
 
@@ -29,7 +29,7 @@ class PhoneContactListAdapter extends ContactListAdapter {
         String displayName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
         String phoneNum = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
         int contactType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
-        photoURI = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
+        //photoURI = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
 
         contact = new MyContact(id, displayName, phoneNum, contactType, photoURI);
         String ContactType = " (" + ContactsContract.CommonDataKinds.Phone.getTypeLabel(context_.getResources(), contact.getContactType(), "Other") + ") ";

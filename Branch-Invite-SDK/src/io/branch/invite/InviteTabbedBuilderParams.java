@@ -5,12 +5,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
+import java.util.HashMap;
+
 /**
  * <p>
  * Class for representing parameters for invite  builder.
  * </p>
  */
-class InviteBuilderParams {
+class InviteTabbedBuilderParams {
     /* Selected background for the tab */
     public Drawable tabSelectedBackground_;
     /* Unselected background for the tab */
@@ -48,9 +50,27 @@ class InviteBuilderParams {
     public String invitationMsg_;
     /* Subject of invitation */
     public String invitationSubject_;
+    /* Default url specified for invitation*/
+    public String defaultInvitationUrl_;
+
+    /* User ID for the inviting person */
+    public String userID_;
+    /* Name of the inviting person */
+    public String userFullName_;
+    /* Url to the inviting users profile picture */
+    public String userImageUrl_;
+    /* Inviting persons last name */
+    public String userShortName_;
+    /* Map to hold the custom parameters added  by user */
+    public final HashMap<String,String> customDataMap_;
+    /* Callback to notify the invite process status */
+    public BranchInviteStatusListener callback_;
+    /* Map to hold the custom Tabs */
+    public final HashMap<String,InviteContactListView> customTabMap_;
 
 
-    public InviteBuilderParams(Context context) {
+
+    public InviteTabbedBuilderParams(Context context) {
         tabSelectedBackground_ = new ColorDrawable(Color.parseColor("#FF000088")); //Default selected color for the tabs
         tabUnselectedBackground_ = new ColorDrawable(Color.parseColor("#FF0000DD"));//Default non-selected color for the tabs
 
@@ -70,8 +90,20 @@ class InviteBuilderParams {
         nonSelectedIndicator_ = context.getResources().getDrawable(android.R.drawable.checkbox_off_background);
 
         isSingleSelect_ =false;
-        invitationSubject_ = "Check out this demo app!";
-        invitationMsg_ = "Check out my demo app with Branch:/n";
+        String appLabel = context.getApplicationInfo().loadLabel(context.getPackageManager()).toString();
+        invitationSubject_ = "Check out "+ appLabel+ "!";
+        invitationMsg_ = "Check out this cool app named "+appLabel;
+        defaultInvitationUrl_ = "https://play.google.com/store/apps/details?id="+ context.getPackageName();
+
+        userID_ = "";
+        userFullName_ = "";
+        userImageUrl_ = "";
+        userShortName_ = "";
+
+        customDataMap_ = new HashMap<>();
+        customTabMap_ = new HashMap<>();
+
+        callback_ = null;
     }
 
 }

@@ -10,7 +10,7 @@ import android.view.View;
 
 import org.json.JSONObject;
 
-import io.branch.invite.InviteBuilder;
+import io.branch.invite.TabbedInviteBuilder;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 
@@ -30,12 +30,12 @@ public class InviteDemoActivity extends Activity {
         findViewById(R.id.invite_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new InviteBuilder(InviteDemoActivity.this)
+                new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name")
                         .setTabStyle(new ColorDrawable(Color.RED), new ColorDrawable(Color.GREEN))
                         .setPositiveButtonStyle(new ColorDrawable(Color.GREEN),"Invite", Color.GRAY)
                         .setNegativeButtonStyle(new ColorDrawable(Color.YELLOW),"Close", Color.MAGENTA)
-
-                        .show();
+                        .addCustomParams("Custom_Param", "This is a custom param")
+                        .showInviteDialog();
             }
         });
     }
@@ -43,9 +43,7 @@ public class InviteDemoActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        branch = Branch.getInstance();
-        branch.setDebug();
-        //branch.disableTouchDebugging();
+        branch = branch.getInstance();
 
         branch.initSession(new Branch.BranchReferralInitListener() {
             @Override
