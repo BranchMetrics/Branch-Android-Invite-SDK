@@ -1,16 +1,23 @@
 package io.branch.invite;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.provider.ContactsContract;
+import android.provider.Telephony;
 import android.view.View;
+
+import java.util.ArrayList;
 
 /**
  * Adapter for listing the email contacts. Adds an alpha indexer for the list.
  */
-class PhoneContactListAdapter extends ContactListAdapter {
+class ContactListAdapterPhone extends ContactListAdapter {
 
-    public PhoneContactListAdapter(Context context, Cursor c, InviteTabbedContentView.IContactTabViewEvents callback, InviteTabbedBuilderParams builderParams) {
+    public ContactListAdapterPhone(Context context, Cursor c, InviteTabbedContentView.IContactTabViewEvents callback, InviteTabbedBuilderParams builderParams) {
+
         super(context, c, callback, builderParams);
     }
 
@@ -39,7 +46,28 @@ class PhoneContactListAdapter extends ContactListAdapter {
         view.setOnClickListener(this);
     }
 
-    public interface onContactItemSelectedCallabck {
+    public interface onContactItemSelectedCallback {
         public void onContactItemSelected(String ContactName, String contactInfo, int contactType);
+    }
+
+    @Override
+    Intent getInviteIntent(String referralUrl, ArrayList<String> selectedContacts, String subject, String message) {
+        Intent inviteIntent;
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            inviteIntent = new Intent(Intent.ACTION_SENDTO);
+            inviteIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            inviteIntent.setType("vnd.android-dir/mms-sms");
+            inviteIntent.setData(Uri.parse("sms:" + Uri.encode(BranchInviteUtil.formatListToCSV(selectedContacts))));
+            inviteIntent.putExtra("sms_body", message + "\n" + referralUrl);
+        } else {
+            inviteIntent = new Intent(Intent.ACTION_SEND);
+            inviteIntent.setType("text/plain");
+            inviteIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+            inviteIntent.putExtra(android.content.Intent.EXTRA_TEXT, message + "\n" + referralUrl);
+            inviteIntent.putExtra("address", BranchInviteUtil.formatListToCSV(selectedContacts));
+            String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(context_);
+            inviteIntent.setPackage(defaultSmsPackageName);
+        }
+        return inviteIntent;
     }
 }

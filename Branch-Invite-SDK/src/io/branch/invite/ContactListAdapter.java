@@ -1,6 +1,7 @@
 package io.branch.invite;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -63,15 +64,15 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
         selectedContactMap_ = new HashMap<String, MyContact>();
 
         //Initialise indexer
-        mAlphabetIndexer = new AlphabetIndexer(c,c.getColumnIndex(getIndexerColumnName()),
-                                        "ABCDEFGHIJKLMNOPQRTSUVWXYZ");
+        mAlphabetIndexer = new AlphabetIndexer(c, c.getColumnIndex(getIndexerColumnName()),
+                "ABCDEFGHIJKLMNOPQRTSUVWXYZ");
         mAlphabetIndexer.setCursor(c);//Sets a new cursor as the data set and resets the cache of indices.
     }
 
-    public ArrayList<String> getSelectedContacts(){
+    public ArrayList<String> getSelectedContacts() {
         ArrayList<String> selectedContactArray = new ArrayList<String>();
         Set<String> keys = selectedContactMap_.keySet();
-        for(String key : keys){
+        for (String key : keys) {
             selectedContactArray.add(selectedContactMap_.get(key).getContactInfo());
         }
         return selectedContactArray;
@@ -79,10 +80,21 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
 
     /**
      * Return the indexer column id for setting the alphabet indexer.
+     *
      * @return columnID for the indexer column in the cursor
      */
-     abstract String getIndexerColumnName();
+    abstract String getIndexerColumnName();
 
+    /**
+     * Get the intent to share the invitation url.
+     *
+     * @param referralUrl      The invitation url
+     * @param selectedContacts A {@link ArrayList<String>} with selected contacts.
+     * @param subject          Subject of the message to be shared.
+     * @param message          Message to be shared to the invitee
+     * @return An {@link Intent} containing data to be shared with the selected applications.This intent will be used to invoke application for sending the invite.
+     */
+    abstract Intent getInviteIntent(String referralUrl, ArrayList<String> selectedContacts, String subject, String message);
 
     /**
      * Class for representing a contact item.
@@ -178,7 +190,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
             selectedImage_.setScaleType(ImageView.ScaleType.FIT_CENTER);
             int selectedPicSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
             layoutParams = new LinearLayout.LayoutParams(selectedPicSize, selectedPicSize);
-            layoutParams.setMargins(0,0,padding*3,0);
+            layoutParams.setMargins(0, 0, padding * 3, 0);
             this.addView(selectedImage_, layoutParams);
 
             int alphabetIndexerSpacing = padding * 5;
@@ -215,8 +227,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
      * Performs a binary search or cache lookup to find the first row that matches a given section's starting letter.
      */
     @Override
-    public int getPositionForSection(int sectionIndex)
-    {
+    public int getPositionForSection(int sectionIndex) {
         return mAlphabetIndexer.getPositionForSection(sectionIndex);
     }
 
@@ -225,8 +236,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
      * in the section array.
      */
     @Override
-    public int getSectionForPosition(int position)
-    {
+    public int getSectionForPosition(int position) {
         return mAlphabetIndexer.getSectionForPosition(position);
     }
 
@@ -234,8 +244,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
      * Returns the section array constructed from the alphabet provided in the constructor.
      */
     @Override
-    public Object[] getSections()
-    {
+    public Object[] getSections() {
         return mAlphabetIndexer.getSections();
     }
 
@@ -243,7 +252,6 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         return new contactListItem(context);
     }
-
 
 
     @Override

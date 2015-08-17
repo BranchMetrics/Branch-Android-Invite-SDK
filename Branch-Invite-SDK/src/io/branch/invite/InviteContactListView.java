@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import io.branch.referral.BranchError;
 
 /**
- * Created by sojanpr on 8/13/15.
+ * <p>Abstract class for invite contact list view. This class provides teh view for tab when using a {@link InviteTabViewBuilder}.
+ * All custom tabs added to the {@link InviteTabViewBuilder} should provide an implementation of this class. </p>
  */
 public abstract class InviteContactListView extends ListView {
     public InviteContactListView(Context context) {
@@ -33,19 +34,41 @@ public abstract class InviteContactListView extends ListView {
     }
 
 
+    /**
+     * <p>Name of the channel this list represents.</p>
+     * This method provide option to to name the channel when you can create your custom invitee list to add to {@link InviteTabViewBuilder}.
+     *
+     * @return A {@link String } representing the channel name
+     */
+    public abstract String getInviteChannelName();
 
-    public InviteChannel getInviteChannel(){
-        return null;
-    }
-    public ArrayList<String> getSelectedContacts(){
-        return new ArrayList<String>();
-    }
+    /**
+     * <p>Gets a list of contacts selected for inviting. This method is called when user press positive button to start sending invitation.</p>
+     *
+     * @return an {@link ArrayList<String>} of selected contacts
+     */
+    public abstract ArrayList<String> getSelectedContacts();
 
+    /**
+     * <p>Callback method to notify when an invitation link created.</p>
+     *
+     * @param invitationUrl The invitation URl created.
+     * @param error         A {@link BranchError} instance if there is any error. Value will be null if there is no error.
+     */
     public abstract void onInvitationLinkCreated(String invitationUrl, BranchError error);
-    public abstract Intent getSharingIntent();
 
-
-
+    /**
+     * <p>Get an intent to invoke the applications to send the invitation. List views added to the {@link InviteTabViewBuilder}
+     * should provide an intent to invoke the sharing client applications.
+     * </p>
+     *
+     * @param referralUrl   The invite url created
+     * @param selectedUsers An {@link ArrayList<String>} of selected users.
+     * @param subject       A {@link String} containing the subject for sharing invite link
+     * @param message       A {@link String} containing the message for sharing invite link
+     * @return An {@link Intent} targeted to share the link created with other application.
+     */
+    public abstract Intent getInviteIntent(String referralUrl, ArrayList<String> selectedUsers, String subject, String message);
 
 }
 

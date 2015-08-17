@@ -42,8 +42,10 @@ class InviteTabbedContentView extends LinearLayout {
 
     /* Callback for tab events */
     IContactTabViewEvents contactTabViewEventsCallback_;
+    /* Builder params for the invite tabbed dialog */
     InviteTabbedBuilderParams inviteBuilderParams_;
-    final Map<String,InviteContactListView> tabContentMap_;
+    /* Map for keeping the tabs added to the tabbed view */
+    final Map<String, InviteContactListView> tabContentMap_;
 
     /**
      * Creates a Invite content with action buttons and default tabs.
@@ -103,7 +105,7 @@ class InviteTabbedContentView extends LinearLayout {
         RelativeLayout rightLayout = new RelativeLayout(context_);
 
         RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        leftLayout.addView(negativeButton,params1);
+        leftLayout.addView(negativeButton, params1);
         RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         rightLayout.addView(positiveButton, params2);
@@ -111,7 +113,7 @@ class InviteTabbedContentView extends LinearLayout {
         controlCover.addView(leftLayout, params);
         controlCover.addView(rightLayout, params);
         params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        this.addView(controlCover,params);
+        this.addView(controlCover, params);
 
 
         //Add Tab view
@@ -150,10 +152,10 @@ class InviteTabbedContentView extends LinearLayout {
         setTabBackGround();
     }
 
-    private void addCustomTabs(){
+    private void addCustomTabs() {
         Set<String> keys = inviteBuilderParams_.customTabMap_.keySet();
-        for(String key : keys){
-            addTab(key,inviteBuilderParams_.customTabMap_.get(key));
+        for (String key : keys) {
+            addTab(key, inviteBuilderParams_.customTabMap_.get(key));
         }
     }
 
@@ -162,17 +164,25 @@ class InviteTabbedContentView extends LinearLayout {
      */
     private void addEmailTab() {
         Uri uri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
-//        String[] projection = new String[]{ContactsContract.CommonDataKinds.Email._ID,
-//                ContactsContract.CommonDataKinds.Email.DISPLAY_NAME,
-//                ContactsContract.CommonDataKinds.Email.ADDRESS,
-//                ContactsContract.CommonDataKinds.Email.TYPE,
-//                ContactsContract.CommonDataKinds.Email.PHOTO_THUMBNAIL_URI};
+        String[] projection;
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            projection = new String[]{ContactsContract.CommonDataKinds.Email._ID,
+                    ContactsContract.CommonDataKinds.Email.DISPLAY_NAME,
+                    ContactsContract.CommonDataKinds.Email.ADDRESS,
+                    ContactsContract.CommonDataKinds.Email.TYPE,
+                    ContactsContract.CommonDataKinds.Email.PHOTO_THUMBNAIL_URI};
+        } else {
+            projection = new String[]{ContactsContract.CommonDataKinds.Email._ID,
+                    ContactsContract.CommonDataKinds.Email.DISPLAY_NAME,
+                    ContactsContract.CommonDataKinds.Email.ADDRESS,
+                    ContactsContract.CommonDataKinds.Email.TYPE};
+        }
 
         Cursor queryCursor = context_.getContentResolver()
-                .query(uri, null, null, null, null);
-        ContactListAdapter adapter = new EmailContactListAdapter(context_, queryCursor,
-                contactTabViewEventsCallback_,inviteBuilderParams_);
-        addTab(inviteBuilderParams_.emailTabText_, new ContactListView(context_, adapter));
+                .query(uri, projection, null, null, null);
+        ContactListAdapter adapter = new ContactListAdapterEmail(context_, queryCursor,
+                contactTabViewEventsCallback_, inviteBuilderParams_);
+        addTab(inviteBuilderParams_.emailTabText_, new ContactListView(context_, adapter, "Email", "com.google.android.gm"));
     }
 
     /**
@@ -180,17 +190,25 @@ class InviteTabbedContentView extends LinearLayout {
      */
     private void addTextTab() {
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-//        String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone._ID,
-//                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-//                ContactsContract.CommonDataKinds.Phone.NUMBER,
-//                ContactsContract.CommonDataKinds.Phone.TYPE,
-//                ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI};
+        String[] projection;
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            projection = new String[]{ContactsContract.CommonDataKinds.Phone._ID,
+                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                    ContactsContract.CommonDataKinds.Phone.NUMBER,
+                    ContactsContract.CommonDataKinds.Phone.TYPE,
+                    ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI};
+        } else {
+            projection = new String[]{ContactsContract.CommonDataKinds.Phone._ID,
+                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                    ContactsContract.CommonDataKinds.Phone.NUMBER,
+                    ContactsContract.CommonDataKinds.Phone.TYPE};
+        }
         Cursor queryCursor = context_.getContentResolver()
-                .query(uri, null, null, null, null);
-        ContactListAdapter adapter = new PhoneContactListAdapter(context_, queryCursor,
-                                        contactTabViewEventsCallback_,inviteBuilderParams_);
+                .query(uri, projection, null, null, null);
+        ContactListAdapter adapter = new ContactListAdapterPhone(context_, queryCursor,
+                contactTabViewEventsCallback_, inviteBuilderParams_);
 
-        addTab(inviteBuilderParams_.textTabText_, new ContactListView(context_, adapter));
+        addTab(inviteBuilderParams_.textTabText_, new ContactListView(context_, adapter, "Message", "vnd.android-dir/mms-sms"));
     }
 
     private void addTab(String tabName, final InviteContactListView listView) {
@@ -198,7 +216,7 @@ class InviteTabbedContentView extends LinearLayout {
             @SuppressLint("NewApi")
             @Override
             public View createTabContent(String tag) {
-                tabContentMap_.put(tag,listView);
+                tabContentMap_.put(tag, listView);
                 return listView;
             }
         });
@@ -220,7 +238,7 @@ class InviteTabbedContentView extends LinearLayout {
         @Override
         public void onClick(View view) {
             if (contactTabViewEventsCallback_ != null) {
-                contactTabViewEventsCallback_.onPositiveButtonClicked(getSelectedContactList(), getInviteChannel(), getTargetType(), getContactListView());
+                contactTabViewEventsCallback_.onPositiveButtonClicked(getSelectedContactList(), getInviteChannel(), getContactListView());
             }
         }
     };
@@ -248,7 +266,7 @@ class InviteTabbedContentView extends LinearLayout {
         void onNegativeButtonClicked();
 
         /* Called on user selecting the positive button */
-        void onPositiveButtonClicked(ArrayList<String> selectedContactName, InviteChannel selectedChannel, String targetPackage, InviteContactListView listView);
+        void onPositiveButtonClicked(ArrayList<String> selectedContactName, String selectedChannelName, InviteContactListView listView);
 
         /* Called when user select a tab*/
         void onContactSelected(ContactListAdapter.MyContact contact);
@@ -257,16 +275,26 @@ class InviteTabbedContentView extends LinearLayout {
 
     private class ContactListView extends InviteContactListView {
         final ContactListAdapter listAdapter_;
+        final String channelName_;
+        final String targetPackageName_;
+
         @SuppressLint("NewApi")
-        public ContactListView(Context context, ContactListAdapter adapter) {
+        public ContactListView(Context context, ContactListAdapter adapter, String channelName, String targetPackage) {
             super(context);
             listAdapter_ = adapter;
+            channelName_ = channelName;
+            targetPackageName_ = targetPackage;
             setAdapter(adapter);
             setViewBackground(this, inviteBuilderParams_.backgroundDrawable_);
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 this.setFastScrollAlwaysVisible(true);
             }
             this.setFastScrollEnabled(true);
+        }
+
+        @Override
+        public String getInviteChannelName() {
+            return channelName_;
         }
 
         @Override
@@ -279,52 +307,48 @@ class InviteTabbedContentView extends LinearLayout {
 
         }
 
-        @Override
-        public Intent getSharingIntent() {
-            return null; //Need only for Custom List views
-        }
 
         @Override
-        public InviteChannel getInviteChannel() {
-            InviteChannel channel = InviteChannel.EMAIL;
-            if(listAdapter_ instanceof PhoneContactListAdapter ) {
-                channel =  InviteChannel.MESSAGE;
-            }
-           return channel;
+        public Intent getInviteIntent(String referralUrl, ArrayList<String> selectedUsers, String subject, String message) {
+            return listAdapter_.getInviteIntent(referralUrl, selectedUsers, subject, message);
         }
 
     }
 
-    public ArrayList<String> getSelectedContactList(){
+    /**
+     * Gets the list of contact selected on the current tab.
+     *
+     * @return An {@link ArrayList<String>} of selected contacts
+     */
+    private ArrayList<String> getSelectedContactList() {
         ArrayList<String> selectedContacts = new ArrayList<>();
         InviteContactListView inviteContactListView = tabContentMap_.get(host_.getCurrentTabTag());
-        if(inviteContactListView != null) {
-            selectedContacts =  inviteContactListView.getSelectedContacts();
+        if (inviteContactListView != null) {
+            selectedContacts = inviteContactListView.getSelectedContacts();
         }
         return selectedContacts;
     }
-    public InviteChannel getInviteChannel(){
-        InviteChannel channel =  null;
+
+    /**
+     * Get the invite channel for the current tab
+     *
+     * @return Channel name for the current tab.
+     */
+    private String getInviteChannel() {
+        String channel = null;
         InviteContactListView inviteContactListView = tabContentMap_.get(host_.getCurrentTabTag());
-        if(inviteContactListView != null) {
-            channel =  inviteContactListView.getInviteChannel();
-            // For Custom list view
-            if(channel == null){
-                channel = InviteChannel.CUSTOM;
-                channel.setChannelName(host_.getCurrentTabTag());
-            }
+        if (inviteContactListView != null) {
+            channel = inviteContactListView.getInviteChannelName();
         }
         return channel;
     }
-    public String getTargetType(){
-        String targetType = null;
-        if(getInviteChannel() != null) {
-            targetType = getInviteChannel().getTargetType();
-        }
-        return targetType;
-    }
 
-    public InviteContactListView getContactListView(){
+    /**
+     * Get the content view for the current tab
+     *
+     * @return A {@link InviteContactListView} instance, which is the content view for current slected tab.
+     */
+    private InviteContactListView getContactListView() {
         return tabContentMap_.get(host_.getCurrentTabTag());
     }
 

@@ -2,17 +2,16 @@ package io.branch.invitedemo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import org.json.JSONObject;
 
-import io.branch.invite.TabbedInviteBuilder;
+import io.branch.invite.InviteListViewBuilder;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
+import io.branch.referral.SharingHelper;
 
 
 /**
@@ -30,11 +29,17 @@ public class InviteDemoActivity extends Activity {
         findViewById(R.id.invite_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name")
-                        .setTabStyle(new ColorDrawable(Color.RED), new ColorDrawable(Color.GREEN))
-                        .setPositiveButtonStyle(new ColorDrawable(Color.GREEN),"Invite", Color.GRAY)
-                        .setNegativeButtonStyle(new ColorDrawable(Color.YELLOW),"Close", Color.MAGENTA)
-                        .addCustomParams("Custom_Param", "This is a custom param")
+//                new InviteTabViewBuilder(InviteDemoActivity.this, "My userID", "My Name")
+//                        .setTabStyle(new ColorDrawable(Color.RED), new ColorDrawable(Color.GREEN))
+//                        .setPositiveButtonStyle(new ColorDrawable(Color.GREEN),"Invite", Color.GRAY)
+//                        .setNegativeButtonStyle(new ColorDrawable(Color.YELLOW),"Close", Color.MAGENTA)
+//                        .addCustomParams("Custom_Param", "This is a custom param")
+//                        .showInviteDialog();
+
+                new InviteListViewBuilder(InviteDemoActivity.this,"123455","Sojan")
+                        .addPreferredInviteChannel(SharingHelper.SHARE_WITH.EMAIL)
+                        .addPreferredInviteChannel(SharingHelper.SHARE_WITH.FACEBOOK)
+                        .addPreferredInviteChannel(SharingHelper.SHARE_WITH.TWITTER)
                         .showInviteDialog();
             }
         });

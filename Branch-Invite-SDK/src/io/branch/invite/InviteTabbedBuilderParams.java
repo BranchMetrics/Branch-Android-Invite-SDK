@@ -10,6 +10,7 @@ import java.util.HashMap;
 /**
  * <p>
  * Class for representing parameters for invite  builder.
+ * This class represent all the features that user can set for a tabbed invite dialog.
  * </p>
  */
 class InviteTabbedBuilderParams {
@@ -62,12 +63,11 @@ class InviteTabbedBuilderParams {
     /* Inviting persons last name */
     public String userShortName_;
     /* Map to hold the custom parameters added  by user */
-    public final HashMap<String,String> customDataMap_;
+    public final HashMap<String, String> customDataMap_;
     /* Callback to notify the invite process status */
     public BranchInviteStatusListener callback_;
     /* Map to hold the custom Tabs */
-    public final HashMap<String,InviteContactListView> customTabMap_;
-
+    public final HashMap<String, InviteContactListView> customTabMap_;
 
 
     public InviteTabbedBuilderParams(Context context) {
@@ -89,11 +89,11 @@ class InviteTabbedBuilderParams {
         selectedIndicator_ = context.getResources().getDrawable(android.R.drawable.checkbox_on_background);
         nonSelectedIndicator_ = context.getResources().getDrawable(android.R.drawable.checkbox_off_background);
 
-        isSingleSelect_ =false;
+        isSingleSelect_ = false;
         String appLabel = context.getApplicationInfo().loadLabel(context.getPackageManager()).toString();
-        invitationSubject_ = "Check out "+ appLabel+ "!";
-        invitationMsg_ = "Check out this cool app named "+appLabel;
-        defaultInvitationUrl_ = "https://play.google.com/store/apps/details?id="+ context.getPackageName();
+        invitationSubject_ = "Check out " + appLabel + "!";
+        invitationMsg_ = "Check out this cool app named " + appLabel;
+        defaultInvitationUrl_ = "https://play.google.com/store/apps/details?id=" + context.getPackageName();
 
         userID_ = "";
         userFullName_ = "";
