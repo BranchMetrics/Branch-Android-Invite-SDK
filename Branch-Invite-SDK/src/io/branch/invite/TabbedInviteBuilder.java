@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable;
  * Builder for create a Tabbed invite dialog. This dialog has pre-populated contact list for
  * each channel. Each channel is added a as a tab on the dialog. There are customisable positive and negative buttons
  * for capturing user actions. New tabs with custom contact list can be added to the tabbed view.
- * This class make use of {@link BranchInviteStatusListener } to notify the invitation status.
+ * This class make use of {@link InviteCallback } to notify the invitation status.
  * If you want a start with a list of applications rather than a pre-populated contact list then consider using {@link SimpleInviteBuilder}
  * {@see addCustomTab() method to see how to add a custom tab to the tabbed view}
  */
@@ -182,10 +182,10 @@ public class TabbedInviteBuilder {
     /**
      * Sets a callback to get notified on invitation status.
      *
-     * @param callback an instance of {@link BranchInviteStatusListener } to notify the invite process status.
+     * @param callback an instance of {@link InviteCallback } to notify the invite process status.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public TabbedInviteBuilder setInvitationStatusCallback(BranchInviteStatusListener callback) {
+    public TabbedInviteBuilder setInvitationStatusCallback(InviteCallback callback) {
         inviteBuilderParams_.callback_ = callback;
         return this;
     }

@@ -65,7 +65,7 @@ class InviteTabbedBuilderParams {
     /* Map to hold the custom parameters added  by user */
     public final HashMap<String, String> customDataMap_;
     /* Callback to notify the invite process status */
-    public BranchInviteStatusListener callback_;
+    public InviteCallback callback_;
     /* Map to hold the custom Tabs */
     public final HashMap<String, InviteContactListView> customTabMap_;
 

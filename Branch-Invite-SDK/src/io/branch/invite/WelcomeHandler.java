@@ -20,13 +20,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,32 +34,29 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.security.auth.callback.Callback;
-
 import io.branch.referral.Branch;
 
 /**
  * Created by sojanpr on 8/17/15.
  */
-public class BranchInvitationHandler {
-    private static BranchInvitationHandler thisInstance_;
+class WelcomeHandler {
+    private static WelcomeHandler thisInstance_;
 
     /* The custom chooser dialog for selecting an application to share the link */
-    Dialog invitationHandlerDialog_;
+    WelcomeDialog invitationHandlerDialog_;
     /* {@link Context} for the invite manager */
     Context context_;
-    InvitationUIListener callback_;
+    WelcomeCallback callback_;
     View invitationView_;
-    InvitationStyle invitationStyle_;
+    WelcomeViewStyle invitationStyle_;
     LoadBitmapFromUrlTask imageLoadTask_;
 
-    private BranchInvitationHandler() {
+    private WelcomeHandler() {
         thisInstance_ = this;
     }
-
-    public static boolean HandleInvitations(Context context, InvitationStyle invitationStyle, InvitationUIListener callback){
+    public static Dialog HandleInvitations(Context context, WelcomeViewStyle invitationStyle, WelcomeCallback callback){
         if(thisInstance_ == null){
-            thisInstance_ = new BranchInvitationHandler();
+            thisInstance_ = new WelcomeHandler();
         }
         else{
             thisInstance_.cancelDialog();
@@ -67,18 +64,12 @@ public class BranchInvitationHandler {
         return thisInstance_.checkAndHandleInvitations(context, invitationStyle, callback);
     }
 
-    public static void cancelInvitationDialog(){
-        if(thisInstance_ != null){
-            thisInstance_.cancelDialog();
-        }
-    }
-
-    private boolean checkAndHandleInvitations(Context context, InvitationStyle invitationStyle, InvitationUIListener callback){
+    private Dialog checkAndHandleInvitations(Context context, WelcomeViewStyle invitationStyle, WelcomeCallback callback){
         context_ = context;
         invitationStyle_ = invitationStyle;
         callback_ = callback;
+        invitationView_ = null;
 
-        boolean isInvitationHandled = false;
         if (Branch.getInstance() != null) {
             JSONObject latestReferringParams = Branch.getInstance().getLatestReferringParams();
             // Check if the link has inviter info.
@@ -98,8 +89,8 @@ public class BranchInvitationHandler {
                         userImageUrl = latestReferringParams.getString(Defines.INVITE_USER_IMAGE_URL.getKey());
                     }
                     // Check if a custom view is desired for invitation.
-                    if (callback != null) {
-                        invitationView_ = callback.getCustomInvitationView(userID, userFullName, userShortName, userImageUrl);
+                    if (callback_ != null ) {
+                        invitationView_ = callback_.getCustomInvitationView(userID, userFullName, userShortName, userImageUrl);
                     }
                     //If user has not provided a custom view create a view with style specified.
                     if (invitationView_ == null) {
@@ -107,15 +98,12 @@ public class BranchInvitationHandler {
                         ((InvitationShowView) invitationView_).updateView(userFullName, userShortName, userImageUrl);
                     }
                     createInvitationHandlerDialog();
-                    isInvitationHandled = true;
-
                 } catch (JSONException ignore) {
 
                 }
             }
-
         }
-        return isInvitationHandled;
+        return invitationHandlerDialog_;
     }
 
 
@@ -131,16 +119,17 @@ public class BranchInvitationHandler {
         if (invitationHandlerDialog_ != null && invitationHandlerDialog_.isShowing()) {
             invitationHandlerDialog_.dismiss();
         }
-        invitationHandlerDialog_ = new Dialog(context_);
+        invitationHandlerDialog_ = new WelcomeDialog(context_);
         setDialogWindowAttributes();
         invitationHandlerDialog_.setContentView(invitationCoverlayout);
 
-        TranslateAnimation slideUp = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0f);
-        slideUp.setDuration(500);
-        slideUp.setInterpolator(new AccelerateInterpolator());
-        ((ViewGroup) invitationHandlerDialog_.getWindow().getDecorView()).getChildAt(0).startAnimation(slideUp);
-
-        invitationHandlerDialog_.show();
+//        TranslateAnimation slideUp = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0f);
+//        slideUp.setDuration(500);
+//        slideUp.setInterpolator(new AccelerateInterpolator());
+//        ((ViewGroup) invitationHandlerDialog_.getWindow().getDecorView()).getChildAt(0).startAnimation(slideUp);
+//
+//        invitationHandlerDialog_.show();
+        invitationHandlerDialog_.slideOpen();
         if(callback_ != null){
             callback_.onInvitationDialogLaunched();
         }
@@ -155,6 +144,13 @@ public class BranchInvitationHandler {
                 if(callback_ != null){
                     callback_.onInvitationDialogDismissed();
                 }
+            }
+        });
+
+        invitationCoverlayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                animateDismiss();
             }
         });
     }
@@ -183,20 +179,16 @@ public class BranchInvitationHandler {
 
 
     private void cancelDialog(){
-        if(invitationHandlerDialog_ != null && invitationHandlerDialog_.isShowing()){
-            invitationHandlerDialog_.dismiss();
-        }
+        animateDismiss();
     }
 
 
     private class InvitationShowView extends LinearLayout {
 
-        int  inviterInfoBackground_  = Color.WHITE;
-        int inviteMsgBackground_  = Color.BLUE;
-        Drawable defaultContactImg_  = new ColorDrawable(Color.GRAY);
+        int  inviterInfoBackground_  = invitationStyle_.getInviteTextColor();
+        int inviteMsgBackground_  = invitationStyle_.getWelcomeTextColor();
         int contactPicSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
         int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-        String doneBtnTxt = "Press to join %s";
 
         ImageView contactImg_;
         TextView inviterInfoText_;
@@ -216,7 +208,6 @@ public class BranchInvitationHandler {
             contactImg_ = new ImageView(context);
             contactImg_.setId(BranchInviteUtil.generateViewId());
             contactImg_.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            contactImg_.setImageDrawable(defaultContactImg_);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(contactPicSize, contactPicSize);
             layoutParams.topMargin = 3*padding;
             layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
@@ -229,8 +220,6 @@ public class BranchInvitationHandler {
             inviterInfoText_.setTextColor(inviteMsgBackground_);
             inviterInfoText_.setMaxLines(3);
             inviterInfoText_.setEllipsize(TextUtils.TruncateAt.END);
-            inviterInfoText_.setText("Info testt    vdcvsvdgfdsgsgsdaggsg dsfsdgfsgfgfdgsdgsdgsgsdggdsgsadgsdgggggggggsav fhbad fjbdasbfjnbsdnfbdsknkdsfkdskfsdkfksdbkgfnsdknbgksdngkfjs");
-
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.topMargin = padding;
             layoutParams.addRule(RelativeLayout.BELOW, contactImg_.getId());
@@ -247,7 +236,6 @@ public class BranchInvitationHandler {
             welcomeMsgText_.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
             welcomeMsgText_.setTextColor(inviterInfoBackground_);
             welcomeMsgText_.setTextAppearance(context_, android.R.style.TextAppearance_Medium);
-            welcomeMsgText_.setText("fdwhfbdbfdsfd nf d  ");
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             inviteMsgLayout.addView(welcomeMsgText_, layoutParams);
@@ -255,7 +243,6 @@ public class BranchInvitationHandler {
             proceedToAppText = new TextView(context_);
             proceedToAppText.setBackgroundColor(inviteMsgBackground_);
             proceedToAppText.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-            proceedToAppText.setText(doneBtnTxt);
             proceedToAppText.setTextAppearance(context_, android.R.style.TextAppearance_Small);
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);welcomeMsgText_.setTextColor(inviterInfoBackground_);
@@ -270,16 +257,16 @@ public class BranchInvitationHandler {
 
        private void updateView(String userFullName, String userShortName, String imageUrl){
            //Set invitation message
-           inviterInfoText_.setText(formatWithName(invitationStyle_.invitationMessageText_, userFullName, userShortName));
+           inviterInfoText_.setText(formatWithName(invitationStyle_.getInvitationMessageText(), userFullName, userShortName));
 
            //Set Welcome message
-           welcomeMsgText_.setText(formatWithName(invitationStyle_.welcomeMessageText_, userFullName, userShortName));
+           welcomeMsgText_.setText(formatWithName(invitationStyle_.getWelcomeMessageText(), userFullName, userShortName));
 
            //Set proceed to app text
-           proceedToAppText.setText(formatWithName(invitationStyle_.proceedToAppText_, userFullName, userShortName));
+           proceedToAppText.setText(formatWithName(invitationStyle_.getProceedToAppText(), userFullName, userShortName));
 
            //Load user image
-           imageLoadTask_ =  new LoadBitmapFromUrlTask(contactImg_,imageUrl, invitationStyle_.defaultContactImg_);
+           imageLoadTask_ =  new LoadBitmapFromUrlTask(contactImg_,imageUrl, invitationStyle_.getDefaultContactImg());
            imageLoadTask_.execute();
        }
 
@@ -327,6 +314,14 @@ public class BranchInvitationHandler {
             }
         }
     }
+
+    private void animateDismiss() {
+        if(invitationHandlerDialog_ != null && invitationHandlerDialog_.isShowing()) {
+           invitationHandlerDialog_.slideClose();
+           invitationHandlerDialog_ = null;
+        }
+    }
+
 
 
 }

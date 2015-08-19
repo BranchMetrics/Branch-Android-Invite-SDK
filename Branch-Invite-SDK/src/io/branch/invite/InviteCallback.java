@@ -8,7 +8,7 @@ import io.branch.referral.BranchError;
  * <p>An Interface class that is implemented by all classes that make use of
  * {@link TabbedInviteBuilder} or {@link SimpleInviteBuilder}, defining methods to listen for invitation status.</p>
  */
-public interface BranchInviteStatusListener {
+public interface InviteCallback {
     /**
      * <p> Callback method to update the sharing status. Called on sharing completed or on error.</p>
      *

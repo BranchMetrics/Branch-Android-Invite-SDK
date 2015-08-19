@@ -8,10 +8,9 @@ import android.view.View;
 
 import org.json.JSONObject;
 
-import io.branch.invite.BranchInvitationHandler;
-import io.branch.invite.InvitationStyle;
-import io.branch.invite.InvitationUIListener;
 import io.branch.invite.SimpleInviteBuilder;
+import io.branch.invite.WelcomeBuilder;
+import io.branch.invite.WelcomeCallback;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.SharingHelper;
@@ -61,29 +60,25 @@ public class InviteDemoActivity extends Activity {
             public void onInitFinished(JSONObject referringParams,
                                        BranchError error) {
                 if (error != null) {
-                    Log.i("", "branch init failed. Caused by -" + error.getMessage());
+                    Log.i("BranchInviteTestBed", "branch init failed. Caused by -" + error.getMessage());
                 } else {
-                    Log.i("BranchInviteTestBed", "branch init complete!" +referringParams.toString());
-                    Log.i("BranchInviteTestBed", "\n\n Latest Referring params!" +branch.getLatestReferringParams());
+                    Log.i("BranchInviteTestBed", "Latest Referring params!" +branch.getLatestReferringParams());
                 }
-                InvitationStyle invitationStyle = new InvitationStyle(InviteDemoActivity.this);
 
-                BranchInvitationHandler.HandleInvitations(InviteDemoActivity.this, invitationStyle, new InvitationUIListener() {
-                    @Override
-                    public View getCustomInvitationView(String userID, String inviterFullName, String inviterShortName, String userImageUrl) {
-                        return null;
-                    }
-
-                    @Override
-                    public void onInvitationDialogLaunched() {
-                        Log.d("BranchInviteTestBed","onInvitationDialogLaunched()");
-                    }
-
-                    @Override
-                    public void onInvitationDialogDismissed() {
-                        Log.d("BranchInviteTestBed","onInvitationDialogDismissed()");
-                    }
-                });
+                // Handle Invitation with branch default style and flow
+                new WelcomeBuilder(InviteDemoActivity.this).show();
+//
+//                // Add custom Style to invitation
+//                WelcomeViewStyle invitationStyle = new WelcomeViewStyle(InviteDemoActivity.this)
+//                        .setDefaultUserImage(getResources().getDrawable(R.drawable.contact_default))
+//                        .setInvitationMessage("You are invited to this app by $FULL_NAME")
+//                        .setWelcomeMessage("Welcome to this cool app. Have fun with your friend $SHORT_NAME")
+//                        .setProceedToAppMessage("Click me to proceed");
+//
+//                BranchInvitationHandler.HandleInvitations(InviteDemoActivity.this, invitationStyle, invitationUIListener);
+//
+//                //Add custom view for invitation
+//                BranchInvitationHandler.HandleInvitations(InviteDemoActivity.this, invitationUIListener);
             }
         }, this.getIntent().getData(), this);
     }
@@ -92,5 +87,42 @@ public class InviteDemoActivity extends Activity {
     public void onNewIntent(Intent intent) {
         this.setIntent(intent);
     }
+
+
+    WelcomeCallback invitationUIListener = new WelcomeCallback() {
+        @Override
+        public View getCustomInvitationView(String userID, String inviterFullName, String inviterShortName, String userImageUrl) {
+            return null;
+        }
+
+        @Override
+        public void onInvitationDialogLaunched() {
+            Log.d("BranchInviteTestBed","onInvitationDialogLaunched()");
+        }
+
+        @Override
+        public void onInvitationDialogDismissed() {
+            Log.d("BranchInviteTestBed","onInvitationDialogDismissed()");
+        }
+    };
+
+    //Invitation listener for custom view
+    WelcomeCallback customInvitationUIListener = new WelcomeCallback() {
+        @Override
+        public View getCustomInvitationView(String userID, String inviterFullName, String inviterShortName, String userImageUrl) {
+            return null;
+        }
+
+        @Override
+        public void onInvitationDialogLaunched() {
+            Log.d("BranchInviteTestBed","onInvitationDialogLaunched()");
+        }
+
+        @Override
+        public void onInvitationDialogDismissed() {
+            Log.d("BranchInviteTestBed","onInvitationDialogDismissed()");
+        }
+    };
+
 
 }

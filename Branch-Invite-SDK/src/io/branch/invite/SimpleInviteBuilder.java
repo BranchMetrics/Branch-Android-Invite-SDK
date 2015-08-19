@@ -15,7 +15,7 @@ import io.branch.referral.SharingHelper;
  * <p>
  * Builder for creating a Branch invitation dialog with preselected application.
  * This dialog will show a list of specified clients to send the invitation.
- * This class make use of {@link BranchInviteStatusListener } to notify the invitation status.
+ * This class make use of {@link InviteCallback } to notify the invitation status.
  * If you want a have pre-populated contact list for selected channel, then consider using {@link SimpleInviteBuilder}
  * </p>
  */
@@ -40,7 +40,7 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
     /* Inviting persons last name */
     public String userShortName_;
     /* Callback to notify the invite process status */
-    public BranchInviteStatusListener callback_;
+    public InviteCallback callback_;
     /* Preferred option for sharing. */
     final private ArrayList<SharingHelper.SHARE_WITH> preferredOptions_;
     /* Branch share link instance to share teh link created. */
@@ -111,10 +111,10 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
     /**
      * Sets a callback to get notified on invitation status.
      *
-     * @param callback an instance of {@link BranchInviteStatusListener } to notify the invite process status.
+     * @param callback an instance of {@link InviteCallback } to notify the invite process status.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public SimpleInviteBuilder setInvitationStatusCallback(BranchInviteStatusListener callback) {
+    public SimpleInviteBuilder setInvitationStatusCallback(InviteCallback callback) {
         callback_ = callback;
         return this;
     }
