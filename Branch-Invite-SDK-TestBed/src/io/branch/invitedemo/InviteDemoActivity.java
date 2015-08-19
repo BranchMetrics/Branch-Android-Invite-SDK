@@ -43,6 +43,7 @@ public class InviteDemoActivity extends Activity {
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.EMAIL)
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.FACEBOOK)
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.TWITTER)
+                        .addPreferredInviteChannel(SharingHelper.SHARE_WITH.MESSAGE)
                         .showInviteDialog();
 
 
@@ -60,9 +61,10 @@ public class InviteDemoActivity extends Activity {
             public void onInitFinished(JSONObject referringParams,
                                        BranchError error) {
                 if (error != null) {
-                    Log.i("BranchInviteTestBed", "branch init failed. Caused by -" + error.getMessage());
+                    Log.i("", "branch init failed. Caused by -" + error.getMessage());
                 } else {
-                    Log.i("BranchInviteTestBed", "branch init complete!");
+                    Log.i("BranchInviteTestBed", "branch init complete!" +referringParams.toString());
+                    Log.i("BranchInviteTestBed", "\n\n Latest Referring params!" +branch.getLatestReferringParams());
                 }
                 InvitationStyle invitationStyle = new InvitationStyle(InviteDemoActivity.this);
 

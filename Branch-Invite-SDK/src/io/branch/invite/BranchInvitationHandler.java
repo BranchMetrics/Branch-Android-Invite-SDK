@@ -79,44 +79,43 @@ public class BranchInvitationHandler {
         callback_ = callback;
 
         boolean isInvitationHandled = false;
-        if(Branch.getInstance() != null){
-            JSONObject firstReferringParams = Branch.getInstance().getFirstReferringParams();
-            if(firstReferringParams.has(Defines.Feature.getKey())){
+        if (Branch.getInstance() != null) {
+            JSONObject latestReferringParams = Branch.getInstance().getLatestReferringParams();
+            // Check if the link has inviter info.
+            if (latestReferringParams.has(Defines.INVITE_USER_ID.getKey())
+                    && latestReferringParams.has(Defines.INVITE_USER_FULLNAME.getKey())) {
                 try {
-                    // Check if the invitation is created with username and ID.
-                    if (firstReferringParams.getString(Defines.Feature.getKey()).equals(Branch.FEATURE_TAG_REFERRAL)
-                            && firstReferringParams.has(Defines.INVITE_USER_ID.getKey())
-                            && firstReferringParams.has(Defines.INVITE_USER_FULLNAME.getKey())) {
-                        // The link is referral type.Then get the inviter info
-                        String userID = firstReferringParams.getString(Defines.INVITE_USER_ID.getKey());
-                        String userFullName =firstReferringParams.getString(Defines.INVITE_USER_FULLNAME.getKey());
+                    // The link is referral type.Then get the inviter info
+                    String userID = latestReferringParams.getString(Defines.INVITE_USER_ID.getKey());
+                    String userFullName = latestReferringParams.getString(Defines.INVITE_USER_FULLNAME.getKey());
 
-                        String userShortName ="";
-                        if(firstReferringParams.has(Defines.INVITE_USER_ID.getKey())){
-                            userShortName = firstReferringParams.getString(Defines.INVITE_USER_SHORT_NAME.getKey());
-                        }
-                        String userImageUrl="";
-                        if(firstReferringParams.has(Defines.INVITE_USER_IMAGE_URL.getKey())){
-                            userImageUrl = firstReferringParams.getString(Defines.INVITE_USER_IMAGE_URL.getKey());
-                        }
-                        // Check if a custom view is desired for invitation.
-                        if(callback != null ) {
-                            invitationView_ = callback.getCustomInvitationView(userID, userFullName, userShortName, userImageUrl);
-                        }
-                        //If user has not provided a custom view create a view with style specified.
-                        if(invitationView_ == null) {
-                            invitationView_ = new InvitationShowView(context_);
-                            ((InvitationShowView)invitationView_).updateView(userFullName,userShortName,userImageUrl);
-                        }
-                        createInvitationHandlerDialog();
-                        isInvitationHandled = true;
+                    String userShortName = "";
+                    if (latestReferringParams.has(Defines.INVITE_USER_ID.getKey())) {
+                        userShortName = latestReferringParams.getString(Defines.INVITE_USER_SHORT_NAME.getKey());
                     }
-                }catch (JSONException ignore){
+                    String userImageUrl = "";
+                    if (latestReferringParams.has(Defines.INVITE_USER_IMAGE_URL.getKey())) {
+                        userImageUrl = latestReferringParams.getString(Defines.INVITE_USER_IMAGE_URL.getKey());
+                    }
+                    // Check if a custom view is desired for invitation.
+                    if (callback != null) {
+                        invitationView_ = callback.getCustomInvitationView(userID, userFullName, userShortName, userImageUrl);
+                    }
+                    //If user has not provided a custom view create a view with style specified.
+                    if (invitationView_ == null) {
+                        invitationView_ = new InvitationShowView(context_);
+                        ((InvitationShowView) invitationView_).updateView(userFullName, userShortName, userImageUrl);
+                    }
+                    createInvitationHandlerDialog();
+                    isInvitationHandled = true;
+
+                } catch (JSONException ignore) {
 
                 }
             }
+
         }
-        return  isInvitationHandled;
+        return isInvitationHandled;
     }
 
 
@@ -285,15 +284,15 @@ public class BranchInvitationHandler {
        }
 
         private String formatWithName(String rawString, String userFullName,  String userShortName){
-            if(rawString.contains(InvitationStyle.FULL_NAME_SUB)){
-                rawString = rawString.replaceAll(InvitationStyle.FULL_NAME_SUB,userFullName);
+            if(rawString.contains(Defines.FULL_NAME_SUB.getKey())){
+                rawString = rawString.replace(Defines.FULL_NAME_SUB.getKey(), userFullName);
             }
-            if(rawString.contains(InvitationStyle.SHORT_NAME_SUB)){
+            if(rawString.contains(Defines.SHORT_NAME_SUB.getKey())){
                 //ShortName is optional. So fall back to full name in case short name not available
                 if(userShortName == null || userShortName.trim().length() < 1){
                     userShortName = userFullName;
                 }
-                rawString = rawString.replaceAll(InvitationStyle.SHORT_NAME_SUB,userShortName);
+                rawString = rawString.replace(Defines.SHORT_NAME_SUB.getKey(), userShortName);
             }
             return  rawString;
         }
@@ -313,8 +312,7 @@ public class BranchInvitationHandler {
         protected Bitmap doInBackground( Void... voids ) {
             Bitmap bitmap = null;
             try {
-                URL newurl = new URL(url_);
-                bitmap = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+                bitmap = BitmapFactory.decodeStream(new URL(url_).openConnection().getInputStream());
             } catch ( MalformedURLException ignore ) {
             } catch ( IOException ignore ) {
             }
@@ -322,9 +320,11 @@ public class BranchInvitationHandler {
         }
 
         @Override
-        protected void onPostExecute( Bitmap result ) {
-            super.onPostExecute( result );
-            imageView_.setImageBitmap( result );
+        protected void onPostExecute( Bitmap image ) {
+            super.onPostExecute(image);
+            if(image != null) {
+                imageView_.setImageBitmap(image);
+            }
         }
     }
 

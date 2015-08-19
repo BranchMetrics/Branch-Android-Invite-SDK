@@ -20,16 +20,14 @@ public class InvitationStyle {
     public String proceedToAppText_;
     public Drawable defaultContactImg_;
 
-    public static final String FULL_NAME_SUB = "$FULL_NAME";
-    public static final String SHORT_NAME_SUB = "$SHORT_NAME";
 
     public InvitationStyle(Context context){
         inviteTextColor_ = Color.WHITE;
         welcomeTextColor_ = Color.BLUE;
         String appLabel = context.getApplicationInfo().loadLabel(context.getPackageManager()).toString();
-        invitationMessageText_ = FULL_NAME_SUB+" has invited you to use "+appLabel;
-        welcomeMessageText_ = "Welcome to "+appLabel+ "! You've been invited to join "+appLabel+" by another user "+SHORT_NAME_SUB;
-        proceedToAppText_ = "Press to join "+ SHORT_NAME_SUB ;
+        invitationMessageText_ = Defines.FULL_NAME_SUB.getKey()+" has invited you to use "+appLabel;
+        welcomeMessageText_ = "Welcome to "+appLabel+ "! You've been invited to join "+appLabel+" by another user "+Defines.SHORT_NAME_SUB.getKey();
+        proceedToAppText_ = "Press to join "+ Defines.SHORT_NAME_SUB.getKey() ;
         defaultContactImg_  = context.getResources().getDrawable(android.R.drawable.gallery_thumb);
     }
 
