@@ -58,7 +58,7 @@ class InviteTabbedContentView extends LinearLayout {
         context_ = context;
         setOrientation(VERTICAL);
         inviteBuilderParams_ = inviteBuilderParams;
-        setViewBackground(this, inviteBuilderParams_.backgroundDrawable_);
+        BranchInviteUtil.setViewBackground(this, inviteBuilderParams_.backgroundDrawable_);
         contactTabViewEventsCallback_ = IContactTabViewEvents;
         tabContentMap_ = new HashMap<String, InviteContactListView>();
 
@@ -84,7 +84,7 @@ class InviteTabbedContentView extends LinearLayout {
         negativeButton.setTypeface(null, Typeface.BOLD);
         negativeButton.setGravity(Gravity.CENTER);
         negativeButton.setTextColor(inviteBuilderParams_.negativeBtnTextColor);
-        setViewBackground(negativeButton, inviteBuilderParams_.negativeBtnBackground);
+        BranchInviteUtil.setViewBackground(negativeButton, inviteBuilderParams_.negativeBtnBackground);
 
         negativeButton.setOnClickListener(negativeButtonClickListener_);
 
@@ -97,7 +97,7 @@ class InviteTabbedContentView extends LinearLayout {
         positiveButton.setGravity(Gravity.CENTER);
 
         positiveButton.setTextColor(inviteBuilderParams_.positiveBtnTextColor);
-        setViewBackground(positiveButton, inviteBuilderParams_.positiveBtnBackground);
+        BranchInviteUtil.setViewBackground(positiveButton, inviteBuilderParams_.positiveBtnBackground);
 
         positiveButton.setOnClickListener(positiveButtonClickListener_);
 
@@ -252,15 +252,6 @@ class InviteTabbedContentView extends LinearLayout {
         host_.getTabWidget().getChildAt(host_.getCurrentTab()).setBackgroundDrawable(inviteBuilderParams_.tabSelectedBackground_);// selected tab
     }
 
-    private void setViewBackground(View view, Drawable drawable) {
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            //noinspection deprecation
-            view.setBackgroundDrawable(drawable);
-        } else {
-            view.setBackground(drawable);
-        }
-    }
-
     interface IContactTabViewEvents {
         /* Called on user selecting the negative button */
         void onNegativeButtonClicked();
@@ -285,7 +276,7 @@ class InviteTabbedContentView extends LinearLayout {
             channelName_ = channelName;
             targetPackageName_ = targetPackage;
             setAdapter(adapter);
-            setViewBackground(this, inviteBuilderParams_.backgroundDrawable_);
+            BranchInviteUtil.setViewBackground(this, inviteBuilderParams_.backgroundDrawable_);
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 this.setFastScrollAlwaysVisible(true);
             }

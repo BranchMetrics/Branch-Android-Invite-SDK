@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import io.branch.referral.BranchError;
 
 /**
- * <p>Abstract class for invite contact list view. This class provides teh view for tab when using a {@link InviteTabViewBuilder}.
- * All custom tabs added to the {@link InviteTabViewBuilder} should provide an implementation of this class. </p>
+ * <p>Abstract class for invite contact list view. This class provides teh view for tab when using a {@link TabbedInviteBuilder}.
+ * All custom tabs added to the {@link TabbedInviteBuilder} should provide an implementation of this class. </p>
  */
 public abstract class InviteContactListView extends ListView {
     public InviteContactListView(Context context) {
@@ -36,7 +36,7 @@ public abstract class InviteContactListView extends ListView {
 
     /**
      * <p>Name of the channel this list represents.</p>
-     * This method provide option to to name the channel when you can create your custom invitee list to add to {@link InviteTabViewBuilder}.
+     * This method provide option to to name the channel when you can create your custom invitee list to add to {@link TabbedInviteBuilder}.
      *
      * @return A {@link String } representing the channel name
      */
@@ -58,7 +58,7 @@ public abstract class InviteContactListView extends ListView {
     public abstract void onInvitationLinkCreated(String invitationUrl, BranchError error);
 
     /**
-     * <p>Get an intent to invoke the applications to send the invitation. List views added to the {@link InviteTabViewBuilder}
+     * <p>Get an intent to invoke the applications to send the invitation. List views added to the {@link TabbedInviteBuilder}
      * should provide an intent to invoke the sharing client applications.
      * </p>
      *

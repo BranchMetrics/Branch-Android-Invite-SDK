@@ -2,13 +2,34 @@ package io.branch.invite;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.view.View;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <p>Utility class for Branch invite sdk</p>
  */
 class BranchInviteUtil {
+    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+    /**
+     * Generate a value suitable for use in {@link View#setId(int)}.
+     * This value will not collide with ID values generated at build time by aapt for R.id.
+     *
+     * @return a generated ID value
+     */
+    public static int generateViewId() {
+        for (;;) {
+            final int result = sNextGeneratedId.get();
+            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
+            int newValue = result + 1;
+            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
+            if (sNextGeneratedId.compareAndSet(result, newValue)) {
+                return result;
+            }
+        }
+    }
 
     /**
      * <p>Check if the specified  package is installed on the device</p>
@@ -43,4 +64,16 @@ class BranchInviteUtil {
         }
         return formattedContactList;
     }
+
+    public static void setViewBackground(View view, Drawable drawable) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            //noinspection deprecation
+            view.setBackgroundDrawable(drawable);
+        } else {
+            view.setBackground(drawable);
+        }
+    }
+
+
+
 }

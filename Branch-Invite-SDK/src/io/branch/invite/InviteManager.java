@@ -61,7 +61,7 @@ class InviteManager implements DialogInterface.OnDismissListener {
      * Create and opens a new invitation dialog.
      *
      * @param context       Context for the dialog
-     * @param builderParams {@link InviteTabViewBuilder} instance.
+     * @param builderParams {@link TabbedInviteBuilder} instance.
      */
     public void showDialog(Context context, InviteTabbedBuilderParams builderParams) {
         context_ = context;
@@ -183,10 +183,10 @@ class InviteManager implements DialogInterface.OnDismissListener {
                 referralURIBuilder.addParameters(customKey, customVal);
             }
             //Add inviter info
-            referralURIBuilder.addParameters("BRANCH_INVITE_USER_ID_KEY", inviteBuilderParams_.userID_)
-                    .addParameters("BRANCH_INVITE_USER_FULLNAME_KEY", inviteBuilderParams_.userFullName_)
-                    .addParameters("BRANCH_INVITE_USER_SHORT_NAME_KEY", inviteBuilderParams_.userShortName_)
-                    .addParameters("BRANCH_INVITE_USER_IMAGE_URL_KEY", inviteBuilderParams_.userImageUrl_);
+            referralURIBuilder.addParameters(Defines.INVITE_USER_ID.getKey(), inviteBuilderParams_.userID_)
+                    .addParameters(Defines.INVITE_USER_FULLNAME.getKey(), inviteBuilderParams_.userFullName_)
+                    .addParameters(Defines.INVITE_USER_SHORT_NAME.getKey(), inviteBuilderParams_.userShortName_)
+                    .addParameters(Defines.INVITE_USER_IMAGE_URL.getKey(), inviteBuilderParams_.userImageUrl_);
 
             referralURIBuilder.generateReferralUrl(new Branch.BranchLinkCreateListener() {
                 @Override

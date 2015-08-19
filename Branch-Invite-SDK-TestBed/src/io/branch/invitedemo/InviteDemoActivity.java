@@ -8,7 +8,10 @@ import android.view.View;
 
 import org.json.JSONObject;
 
-import io.branch.invite.InviteListViewBuilder;
+import io.branch.invite.BranchInvitationHandler;
+import io.branch.invite.InvitationStyle;
+import io.branch.invite.InvitationUIListener;
+import io.branch.invite.SimpleInviteBuilder;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.SharingHelper;
@@ -29,18 +32,20 @@ public class InviteDemoActivity extends Activity {
         findViewById(R.id.invite_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                new InviteTabViewBuilder(InviteDemoActivity.this, "My userID", "My Name")
+//                new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name")
 //                        .setTabStyle(new ColorDrawable(Color.RED), new ColorDrawable(Color.GREEN))
 //                        .setPositiveButtonStyle(new ColorDrawable(Color.GREEN),"Invite", Color.GRAY)
 //                        .setNegativeButtonStyle(new ColorDrawable(Color.YELLOW),"Close", Color.MAGENTA)
 //                        .addCustomParams("Custom_Param", "This is a custom param")
 //                        .showInviteDialog();
 
-                new InviteListViewBuilder(InviteDemoActivity.this,"123455","Sojan")
+                new SimpleInviteBuilder(InviteDemoActivity.this,"123455","Sojan")
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.EMAIL)
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.FACEBOOK)
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.TWITTER)
                         .showInviteDialog();
+
+
             }
         });
     }
@@ -55,10 +60,28 @@ public class InviteDemoActivity extends Activity {
             public void onInitFinished(JSONObject referringParams,
                                        BranchError error) {
                 if (error != null) {
-                    Log.i("BranchTestBed", "branch init failed. Caused by -" + error.getMessage());
+                    Log.i("BranchInviteTestBed", "branch init failed. Caused by -" + error.getMessage());
                 } else {
-                    Log.i("BranchTestBed", "branch init complete!");
+                    Log.i("BranchInviteTestBed", "branch init complete!");
                 }
+                InvitationStyle invitationStyle = new InvitationStyle(InviteDemoActivity.this);
+
+                BranchInvitationHandler.HandleInvitations(InviteDemoActivity.this, invitationStyle, new InvitationUIListener() {
+                    @Override
+                    public View getCustomInvitationView(String userID, String inviterFullName, String inviterShortName, String userImageUrl) {
+                        return null;
+                    }
+
+                    @Override
+                    public void onInvitationDialogLaunched() {
+                        Log.d("BranchInviteTestBed","onInvitationDialogLaunched()");
+                    }
+
+                    @Override
+                    public void onInvitationDialogDismissed() {
+                        Log.d("BranchInviteTestBed","onInvitationDialogDismissed()");
+                    }
+                });
             }
         }, this.getIntent().getData(), this);
     }

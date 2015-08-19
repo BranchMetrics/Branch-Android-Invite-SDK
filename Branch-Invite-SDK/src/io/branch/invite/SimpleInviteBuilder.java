@@ -16,10 +16,10 @@ import io.branch.referral.SharingHelper;
  * Builder for creating a Branch invitation dialog with preselected application.
  * This dialog will show a list of specified clients to send the invitation.
  * This class make use of {@link BranchInviteStatusListener } to notify the invitation status.
- * If you want a have pre-populated contact list for selected channel, then consider using {@link InviteListViewBuilder}
+ * If you want a have pre-populated contact list for selected channel, then consider using {@link SimpleInviteBuilder}
  * </p>
  */
-public class InviteListViewBuilder implements Branch.BranchLinkShareListener {
+public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
     /* Current activity to show the dialog */
     final Activity activity_;
     /* Json parameters for link creation */
@@ -53,7 +53,7 @@ public class InviteListViewBuilder implements Branch.BranchLinkShareListener {
      * @param userID       A {@link String} with value of user-id for the inviter.
      * @param userFullName A {@link String} with value of users full name.
      */
-    public InviteListViewBuilder(Activity activity, String userID, String userFullName) {
+    public SimpleInviteBuilder(Activity activity, String userID, String userFullName) {
         activity_ = activity;
         params_ = new JSONObject();
         userID_ = userID;
@@ -76,7 +76,7 @@ public class InviteListViewBuilder implements Branch.BranchLinkShareListener {
      * @param inviterShortName A {@link String} with value of custom display name
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteListViewBuilder setInviterShortName(String inviterShortName) {
+    public SimpleInviteBuilder setInviterShortName(String inviterShortName) {
         userShortName_ = inviterShortName;
         return this;
     }
@@ -87,7 +87,7 @@ public class InviteListViewBuilder implements Branch.BranchLinkShareListener {
      * @param imageUrl A url for the user image.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public InviteListViewBuilder setInviterImageUrl(String imageUrl) {
+    public SimpleInviteBuilder setInviterImageUrl(String imageUrl) {
         userImageUrl_ = imageUrl;
         return this;
     }
@@ -99,7 +99,7 @@ public class InviteListViewBuilder implements Branch.BranchLinkShareListener {
      * @param value A {@link String} value with the value for the custom param.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public InviteListViewBuilder addCustomParams(String key, String value) {
+    public SimpleInviteBuilder addCustomParams(String key, String value) {
         try {
             params_.put(key, value);
         } catch (JSONException ignore) {
@@ -114,7 +114,7 @@ public class InviteListViewBuilder implements Branch.BranchLinkShareListener {
      * @param callback an instance of {@link BranchInviteStatusListener } to notify the invite process status.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public InviteListViewBuilder setInvitationStatusCallback(BranchInviteStatusListener callback) {
+    public SimpleInviteBuilder setInvitationStatusCallback(BranchInviteStatusListener callback) {
         callback_ = callback;
         return this;
     }
@@ -126,7 +126,7 @@ public class InviteListViewBuilder implements Branch.BranchLinkShareListener {
      * @param message {@link String} with value for the invite message body.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public InviteListViewBuilder setInvitation(String subject, String message) {
+    public SimpleInviteBuilder setInvitation(String subject, String message) {
         shareLinkBuilder_.setSubject(subject);
         shareLinkBuilder_.setMessage(subject);
         return this;
@@ -141,7 +141,7 @@ public class InviteListViewBuilder implements Branch.BranchLinkShareListener {
      *                        Preferred applications are defined in {@link io.branch.referral.SharingHelper.SHARE_WITH}.
      * @return A {@link io.branch.referral.Branch.ShareLinkBuilder} instance.
      */
-    public InviteListViewBuilder addPreferredInviteChannel(SharingHelper.SHARE_WITH preferredOption) {
+    public SimpleInviteBuilder addPreferredInviteChannel(SharingHelper.SHARE_WITH preferredOption) {
         shareLinkBuilder_.addPreferredSharingOption(preferredOption);
         return this;
     }
@@ -152,7 +152,7 @@ public class InviteListViewBuilder implements Branch.BranchLinkShareListener {
      * @param defaultUrl Fallback url to share.
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteListViewBuilder setDefaultUrl(String defaultUrl) {
+    public SimpleInviteBuilder setDefaultUrl(String defaultUrl) {
         shareLinkBuilder_.setDefaultURL(defaultUrl);
         return this;
     }
@@ -160,10 +160,10 @@ public class InviteListViewBuilder implements Branch.BranchLinkShareListener {
 
     public void showInviteDialog() {
         try {
-            params_.put("BRANCH_INVITE_USER_ID_KEY", userID_);
-            params_.put("BRANCH_INVITE_USER_FULLNAME_KEY", userFullName_);
-            params_.put("BRANCH_INVITE_USER_SHORT_NAME_KEY", userShortName_);
-            params_.put("BRANCH_INVITE_USER_IMAGE_URL_KEY", userImageUrl_);
+            params_.put(Defines.INVITE_USER_ID.getKey(), userID_);
+            params_.put(Defines.INVITE_USER_FULLNAME.getKey(), userFullName_);
+            params_.put(Defines.INVITE_USER_SHORT_NAME.getKey(), userShortName_);
+            params_.put(Defines.INVITE_USER_IMAGE_URL.getKey(), userImageUrl_);
 
         } catch (JSONException ignore) {
 

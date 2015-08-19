@@ -6,7 +6,7 @@ import io.branch.referral.BranchError;
 
 /**
  * <p>An Interface class that is implemented by all classes that make use of
- * {@link InviteTabViewBuilder} or {@link InviteListViewBuilder}, defining methods to listen for invitation status.</p>
+ * {@link TabbedInviteBuilder} or {@link SimpleInviteBuilder}, defining methods to listen for invitation status.</p>
  */
 public interface BranchInviteStatusListener {
     /**
@@ -14,13 +14,13 @@ public interface BranchInviteStatusListener {
      *
      * @param inviteLink    The link created to invite.
      * @param inviteChannel Channel selected for inviting. Email,Message,Facebook etc.
-     * @param inviteeList   A list of contacts invited valid only for {@list InviteTabViewBuilder} where channel is preselected. Value will be null for {@link InviteListViewBuilder}
+     * @param inviteeList   A list of contacts invited valid only for {@list TabbedInviteBuilder} where channel is preselected. Value will be null for {@link SimpleInviteBuilder}
      * @param error         A {@link BranchError} to update errors, if there is any.
      */
     void onInviteFinished(String inviteLink, String inviteChannel, ArrayList<String> inviteeList, BranchError error);
 
     /**
-     * <p>Called when user select a channel for inviting some one when using {@link InviteListViewBuilder}
+     * <p>Called when user select a channel for inviting some one when using {@link SimpleInviteBuilder}
      * Branch will create a deep link for the selected channel and share with it after calling this
      * method. On sharing complete, status is updated by onInviteFinished() callback. Consider
      * having a sharing in progress UI if you wish to prevent user activity in the window between selecting a channel

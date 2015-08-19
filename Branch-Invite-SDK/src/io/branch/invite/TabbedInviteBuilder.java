@@ -8,10 +8,10 @@ import android.graphics.drawable.Drawable;
  * each channel. Each channel is added a as a tab on the dialog. There are customisable positive and negative buttons
  * for capturing user actions. New tabs with custom contact list can be added to the tabbed view.
  * This class make use of {@link BranchInviteStatusListener } to notify the invitation status.
- * If you want a start with a list of applications rather than a pre-populated contact list then consider using {@link InviteListViewBuilder}
+ * If you want a start with a list of applications rather than a pre-populated contact list then consider using {@link SimpleInviteBuilder}
  * {@see addCustomTab() method to see how to add a custom tab to the tabbed view}
  */
-public class InviteTabViewBuilder {
+public class TabbedInviteBuilder {
     final InviteManager inviteManager_;
     final Context context_;
     final InviteTabbedBuilderParams inviteBuilderParams_;
@@ -24,7 +24,7 @@ public class InviteTabViewBuilder {
      * @param userID       A {@link String} with value of user-id for the inviter.
      * @param userFullName A {@link String} with value of users full name.
      */
-    public InviteTabViewBuilder(Context context, String userID, String userFullName) {
+    public TabbedInviteBuilder(Context context, String userID, String userFullName) {
         context_ = context;
         inviteManager_ = InviteManager.getInstance();
         inviteBuilderParams_ = new InviteTabbedBuilderParams(context);
@@ -39,7 +39,7 @@ public class InviteTabViewBuilder {
      * @param nonSelectedTabDrawable Drawable background for a non selected tab.
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteTabViewBuilder setTabStyle(Drawable selectedTabDrawable, Drawable nonSelectedTabDrawable) {
+    public TabbedInviteBuilder setTabStyle(Drawable selectedTabDrawable, Drawable nonSelectedTabDrawable) {
         inviteBuilderParams_.tabSelectedBackground_ = selectedTabDrawable;
         inviteBuilderParams_.tabUnselectedBackground_ = nonSelectedTabDrawable;
         return this;
@@ -53,7 +53,7 @@ public class InviteTabViewBuilder {
      * @param textColor     An  {@link Integer} representing the ARGB color value for positive button text.
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteTabViewBuilder setPositiveButtonStyle(Drawable btnBackground, String btnText, int textColor) {
+    public TabbedInviteBuilder setPositiveButtonStyle(Drawable btnBackground, String btnText, int textColor) {
         inviteBuilderParams_.positiveBtnBackground = btnBackground;
         inviteBuilderParams_.positiveButtonText_ = btnText;
         inviteBuilderParams_.positiveBtnTextColor = textColor;
@@ -68,7 +68,7 @@ public class InviteTabViewBuilder {
      * @param textColor     An  {@link Integer} representing the ARGB color value for negative button text.
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteTabViewBuilder setNegativeButtonStyle(Drawable btnBackground, String btnText, int textColor) {
+    public TabbedInviteBuilder setNegativeButtonStyle(Drawable btnBackground, String btnText, int textColor) {
         inviteBuilderParams_.negativeBtnBackground = btnBackground;
         inviteBuilderParams_.negativeButtonText_ = btnText;
         inviteBuilderParams_.negativeBtnTextColor = textColor;
@@ -81,7 +81,7 @@ public class InviteTabViewBuilder {
      * @param emailTabText A {@link String} value for Email tab text.
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteTabViewBuilder setEmailTabText(String emailTabText) {
+    public TabbedInviteBuilder setEmailTabText(String emailTabText) {
         inviteBuilderParams_.emailTabText_ = emailTabText;
         return this;
     }
@@ -92,7 +92,7 @@ public class InviteTabViewBuilder {
      * @param phoneTabText A {@link String} value for Phone tab text.
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteTabViewBuilder setPhoneTabText(String phoneTabText) {
+    public TabbedInviteBuilder setPhoneTabText(String phoneTabText) {
         inviteBuilderParams_.textTabText_ = phoneTabText;
         return this;
     }
@@ -103,7 +103,7 @@ public class InviteTabViewBuilder {
      *
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteTabViewBuilder enableSingleSelect() {
+    public TabbedInviteBuilder enableSingleSelect() {
         inviteBuilderParams_.isSingleSelect_ = true;
         return this;
     }
@@ -114,7 +114,7 @@ public class InviteTabViewBuilder {
      * @param backgroundDrawable Drawable background for the tabbed contact view
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteTabViewBuilder setBackground(Drawable backgroundDrawable) {
+    public TabbedInviteBuilder setBackground(Drawable backgroundDrawable) {
         inviteBuilderParams_.backgroundDrawable_ = backgroundDrawable;
         return this;
     }
@@ -126,7 +126,7 @@ public class InviteTabViewBuilder {
      * @param nonSelectedIcons Drawable icon to highlight a contact as non selected.
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteTabViewBuilder setContactListItemStyle(Drawable selectedIcon, Drawable nonSelectedIcons) {
+    public TabbedInviteBuilder setContactListItemStyle(Drawable selectedIcon, Drawable nonSelectedIcons) {
         inviteBuilderParams_.selectedIndicator_ = selectedIcon;
         inviteBuilderParams_.nonSelectedIndicator_ = nonSelectedIcons;
         return this;
@@ -139,7 +139,7 @@ public class InviteTabViewBuilder {
      * @param message Invitation message body
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteTabViewBuilder setInvitationText(String subject, String message) {
+    public TabbedInviteBuilder setInvitationText(String subject, String message) {
         inviteBuilderParams_.invitationSubject_ = subject;
         inviteBuilderParams_.invitationMsg_ = message;
         return this;
@@ -151,7 +151,7 @@ public class InviteTabViewBuilder {
      * @param inviterShortName A {@link String} with value of custom display name
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteTabViewBuilder setInviterShortName(String inviterShortName) {
+    public TabbedInviteBuilder setInviterShortName(String inviterShortName) {
         inviteBuilderParams_.userShortName_ = inviterShortName;
         return this;
     }
@@ -162,7 +162,7 @@ public class InviteTabViewBuilder {
      * @param imageUrl A url for the user image.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public InviteTabViewBuilder setInviterImageUrl(String imageUrl) {
+    public TabbedInviteBuilder setInviterImageUrl(String imageUrl) {
         inviteBuilderParams_.userImageUrl_ = imageUrl;
         return this;
     }
@@ -174,7 +174,7 @@ public class InviteTabViewBuilder {
      * @param value A {@link String} value with the value for the custom param.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public InviteTabViewBuilder addCustomParams(String key, String value) {
+    public TabbedInviteBuilder addCustomParams(String key, String value) {
         inviteBuilderParams_.customDataMap_.put(key, value);
         return this;
     }
@@ -185,7 +185,7 @@ public class InviteTabViewBuilder {
      * @param callback an instance of {@link BranchInviteStatusListener } to notify the invite process status.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public InviteTabViewBuilder setInvitationStatusCallback(BranchInviteStatusListener callback) {
+    public TabbedInviteBuilder setInvitationStatusCallback(BranchInviteStatusListener callback) {
         inviteBuilderParams_.callback_ = callback;
         return this;
     }
@@ -198,7 +198,7 @@ public class InviteTabViewBuilder {
      * @param contactListView A {@link InviteContactListView} instance which will be set as the content view for the tab.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public InviteTabViewBuilder addCustomTab(String channelName, InviteContactListView contactListView) {
+    public TabbedInviteBuilder addCustomTab(String channelName, InviteContactListView contactListView) {
         inviteBuilderParams_.customTabMap_.put(channelName, contactListView);
         return this;
     }
@@ -209,7 +209,7 @@ public class InviteTabViewBuilder {
      * @param defaultUrl Fallback url to share.
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public InviteTabViewBuilder setDefaultUrl(String defaultUrl) {
+    public TabbedInviteBuilder setDefaultUrl(String defaultUrl) {
         inviteBuilderParams_.defaultInvitationUrl_ = defaultUrl;
         return this;
     }
