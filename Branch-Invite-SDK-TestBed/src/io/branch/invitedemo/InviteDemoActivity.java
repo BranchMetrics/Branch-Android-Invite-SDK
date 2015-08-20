@@ -4,20 +4,16 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import org.json.JSONObject;
 
-import io.branch.invite.SimpleInviteBuilder;
+import io.branch.invite.TabbedInviteBuilder;
 import io.branch.invite.WelcomeBuilder;
-import io.branch.invite.WelcomeCallback;
-import io.branch.invite.WelcomeViewStyle;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
-import io.branch.referral.SharingHelper;
 
 
 /**
@@ -36,19 +32,35 @@ public class InviteDemoActivity extends Activity {
         findViewById(R.id.invite_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name")
-//                        .setTabStyle(new ColorDrawable(Color.RED), new ColorDrawable(Color.GREEN))
-//                        .setPositiveButtonStyle(new ColorDrawable(Color.GREEN),"Invite", Color.GRAY)
-//                        .setNegativeButtonStyle(new ColorDrawable(Color.YELLOW),"Close", Color.MAGENTA)
-//                        .addCustomParams("Custom_Param", "This is a custom param")
-//                        .showInviteDialog();
 
-                new SimpleInviteBuilder(InviteDemoActivity.this, "123455", "Sojan")
+                //-----------  Simple invite View -------------------------------//
+                // new SimpleInviteBuilder(InviteDemoActivity.this, "123456", "Sojan Razallian").showInviteDialog();
+
+                //-- Here is how to Customise simple invite view ----------------------------------------//
+
+                /* new SimpleInviteBuilder(InviteDemoActivity.this, "123456", "Sojan Razallian")
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.EMAIL)
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.FACEBOOK)
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.TWITTER)
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.MESSAGE)
+                        .setInviterImageUrl("https://s3-us-west-1.amazonaws.com/branchhost/mosaic_og.png")
+                        .addCustomParams("Custom_Param1", "Custom_Param1_value")
                         .showInviteDialog();
+                */
+
+                //----------------- Tabbed invite view ---------------------------------//
+                new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name").showInviteDialog();
+
+                //-- Here is how to customise tabbed invite view------------------------------------//
+
+                /*new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name")
+                        .setTabStyle(new ColorDrawable(Color.RED), new ColorDrawable(Color.GREEN))
+                        .setPositiveButtonStyle(new ColorDrawable(Color.TRANSPARENT),"Invite", Color.BLUE)
+                        .setNegativeButtonStyle(new ColorDrawable(Color.TRANSPARENT),"Close", Color.MAGENTA)
+                        .setInviterImageUrl("https://s3-us-west-1.amazonaws.com/branchhost/mosaic_og.png")
+                        .addCustomParams("Custom_Param", "This is a custom param")
+                        .showInviteDialog();
+                 */
 
 
             }
