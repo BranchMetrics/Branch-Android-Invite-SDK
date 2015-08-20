@@ -1,5 +1,6 @@
 package io.branch.invite;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
@@ -217,17 +218,7 @@ public class TabbedInviteBuilder {
     /**
      * Creates the invitation dialog with the arguments supplied in the builder.
      */
-    public void showInviteDialog() {
-        inviteManager_.showDialog(context_, inviteBuilderParams_);
+    public Dialog showInviteDialog() {
+        return inviteManager_.showDialog(context_, inviteBuilderParams_);
     }
-
-    /**
-     * Cancels the current invitation dialog.
-     */
-    public void cancelInviteDialog() {
-        if (inviteManager_ != null) {
-            inviteManager_.cancelInviteDialog();
-        }
-    }
-
 }

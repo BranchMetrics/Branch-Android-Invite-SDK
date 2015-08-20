@@ -18,16 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -35,36 +30,51 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 
 /**
- * Created by sojanpr on 8/17/15.
+ * <p>Calls for creating a welcome dialog. Welcome dialog provide a custom view for the Dialog, which can be customised
+ * by providing styles .{@see WelcomeViewStyle} for more details.
+ * This class  provides an option to set the custom view for the Welcome Dialog. Dialog content view can be inflated with any
+ * custom view provided.{@see WelcomeCallback#getCustomInvitationView()} for more details </p>
  */
 class WelcomeHandler {
     private static WelcomeHandler thisInstance_;
 
     /* The custom chooser dialog for selecting an application to share the link */
-    WelcomeDialog invitationHandlerDialog_;
+    AnimatedDialog invitationHandlerDialog_;
     /* {@link Context} for the invite manager */
     Context context_;
+    /* Callback instance for notifying welcome UI events */
     WelcomeCallback callback_;
+    /* The view to inflate the dialog content */
     View invitationView_;
+    /* Styling parameters for welcome view*/
     WelcomeViewStyle invitationStyle_;
+    /* Background task for loading image URl for inviter*/
     LoadBitmapFromUrlTask imageLoadTask_;
 
     private WelcomeHandler() {
         thisInstance_ = this;
     }
-    public static Dialog HandleInvitations(Context context, WelcomeViewStyle invitationStyle, WelcomeCallback callback){
-        if(thisInstance_ == null){
+
+    /**
+     * Check for invitation parameters in the latest referring parameters and creates a welcome dialog
+     * with specified styles or custom view. Do nothing if there is no invitation params available for this session.
+     *
+     * @param context         Context for showing welcome Dialog
+     * @param invitationStyle {@link WelcomeViewStyle} instance  to specify the welcome Dialog style
+     * @param callback        {@link WelcomeCallback} instance to callback the UI events
+     * @return A Dialog instance if a welcome dialog is created. Null if invitation parameters are not available or in case of error
+     */
+    public static Dialog HandleInvitations(Context context, WelcomeViewStyle invitationStyle, WelcomeCallback callback) {
+        if (thisInstance_ == null) {
             thisInstance_ = new WelcomeHandler();
-        }
-        else{
-            thisInstance_.cancelDialog();
         }
         return thisInstance_.checkAndHandleInvitations(context, invitationStyle, callback);
     }
 
-    private Dialog checkAndHandleInvitations(Context context, WelcomeViewStyle invitationStyle, WelcomeCallback callback){
+    private Dialog checkAndHandleInvitations(Context context, WelcomeViewStyle invitationStyle, WelcomeCallback callback) {
         context_ = context;
         invitationStyle_ = invitationStyle;
         callback_ = callback;
@@ -75,37 +85,42 @@ class WelcomeHandler {
             // Check if the link has inviter info.
             if (latestReferringParams.has(Defines.INVITE_USER_ID.getKey())
                     && latestReferringParams.has(Defines.INVITE_USER_FULLNAME.getKey())) {
-                try {
-                    // The link is referral type.Then get the inviter info
-                    String userID = latestReferringParams.getString(Defines.INVITE_USER_ID.getKey());
-                    String userFullName = latestReferringParams.getString(Defines.INVITE_USER_FULLNAME.getKey());
 
-                    String userShortName = "";
-                    if (latestReferringParams.has(Defines.INVITE_USER_ID.getKey())) {
-                        userShortName = latestReferringParams.getString(Defines.INVITE_USER_SHORT_NAME.getKey());
-                    }
-                    String userImageUrl = "";
-                    if (latestReferringParams.has(Defines.INVITE_USER_IMAGE_URL.getKey())) {
-                        userImageUrl = latestReferringParams.getString(Defines.INVITE_USER_IMAGE_URL.getKey());
-                    }
-                    // Check if a custom view is desired for invitation.
-                    if (callback_ != null ) {
-                        invitationView_ = callback_.getCustomInvitationView(userID, userFullName, userShortName, userImageUrl);
-                    }
-                    //If user has not provided a custom view create a view with style specified.
-                    if (invitationView_ == null) {
-                        invitationView_ = new InvitationShowView(context_);
-                        ((InvitationShowView) invitationView_).updateView(userFullName, userShortName, userImageUrl);
-                    }
-                    createInvitationHandlerDialog();
-                } catch (JSONException ignore) {
+                // The link is referral type.Then get the inviter info
+                String userID = (String) latestReferringParams.remove(Defines.INVITE_USER_ID.getKey());
+                String userFullName = (String) latestReferringParams.remove(Defines.INVITE_USER_FULLNAME.getKey());
 
+                String userShortName = "";
+                if (latestReferringParams.has(Defines.INVITE_USER_ID.getKey())) {
+                    userShortName = (String) latestReferringParams.remove(Defines.INVITE_USER_SHORT_NAME.getKey());
                 }
+                String userImageUrl = "";
+                if (latestReferringParams.has(Defines.INVITE_USER_IMAGE_URL.getKey())) {
+                    userImageUrl = (String) latestReferringParams.remove(Defines.INVITE_USER_IMAGE_URL.getKey());
+                }
+
+                // Check if a custom view is desired for invitation.
+                if (callback_ != null) {
+                    invitationView_ = callback_.getCustomInvitationView(userID, userFullName, userShortName, userImageUrl, latestReferringParams);
+                }
+                //If user has not provided a custom view create a view with style specified.
+                if (invitationView_ == null) {
+                    invitationView_ = new InvitationShowView(context_);
+                    ((InvitationShowView) invitationView_).updateView(userFullName, userShortName, userImageUrl);
+                }
+                createInvitationHandlerDialog();
+            } else {
+                if (callback_ != null) {
+                    callback_.onBranchError(new BranchError("No invitations available for this session ", BranchError.ERR_NO_SESSION));
+                }
+            }
+        } else {
+            if (callback_ != null) {
+                callback_.onBranchError(new BranchError("Trouble instantiating Branch", BranchError.ERR_BRANCH_NOT_INSTANTIATED));
             }
         }
         return invitationHandlerDialog_;
     }
-
 
 
     /**
@@ -119,30 +134,23 @@ class WelcomeHandler {
         if (invitationHandlerDialog_ != null && invitationHandlerDialog_.isShowing()) {
             invitationHandlerDialog_.dismiss();
         }
-        invitationHandlerDialog_ = new WelcomeDialog(context_);
-        setDialogWindowAttributes();
+        invitationHandlerDialog_ = new AnimatedDialog(context_);
         invitationHandlerDialog_.setContentView(invitationCoverlayout);
+        invitationHandlerDialog_.show();
 
-//        TranslateAnimation slideUp = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0f);
-//        slideUp.setDuration(500);
-//        slideUp.setInterpolator(new AccelerateInterpolator());
-//        ((ViewGroup) invitationHandlerDialog_.getWindow().getDecorView()).getChildAt(0).startAnimation(slideUp);
-//
-//        invitationHandlerDialog_.show();
-        invitationHandlerDialog_.slideOpen();
-        if(callback_ != null){
-            callback_.onInvitationDialogLaunched();
+        if (callback_ != null) {
+            callback_.onWelcomeDialogLaunched();
         }
 
         invitationHandlerDialog_.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
-                if(imageLoadTask_ != null){
+                if (imageLoadTask_ != null) {
                     imageLoadTask_.cancel(true);
                 }
 
-                if(callback_ != null){
-                    callback_.onInvitationDialogDismissed();
+                if (callback_ != null) {
+                    callback_.onWelcomeDialogDismissed();
                 }
             }
         });
@@ -150,43 +158,20 @@ class WelcomeHandler {
         invitationCoverlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                animateDismiss();
+                if (invitationHandlerDialog_ != null && invitationHandlerDialog_.isShowing()) {
+                    invitationHandlerDialog_.dismiss();
+                }
             }
         });
     }
 
     /**
-     * Set the window attributes for the invite dialog.
+     * Create the default view for welcome Dialog
      */
-    private void setDialogWindowAttributes() {
-        invitationHandlerDialog_.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        invitationHandlerDialog_.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        invitationHandlerDialog_.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        invitationHandlerDialog_.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(invitationHandlerDialog_.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-        WindowManager wm = (WindowManager) context_.getSystemService(Context.WINDOW_SERVICE); // for activity use context instead of getActivity()
-        Display display = wm.getDefaultDisplay(); // getting the screen size of device
-        Point size = new Point();
-        lp.gravity = Gravity.BOTTOM;
-        lp.dimAmount = 0.8f;
-        invitationHandlerDialog_.getWindow().setAttributes(lp);
-        invitationHandlerDialog_.getWindow().setWindowAnimations(android.R.anim.slide_in_left);
-        invitationHandlerDialog_.setCanceledOnTouchOutside(true);
-    }
-
-
-    private void cancelDialog(){
-        animateDismiss();
-    }
-
-
     private class InvitationShowView extends LinearLayout {
 
-        int  inviterInfoBackground_  = invitationStyle_.getInviteTextColor();
-        int inviteMsgBackground_  = invitationStyle_.getWelcomeTextColor();
+        int inviterInfoBackground_ = invitationStyle_.getInviteTextColor();
+        int inviteMsgBackground_ = invitationStyle_.getWelcomeTextColor();
         int contactPicSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
         int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
 
@@ -209,7 +194,7 @@ class WelcomeHandler {
             contactImg_.setId(BranchInviteUtil.generateViewId());
             contactImg_.setScaleType(ImageView.ScaleType.FIT_CENTER);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(contactPicSize, contactPicSize);
-            layoutParams.topMargin = 3*padding;
+            layoutParams.topMargin = 3 * padding;
             layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
             inviterInfoLayout.addView(contactImg_, layoutParams);
 
@@ -224,7 +209,6 @@ class WelcomeHandler {
             layoutParams.topMargin = padding;
             layoutParams.addRule(RelativeLayout.BELOW, contactImg_.getId());
             inviterInfoLayout.addView(inviterInfoText_, layoutParams);
-
 
 
             RelativeLayout inviteMsgLayout = new RelativeLayout(context);
@@ -245,7 +229,8 @@ class WelcomeHandler {
             proceedToAppText.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
             proceedToAppText.setTextAppearance(context_, android.R.style.TextAppearance_Small);
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);welcomeMsgText_.setTextColor(inviterInfoBackground_);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            welcomeMsgText_.setTextColor(inviterInfoBackground_);
             layoutParams.bottomMargin = padding;
             inviteMsgLayout.addView(proceedToAppText, layoutParams);
 
@@ -254,74 +239,75 @@ class WelcomeHandler {
 
         }
 
+        /**
+         * Update the welcome dialog with the inviter info
+         *
+         * @param userFullName  name of the inviter
+         * @param userShortName Short name for the inviter
+         * @param imageUrl      Image Url for inviter
+         */
+        private void updateView(String userFullName, String userShortName, String imageUrl) {
+            //Set invitation message
+            inviterInfoText_.setText(formatWithName(invitationStyle_.getInvitationMessageText(), userFullName, userShortName));
 
-       private void updateView(String userFullName, String userShortName, String imageUrl){
-           //Set invitation message
-           inviterInfoText_.setText(formatWithName(invitationStyle_.getInvitationMessageText(), userFullName, userShortName));
+            //Set Welcome message
+            welcomeMsgText_.setText(formatWithName(invitationStyle_.getWelcomeMessageText(), userFullName, userShortName));
 
-           //Set Welcome message
-           welcomeMsgText_.setText(formatWithName(invitationStyle_.getWelcomeMessageText(), userFullName, userShortName));
+            //Set proceed to app text
+            proceedToAppText.setText(formatWithName(invitationStyle_.getProceedToAppText(), userFullName, userShortName));
 
-           //Set proceed to app text
-           proceedToAppText.setText(formatWithName(invitationStyle_.getProceedToAppText(), userFullName, userShortName));
+            //Load user image
+            imageLoadTask_ = new LoadBitmapFromUrlTask(contactImg_, imageUrl, invitationStyle_.getDefaultContactImg());
+            imageLoadTask_.execute();
+        }
 
-           //Load user image
-           imageLoadTask_ =  new LoadBitmapFromUrlTask(contactImg_,imageUrl, invitationStyle_.getDefaultContactImg());
-           imageLoadTask_.execute();
-       }
-
-        private String formatWithName(String rawString, String userFullName,  String userShortName){
-            if(rawString.contains(Defines.FULL_NAME_SUB.getKey())){
+        private String formatWithName(String rawString, String userFullName, String userShortName) {
+            if (rawString.contains(Defines.FULL_NAME_SUB.getKey())) {
                 rawString = rawString.replace(Defines.FULL_NAME_SUB.getKey(), userFullName);
             }
-            if(rawString.contains(Defines.SHORT_NAME_SUB.getKey())){
+            if (rawString.contains(Defines.SHORT_NAME_SUB.getKey())) {
                 //ShortName is optional. So fall back to full name in case short name not available
-                if(userShortName == null || userShortName.trim().length() < 1){
+                if (userShortName == null || userShortName.trim().length() < 1) {
                     userShortName = userFullName;
                 }
                 rawString = rawString.replace(Defines.SHORT_NAME_SUB.getKey(), userShortName);
             }
-            return  rawString;
+            return rawString;
         }
 
     }
 
-    private class LoadBitmapFromUrlTask extends AsyncTask< Void, Void, Bitmap> {
+    /**
+     * Asynchronous task for downloading image specified by the URL
+     */
+    private class LoadBitmapFromUrlTask extends AsyncTask<Void, Void, Bitmap> {
         final ImageView imageView_;
         final String url_;
 
-        LoadBitmapFromUrlTask(ImageView imgView, String url, Drawable defaultImage){
+        LoadBitmapFromUrlTask(ImageView imgView, String url, Drawable defaultImage) {
             imageView_ = imgView;
             url_ = url;
             imageView_.setImageDrawable(defaultImage);
         }
+
         @Override
-        protected Bitmap doInBackground( Void... voids ) {
+        protected Bitmap doInBackground(Void... voids) {
             Bitmap bitmap = null;
             try {
                 bitmap = BitmapFactory.decodeStream(new URL(url_).openConnection().getInputStream());
-            } catch ( MalformedURLException ignore ) {
-            } catch ( IOException ignore ) {
+            } catch (MalformedURLException ignore) {
+            } catch (IOException ignore) {
             }
             return bitmap;
         }
 
         @Override
-        protected void onPostExecute( Bitmap image ) {
+        protected void onPostExecute(Bitmap image) {
             super.onPostExecute(image);
-            if(image != null) {
+            if (image != null) {
                 imageView_.setImageBitmap(image);
             }
         }
     }
-
-    private void animateDismiss() {
-        if(invitationHandlerDialog_ != null && invitationHandlerDialog_.isShowing()) {
-           invitationHandlerDialog_.slideClose();
-           invitationHandlerDialog_ = null;
-        }
-    }
-
-
 
 }

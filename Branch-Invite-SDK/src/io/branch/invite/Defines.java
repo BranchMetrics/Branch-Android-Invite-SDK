@@ -1,9 +1,9 @@
 package io.branch.invite;
 
-import java.security.Key;
-
 /**
- * Created by sojanpr on 8/18/15.
+ * <p>
+ * Defines all Json keys associated with branch invite parameters.
+ * </p>
  */
 enum Defines {
 
@@ -16,9 +16,11 @@ enum Defines {
     SHORT_NAME_SUB("$SHORT_NAME");
 
     private String key = "";
+
     private Defines(String key) {
         this.key = key;
     }
+
     public String getKey() {
         return key;
     }

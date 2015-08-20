@@ -33,7 +33,7 @@ import io.branch.referral.BranchReferralUrlBuilder;
 class InviteManager implements DialogInterface.OnDismissListener {
 
     /* The custom chooser dialog for selecting an application to share the link */
-    Dialog inviteDialog_;
+    AnimatedDialog inviteDialog_;
     /* {@link Context} for the invite manager */
     Context context_;
     /* Static instance  for the invite manager */
@@ -41,6 +41,9 @@ class InviteManager implements DialogInterface.OnDismissListener {
     /* Builder parameters for the tabbed view.*/
     private InviteTabbedBuilderParams inviteBuilderParams_;
 
+    /**
+     * Singleton instance for this class
+     */
     private InviteManager() {
         thisInstance_ = this;
     }
@@ -57,18 +60,36 @@ class InviteManager implements DialogInterface.OnDismissListener {
         return thisInstance_;
     }
 
+    //-------------------- Public Methods ---------------------------//
+
     /**
      * Create and opens a new invitation dialog.
      *
      * @param context       Context for the dialog
      * @param builderParams {@link TabbedInviteBuilder} instance.
      */
-    public void showDialog(Context context, InviteTabbedBuilderParams builderParams) {
+    public Dialog showDialog(Context context, InviteTabbedBuilderParams builderParams) {
         context_ = context;
         inviteBuilderParams_ = builderParams;
         createInviteDialog(builderParams);
         inviteDialog_.setOnDismissListener(this);
+        return inviteDialog_;
     }
+
+    public void cancelInviteDialog() {
+        if (inviteDialog_ != null && inviteDialog_.isShowing()) {
+            inviteDialog_.dismiss();
+        }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        if (inviteBuilderParams_.callback_ != null) {
+            inviteBuilderParams_.callback_.onInviteDialogDismissed();
+        }
+    }
+
+    //------------------------ Private methods -----------------------------//
 
     /**
      * Create and show an invitation dialog with the given options.
@@ -81,66 +102,11 @@ class InviteManager implements DialogInterface.OnDismissListener {
         if (inviteDialog_ != null && inviteDialog_.isShowing()) {
             inviteDialog_.dismiss();
         }
-        inviteDialog_ = new Dialog(context_);
-        setDialogWindowAttributes();
+        inviteDialog_ = new AnimatedDialog(context_);
         inviteDialog_.setContentView(tabbedViewCover);
-        
-        TranslateAnimation slideUp = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0f);
-        slideUp.setDuration(500);
-        slideUp.setInterpolator(new AccelerateInterpolator());
-        ((ViewGroup) inviteDialog_.getWindow().getDecorView()).getChildAt(0).startAnimation(slideUp);
-
         inviteDialog_.show();
     }
 
-    /**
-     * Set the window attributes for the invite dialog.
-     */
-    private void setDialogWindowAttributes() {
-        inviteDialog_.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        inviteDialog_.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        inviteDialog_.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        inviteDialog_.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(inviteDialog_.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-        WindowManager wm = (WindowManager) context_.getSystemService(Context.WINDOW_SERVICE); // for activity use context instead of getActivity()
-        Display display = wm.getDefaultDisplay(); // getting the screen size of device
-        Point size = new Point();
-        lp.gravity = Gravity.BOTTOM;
-        lp.dimAmount = 0.8f;
-        inviteDialog_.getWindow().setAttributes(lp);
-        inviteDialog_.getWindow().setWindowAnimations(android.R.anim.slide_in_left);
-        inviteDialog_.setCanceledOnTouchOutside(true);
-    }
-
-    /**
-     * Animation to be played on dismissing the dialog.
-     */
-    private void animateDismiss() {
-        TranslateAnimation slideDown = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1f);
-        slideDown.setDuration(500);
-        slideDown.setInterpolator(new DecelerateInterpolator());
-        ((ViewGroup) inviteDialog_.getWindow().getDecorView()).getChildAt(0).startAnimation(slideDown);
-        slideDown.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if (inviteDialog_ != null) {
-                    inviteDialog_.dismiss();
-                    inviteDialog_ = null;
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-    }
 
     /**
      * Tab view events are handled here.
@@ -148,7 +114,9 @@ class InviteManager implements DialogInterface.OnDismissListener {
     InviteTabbedContentView.IContactTabViewEvents contactTabViewCallback_ = new InviteTabbedContentView.IContactTabViewEvents() {
         @Override
         public void onNegativeButtonClicked() {
-            animateDismiss();
+            if (inviteDialog_ != null && inviteDialog_.isShowing()) {
+                inviteDialog_.dismiss();
+            }
         }
 
         @Override
@@ -172,7 +140,9 @@ class InviteManager implements DialogInterface.OnDismissListener {
     private void createUrlAndInvite(final ArrayList<String> selectedContactNames, final String selectedChannel, final InviteContactListView listView) {
         // Check if any contact selected.
         if (selectedContactNames.size() < 1) {
-            animateDismiss();
+            if (inviteDialog_ != null && inviteDialog_.isShowing()) {
+                inviteDialog_.dismiss();
+            }
         } else {
             BranchReferralUrlBuilder referralURIBuilder = new BranchReferralUrlBuilder(context_, selectedChannel);
 
@@ -192,10 +162,10 @@ class InviteManager implements DialogInterface.OnDismissListener {
                 @Override
                 public void onLinkCreate(String url, BranchError branchError) {
                     listView.onInvitationLinkCreated(url, branchError);
-                    if(branchError != null){
+                    if (branchError != null) {
                         url = inviteBuilderParams_.defaultInvitationUrl_;
                     }
-                    if(url != null && url.length() > 0) {
+                    if (url != null && url.length() > 0) {
                         Intent invitationIntent = listView.getInviteIntent(url, selectedContactNames, inviteBuilderParams_.invitationSubject_, inviteBuilderParams_.invitationMsg_);
                         sendInvitation(invitationIntent, selectedContactNames, url);
                     }
@@ -203,7 +173,9 @@ class InviteManager implements DialogInterface.OnDismissListener {
                         inviteBuilderParams_.callback_.onInviteFinished(url, selectedChannel, selectedContactNames, branchError);
                     }
 
-                    animateDismiss();
+                    if (inviteDialog_ != null && inviteDialog_.isShowing()) {
+                        inviteDialog_.dismiss();
+                    }
                 }
             });
         }
@@ -224,25 +196,21 @@ class InviteManager implements DialogInterface.OnDismissListener {
         }
     }
 
-    private Intent getDefaultIntent(ArrayList<String> selectedContactName, String inviteUrl) {
+    /**
+     * Creates a  fallback intent to show the sharing options
+     *
+     * @param selectedContacts List of selected contacts
+     * @param inviteUrl        The invite url created
+     * @return Intent with SEND Action to launch the sharing options
+     */
+    private Intent getDefaultIntent(ArrayList<String> selectedContacts, String inviteUrl) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, inviteBuilderParams_.invitationSubject_);
         intent.putExtra(android.content.Intent.EXTRA_TEXT, inviteBuilderParams_.invitationMsg_ + "\n" + inviteUrl);
-        intent.putExtra(android.content.Intent.EXTRA_EMAIL, selectedContactName.toArray(new String[0]));
-        intent.putExtra("address", BranchInviteUtil.formatListToCSV(selectedContactName));
+        intent.putExtra(android.content.Intent.EXTRA_EMAIL, selectedContacts.toArray(new String[0]));
+        intent.putExtra("address", BranchInviteUtil.formatListToCSV(selectedContacts));
         return intent;
     }
 
-
-    public void cancelInviteDialog() {
-        animateDismiss();
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        if (inviteBuilderParams_.callback_ != null) {
-            inviteBuilderParams_.callback_.onInviteDialogDismissed();
-        }
-    }
 }

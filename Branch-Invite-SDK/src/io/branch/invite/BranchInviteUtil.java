@@ -13,14 +13,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 class BranchInviteUtil {
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+
     /**
-     * Generate a value suitable for use in {@link View#setId(int)}.
-     * This value will not collide with ID values generated at build time by aapt for R.id.
+     * </p>Generate a value suitable for use in {@link View#setId(int)}.
+     * This value will not collide with ID values generated at build time by aapt for R.id.</p>x
      *
      * @return a generated ID value
      */
     public static int generateViewId() {
-        for (;;) {
+        for (; ; ) {
             final int result = sNextGeneratedId.get();
             // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
             int newValue = result + 1;
@@ -65,6 +66,12 @@ class BranchInviteUtil {
         return formattedContactList;
     }
 
+    /**
+     * <p>Set the view background with the given drawable. Calls appropriate methods depending on the API level.</p>
+     *
+     * @param view     View whose background need to be set
+     * @param drawable Drawable to set as background
+     */
     public static void setViewBackground(View view, Drawable drawable) {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             //noinspection deprecation
@@ -73,7 +80,6 @@ class BranchInviteUtil {
             view.setBackground(drawable);
         }
     }
-
 
 
 }

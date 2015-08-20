@@ -13,10 +13,10 @@ import io.branch.referral.SharingHelper;
 
 /**
  * <p>
- * Builder for creating a Branch invitation dialog with preselected application.
- * This dialog will show a list of specified clients to send the invitation.
+ * Builder for creating a Branch invitation dialog with preselected applications.
+ * This dialog will show a list of specified applications to send the invitation.
  * This class make use of {@link InviteCallback } to notify the invitation status.
- * If you want a have pre-populated contact list for selected channel, then consider using {@link SimpleInviteBuilder}
+ * If you want to have a pre-populated contact list for selected channel, then consider using {@link TabbedInviteBuilder}
  * </p>
  */
 public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
