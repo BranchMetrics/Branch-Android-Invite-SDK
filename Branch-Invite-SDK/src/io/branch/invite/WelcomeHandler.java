@@ -128,6 +128,7 @@ class WelcomeHandler {
      */
     private void createInvitationHandlerDialog() {
         RelativeLayout invitationCoverlayout = new RelativeLayout(context_);
+        invitationCoverlayout.setBackgroundColor(Color.TRANSPARENT);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         invitationCoverlayout.addView(invitationView_, params);
         invitationCoverlayout.setBackgroundColor(Color.WHITE);

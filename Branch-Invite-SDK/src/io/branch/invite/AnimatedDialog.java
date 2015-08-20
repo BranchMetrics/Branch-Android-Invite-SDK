@@ -74,6 +74,7 @@ class AnimatedDialog extends Dialog {
     //------------------Private methods------------------//
     private void init(Context context) {
         context_ = context;
+        setDialogWindowAttributes();
         // Listen for the backpress in order to dismiss the dialog with animation
         setOnKeyListener(new OnKeyListener() {
             @Override
@@ -117,7 +118,7 @@ class AnimatedDialog extends Dialog {
         slideUp.setInterpolator(new AccelerateInterpolator());
         ((ViewGroup) getWindow().getDecorView()).getChildAt(0).startAnimation(slideUp);
 
-        show();
+        AnimatedDialog.super.show();
     }
 
     /**

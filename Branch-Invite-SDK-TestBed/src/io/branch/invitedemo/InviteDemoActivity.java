@@ -75,29 +75,30 @@ public class InviteDemoActivity extends Activity {
 
                 //----  Here is how to customise your Branch welcome screen---------------//
 
-                /* new WelcomeBuilder(InviteDemoActivity.this)
-                        .setInvitationStyle(new WelcomeViewStyle(InviteDemoActivity.this)
+                /*new WelcomeBuilder(InviteDemoActivity.this)
+                        .setWelcomeViewStyle(new WelcomeViewStyle(InviteDemoActivity.this)
                                 .setDefaultUserImage(getResources().getDrawable(R.drawable.contact_default))
                                 .setInvitationMessage("You are invited to this app by $FULL_NAME")
                                 .setWelcomeMessage("Welcome to this cool app. Have fun with your friend $SHORT_NAME")
                                 .setProceedToAppMessage("Click me to proceed"))
                         .show();
-                 */
+                  */
+
 
                 //----  Here is how to add a custom welcome view---------------------//
 
-                /*   welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
-                        .setInvitationUICallback(new WelcomeCallback() {
+                /*  welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
+                        .setWelcomeViewCallback(new WelcomeCallback() {
                             @Override
                             public View getCustomInvitationView(String userID, String inviterFullName, String inviterShortName, String userImageUrl, JSONObject customParameters) {
                                 return getCustomView(inviterFullName);
                             }
 
                             @Override
-                            public void onInvitationDialogLaunched() {}
+                            public void onWelcomeDialogLaunched() {}
 
                             @Override
-                            public void onInvitationDialogDismissed() {}
+                            public void onWelcomeDialogDismissed() {}
 
                             @Override
                             public void onBranchError(BranchError error) {}
