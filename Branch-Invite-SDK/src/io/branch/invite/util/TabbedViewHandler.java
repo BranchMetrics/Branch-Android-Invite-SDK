@@ -1,4 +1,4 @@
-package io.branch.invite;
+package io.branch.invite.util;
 
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -6,22 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Set;
 
+import io.branch.invite.InviteContactListView;
+import io.branch.invite.TabBuilderParams;
+import io.branch.invite.TabbedInviteBuilder;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.BranchReferralUrlBuilder;
@@ -30,32 +23,32 @@ import io.branch.referral.BranchReferralUrlBuilder;
  * <p>Class for handling the tabbed invitation dialog. This class create and manages the invitation tabbed dialog.
  * Email / Text tabs are added by default to the tabbed view.</p>
  */
-class InviteManager implements DialogInterface.OnDismissListener {
+public class TabbedViewHandler implements DialogInterface.OnDismissListener {
 
     /* The custom chooser dialog for selecting an application to share the link */
     AnimatedDialog inviteDialog_;
     /* {@link Context} for the invite manager */
     Context context_;
     /* Static instance  for the invite manager */
-    private static InviteManager thisInstance_;
+    private static TabbedViewHandler thisInstance_;
     /* Builder parameters for the tabbed view.*/
-    private InviteTabbedBuilderParams inviteBuilderParams_;
+    private TabBuilderParams inviteBuilderParams_;
 
     /**
      * Singleton instance for this class
      */
-    private InviteManager() {
+    private TabbedViewHandler() {
         thisInstance_ = this;
     }
 
     /**
-     * Get the singleton instance of {@link InviteManager}.
+     * Get the singleton instance of {@link TabbedViewHandler}.
      *
-     * @return {@link InviteManager} instance
+     * @return {@link TabbedViewHandler} instance
      */
-    public static InviteManager getInstance() {
+    public static TabbedViewHandler getInstance() {
         if (thisInstance_ == null) {
-            thisInstance_ = new InviteManager();
+            thisInstance_ = new TabbedViewHandler();
         }
         return thisInstance_;
     }
@@ -68,7 +61,7 @@ class InviteManager implements DialogInterface.OnDismissListener {
      * @param context       Context for the dialog
      * @param builderParams {@link TabbedInviteBuilder} instance.
      */
-    public Dialog showDialog(Context context, InviteTabbedBuilderParams builderParams) {
+    public Dialog showDialog(Context context, TabBuilderParams builderParams) {
         context_ = context;
         inviteBuilderParams_ = builderParams;
         createInviteDialog(builderParams);
@@ -94,7 +87,7 @@ class InviteManager implements DialogInterface.OnDismissListener {
     /**
      * Create and show an invitation dialog with the given options.
      */
-    private void createInviteDialog(InviteTabbedBuilderParams builderParams) {
+    private void createInviteDialog(TabBuilderParams builderParams) {
         RelativeLayout tabbedViewCover = new RelativeLayout(context_);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         tabbedViewCover.addView(new InviteTabbedContentView(context_, contactTabViewCallback_, builderParams), params);
@@ -111,7 +104,7 @@ class InviteManager implements DialogInterface.OnDismissListener {
     /**
      * Tab view events are handled here.
      */
-    InviteTabbedContentView.IContactTabViewEvents contactTabViewCallback_ = new InviteTabbedContentView.IContactTabViewEvents() {
+    public InviteTabbedContentView.IContactTabViewEvents contactTabViewCallback_ = new InviteTabbedContentView.IContactTabViewEvents() {
         @Override
         public void onNegativeButtonClicked() {
             if (inviteDialog_ != null && inviteDialog_.isShowing()) {

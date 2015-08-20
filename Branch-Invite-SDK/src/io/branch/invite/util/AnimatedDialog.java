@@ -1,4 +1,4 @@
-package io.branch.invite;
+package io.branch.invite.util;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -20,7 +20,7 @@ import android.view.animation.TranslateAnimation;
 /**
  * <p>Class for creating a Dialog which open and closes with an animation to the content view </p>
  */
-class AnimatedDialog extends Dialog {
+public class AnimatedDialog extends Dialog {
     private static boolean isClosing_ = false;
     Context context_;
 

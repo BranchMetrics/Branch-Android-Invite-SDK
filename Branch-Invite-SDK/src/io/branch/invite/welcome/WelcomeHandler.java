@@ -1,4 +1,4 @@
-package io.branch.invite;
+package io.branch.invite.welcome;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -6,18 +6,13 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,6 +26,9 @@ import java.net.URL;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
+import io.branch.invite.util.AnimatedDialog;
+import io.branch.invite.util.BranchInviteUtil;
+import io.branch.invite.util.Defines;
 
 /**
  * <p>Calls for creating a welcome dialog. Welcome dialog provide a custom view for the Dialog, which can be customised

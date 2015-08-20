@@ -1,8 +1,10 @@
-package io.branch.invite;
+package io.branch.invite.welcome;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+
+import io.branch.invite.util.Defines;
 
 /**
  * Builder class providing custom style for the welcome View

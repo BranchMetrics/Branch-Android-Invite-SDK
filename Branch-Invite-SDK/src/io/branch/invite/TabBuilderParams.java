@@ -13,7 +13,7 @@ import java.util.HashMap;
  * This class represent all the features that user can set for a tabbed invite dialog.
  * </p>
  */
-class InviteTabbedBuilderParams {
+public class TabBuilderParams {
     /* Selected background for the tab */
     public Drawable tabSelectedBackground_;
     /* Unselected background for the tab */
@@ -70,7 +70,7 @@ class InviteTabbedBuilderParams {
     public final HashMap<String, InviteContactListView> customTabMap_;
 
 
-    public InviteTabbedBuilderParams(Context context) {
+    public TabBuilderParams(Context context) {
         tabSelectedBackground_ = new ColorDrawable(Color.parseColor("#FF000088")); //Default selected color for the tabs
         tabUnselectedBackground_ = new ColorDrawable(Color.parseColor("#FF0000DD"));//Default non-selected color for the tabs
 

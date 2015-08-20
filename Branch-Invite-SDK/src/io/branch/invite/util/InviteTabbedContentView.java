@@ -1,4 +1,4 @@
-package io.branch.invite;
+package io.branch.invite.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
@@ -26,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import io.branch.invite.InviteContactListView;
+import io.branch.invite.TabBuilderParams;
 import io.branch.referral.BranchError;
 
 /**
@@ -43,7 +44,7 @@ class InviteTabbedContentView extends LinearLayout {
     /* Callback for tab events */
     IContactTabViewEvents contactTabViewEventsCallback_;
     /* Builder params for the invite tabbed dialog */
-    InviteTabbedBuilderParams inviteBuilderParams_;
+    TabBuilderParams inviteBuilderParams_;
     /* Map for keeping the tabs added to the tabbed view */
     final Map<String, InviteContactListView> tabContentMap_;
 
@@ -51,9 +52,9 @@ class InviteTabbedContentView extends LinearLayout {
      * Creates a Invite content with action buttons and default tabs.
      *
      * @param context               A {@link Context} for the view
-     * @param IContactTabViewEvents Instance of {@link io.branch.invite.InviteTabbedContentView.IContactTabViewEvents} to update invite view events
+     * @param IContactTabViewEvents Instance of {@link InviteTabbedContentView.IContactTabViewEvents} to update invite view events
      */
-    public InviteTabbedContentView(Context context, IContactTabViewEvents IContactTabViewEvents, InviteTabbedBuilderParams inviteBuilderParams) {
+    public InviteTabbedContentView(Context context, IContactTabViewEvents IContactTabViewEvents, TabBuilderParams inviteBuilderParams) {
         super(context);
         context_ = context;
         setOrientation(VERTICAL);
@@ -252,7 +253,7 @@ class InviteTabbedContentView extends LinearLayout {
         host_.getTabWidget().getChildAt(host_.getCurrentTab()).setBackgroundDrawable(inviteBuilderParams_.tabSelectedBackground_);// selected tab
     }
 
-    interface IContactTabViewEvents {
+    public interface IContactTabViewEvents {
         /* Called on user selecting the negative button */
         void onNegativeButtonClicked();
 

@@ -1,11 +1,11 @@
-package io.branch.invite;
+package io.branch.invite.util;
 
 /**
  * <p>
  * Defines all Json keys associated with branch invite parameters.
  * </p>
  */
-enum Defines {
+public enum Defines {
 
     Feature("feature"),
     INVITE_USER_ID("BRANCH_INVITE_USER_ID_KEY"),

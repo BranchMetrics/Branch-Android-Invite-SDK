@@ -1,4 +1,4 @@
-package io.branch.invite;
+package io.branch.invite.util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+import io.branch.invite.TabBuilderParams;
+
 /**
  * Adapter for listing the email contacts. Adds an alpha indexer for the list.
  */
@@ -17,7 +19,7 @@ class ContactListAdapterEmail extends ContactListAdapter {
 
     final Context context_;
 
-    public ContactListAdapterEmail(Context context, Cursor c, InviteTabbedContentView.IContactTabViewEvents callback, InviteTabbedBuilderParams builderParams) {
+    public ContactListAdapterEmail(Context context, Cursor c, InviteTabbedContentView.IContactTabViewEvents callback, TabBuilderParams builderParams) {
         super(context, c, callback, builderParams);
         context_ = context;
     }
@@ -57,7 +59,7 @@ class ContactListAdapterEmail extends ContactListAdapter {
     }
 
     @Override
-    Intent getInviteIntent(String referralUrl, ArrayList<String> selectedContacts, String subject, String message) {
+    public Intent getInviteIntent(String referralUrl, ArrayList<String> selectedContacts, String subject, String message) {
         Intent inviteIntent = new Intent();
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");

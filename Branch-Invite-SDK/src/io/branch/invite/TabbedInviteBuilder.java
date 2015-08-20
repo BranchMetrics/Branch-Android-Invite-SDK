@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
+import io.branch.invite.util.TabbedViewHandler;
+
 /**
  * Builder for create a Tabbed invite dialog. This dialog has pre-populated contact list for
  * each channel. Each channel is added a as a tab on the dialog. There are customisable positive and negative buttons
@@ -13,9 +15,9 @@ import android.graphics.drawable.Drawable;
  * {@see addCustomTab() method to see how to add a custom tab to the tabbed view}
  */
 public class TabbedInviteBuilder {
-    final InviteManager inviteManager_;
+    final TabbedViewHandler inviteManager_;
     final Context context_;
-    final InviteTabbedBuilderParams inviteBuilderParams_;
+    final TabBuilderParams inviteBuilderParams_;
 
     /**
      * <p>Create a builder for Tabbed invite dialog. This dialog has pre-populated contact list for
@@ -27,8 +29,8 @@ public class TabbedInviteBuilder {
      */
     public TabbedInviteBuilder(Context context, String userID, String userFullName) {
         context_ = context;
-        inviteManager_ = InviteManager.getInstance();
-        inviteBuilderParams_ = new InviteTabbedBuilderParams(context);
+        inviteManager_ = TabbedViewHandler.getInstance();
+        inviteBuilderParams_ = new TabBuilderParams(context);
         inviteBuilderParams_.userID_ = userID;
         inviteBuilderParams_.userFullName_ = userFullName;
     }
