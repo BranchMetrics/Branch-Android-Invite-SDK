@@ -18,7 +18,7 @@ import io.branch.referral.BranchError;
 
 /**
  * Activity to demonstrate Branch Invite SDK. Branch Deep-Link SDK need to be added and initialised
- * in order to use the Branch Invite SDK.Make sure you are added Branch referral SDK as compile dependency.
+ * in order to use the Branch Invite SDK. Make sure you are added Branch referral SDK as compile dependency.
  */
 public class InviteDemoActivity extends Activity {
     Branch branch;
@@ -129,6 +129,9 @@ public class InviteDemoActivity extends Activity {
     }
 
 
+    /**
+     * Creates a custom view for welcome dialog
+     */
     private View getCustomView(String inviterFullName) {
         View customView = getLayoutInflater().inflate(R.layout.welcome_layout, null);
         ((TextView) customView.findViewById(R.id.inviteText)).setText(inviterFullName + " Invited you to this application");
