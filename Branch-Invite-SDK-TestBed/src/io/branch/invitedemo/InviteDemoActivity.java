@@ -138,7 +138,7 @@ public class InviteDemoActivity extends Activity {
         customView.findViewById(R.id.proceedBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                welcomeDialog_.dismiss();
+                welcomeDialog_.cancel();
             }
         });
         return customView;

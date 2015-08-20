@@ -133,7 +133,7 @@ class WelcomeHandler {
         invitationCoverlayout.addView(invitationView_, params);
         invitationCoverlayout.setBackgroundColor(Color.WHITE);
         if (invitationHandlerDialog_ != null && invitationHandlerDialog_.isShowing()) {
-            invitationHandlerDialog_.dismiss();
+            invitationHandlerDialog_.cancel();
         }
         invitationHandlerDialog_ = new AnimatedDialog(context_);
         invitationHandlerDialog_.setContentView(invitationCoverlayout);
@@ -160,7 +160,7 @@ class WelcomeHandler {
             @Override
             public void onClick(View view) {
                 if (invitationHandlerDialog_ != null && invitationHandlerDialog_.isShowing()) {
-                    invitationHandlerDialog_.dismiss();
+                    invitationHandlerDialog_.cancel();
                 }
             }
         });

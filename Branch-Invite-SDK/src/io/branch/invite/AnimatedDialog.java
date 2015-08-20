@@ -57,11 +57,11 @@ class AnimatedDialog extends Dialog {
     }
 
     /**
-     * </p> Dismiss the dialog with an animation to the content View.</p>
+     * </p> Dismiss the dialog.</p>
      */
     @Override
     public void dismiss() {
-        slideClose();
+        super.dismiss();
     }
 
     @Override

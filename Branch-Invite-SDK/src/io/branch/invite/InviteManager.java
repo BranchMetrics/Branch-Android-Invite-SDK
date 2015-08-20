@@ -78,7 +78,7 @@ class InviteManager implements DialogInterface.OnDismissListener {
 
     public void cancelInviteDialog() {
         if (inviteDialog_ != null && inviteDialog_.isShowing()) {
-            inviteDialog_.dismiss();
+            inviteDialog_.cancel();
         }
     }
 
@@ -100,7 +100,7 @@ class InviteManager implements DialogInterface.OnDismissListener {
         tabbedViewCover.addView(new InviteTabbedContentView(context_, contactTabViewCallback_, builderParams), params);
         tabbedViewCover.setBackgroundColor(Color.WHITE);
         if (inviteDialog_ != null && inviteDialog_.isShowing()) {
-            inviteDialog_.dismiss();
+            inviteDialog_.cancel();
         }
         inviteDialog_ = new AnimatedDialog(context_);
         inviteDialog_.setContentView(tabbedViewCover);
@@ -115,7 +115,7 @@ class InviteManager implements DialogInterface.OnDismissListener {
         @Override
         public void onNegativeButtonClicked() {
             if (inviteDialog_ != null && inviteDialog_.isShowing()) {
-                inviteDialog_.dismiss();
+                inviteDialog_.cancel();
             }
         }
 
@@ -141,7 +141,7 @@ class InviteManager implements DialogInterface.OnDismissListener {
         // Check if any contact selected.
         if (selectedContactNames.size() < 1) {
             if (inviteDialog_ != null && inviteDialog_.isShowing()) {
-                inviteDialog_.dismiss();
+                inviteDialog_.cancel();
             }
         } else {
             BranchReferralUrlBuilder referralURIBuilder = new BranchReferralUrlBuilder(context_, selectedChannel);
@@ -174,7 +174,7 @@ class InviteManager implements DialogInterface.OnDismissListener {
                     }
 
                     if (inviteDialog_ != null && inviteDialog_.isShowing()) {
-                        inviteDialog_.dismiss();
+                        inviteDialog_.cancel();
                     }
                 }
             });
