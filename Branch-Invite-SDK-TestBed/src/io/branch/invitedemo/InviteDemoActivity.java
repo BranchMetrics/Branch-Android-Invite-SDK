@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import org.json.JSONObject;
 
@@ -132,7 +131,7 @@ public class InviteDemoActivity extends Activity {
     /**
      * Creates a custom view for welcome dialog
      */
-    private View getCustomView(String inviterFullName) {
+   /* private View getCustomView(String inviterFullName) {
         View customView = getLayoutInflater().inflate(R.layout.welcome_layout, null);
         ((TextView) customView.findViewById(R.id.inviteText)).setText(inviterFullName + " Invited you to this application");
         customView.findViewById(R.id.proceedBtn).setOnClickListener(new View.OnClickListener() {
@@ -142,5 +141,5 @@ public class InviteDemoActivity extends Activity {
             }
         });
         return customView;
-    }
+    }*/
 }

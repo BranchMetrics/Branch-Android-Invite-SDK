@@ -23,6 +23,7 @@ import android.view.animation.TranslateAnimation;
 class AnimatedDialog extends Dialog {
     private static boolean isClosing_ = false;
     Context context_;
+
     public AnimatedDialog(Context context) {
         super(context);
         init(context);
@@ -54,14 +55,6 @@ class AnimatedDialog extends Dialog {
     @Override
     public void cancel() {
         slideClose();
-    }
-
-    /**
-     * </p> Dismiss the dialog.</p>
-     */
-    @Override
-    public void dismiss() {
-        super.dismiss();
     }
 
     @Override
