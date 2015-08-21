@@ -3,6 +3,7 @@ package io.branch.invite;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.widget.TextView;
 
 import io.branch.invite.util.TabbedViewHandler;
 
@@ -227,6 +228,18 @@ public class TabbedInviteBuilder {
         inviteBuilderParams_.noContactAvailableMsg_ = noContactMsg;
         return this;
     }
+
+    /**
+     * Sets a title for the invite dialog with the given Text View.
+     *
+     * @param titleView Text view for the title of the invite dialog.
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    public TabbedInviteBuilder setTitle(TextView titleView) {
+        inviteBuilderParams_.titleTxtVew_ = titleView;
+        return this;
+    }
+
 
     /**
      * Creates the invitation dialog with the arguments supplied in the builder.

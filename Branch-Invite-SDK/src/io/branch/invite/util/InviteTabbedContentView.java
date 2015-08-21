@@ -20,8 +20,6 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,7 +71,12 @@ class InviteTabbedContentView extends LinearLayout {
      * Initialise  the invite  view and setup the default tabs.
      */
     private void initTabView() {
-        //Add action buttons
+        // Add Title if specified
+        if (inviteBuilderParams_.titleTxtVew_ != null) {
+            this.addView(inviteBuilderParams_.titleTxtVew_, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+
+        // Add action buttons
         LinearLayout controlCover = new LinearLayout(context_);
         controlCover.setOrientation(HORIZONTAL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -188,8 +191,7 @@ class InviteTabbedContentView extends LinearLayout {
 
         if (queryCursor != null && queryCursor.getCount() > 0) {
             addTab(inviteBuilderParams_.emailTabText_, new ContactListView(context_, adapter, "Email", "com.google.android.gm"));
-        }
-        else{
+        } else {
             addTabForEmptyContactList(inviteBuilderParams_.emailTabText_);
         }
     }
@@ -219,8 +221,7 @@ class InviteTabbedContentView extends LinearLayout {
 
         if (queryCursor != null && queryCursor.getCount() > 0) {
             addTab(inviteBuilderParams_.textTabText_, new ContactListView(context_, adapter, "Message", "vnd.android-dir/mms-sms"));
-        }
-        else{
+        } else {
             addTabForEmptyContactList(inviteBuilderParams_.textTabText_);
         }
     }
@@ -230,12 +231,12 @@ class InviteTabbedContentView extends LinearLayout {
             @SuppressLint("NewApi")
             @Override
             public View createTabContent(String tag) {
-                TextView noContactTxt =  new TextView(context_);
+                TextView noContactTxt = new TextView(context_);
                 noContactTxt.setText(inviteBuilderParams_.noContactAvailableMsg_);
                 noContactTxt.setTextAppearance(context_, android.R.style.TextAppearance_Medium);
                 noContactTxt.setTextColor(Color.GRAY);
                 noContactTxt.setGravity(Gravity.CENTER);
-                noContactTxt.setPadding(padding_,padding_*2,padding_,padding_);
+                noContactTxt.setPadding(padding_, padding_ * 2, padding_, padding_);
                 return noContactTxt;
             }
         });

@@ -4,9 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
@@ -21,8 +19,7 @@ import android.view.animation.TranslateAnimation;
  * <p>Class for creating a Dialog which open and closes with an animation to the content view </p>
  */
 public class AnimatedDialog extends Dialog {
-    private static boolean isClosing_ = false;
-    Context context_;
+    private boolean isClosing_ = false;
 
     public AnimatedDialog(Context context) {
         super(context);
@@ -66,7 +63,6 @@ public class AnimatedDialog extends Dialog {
 
     //------------------Private methods------------------//
     private void init(Context context) {
-        context_ = context;
         setDialogWindowAttributes();
         // Listen for the backpress in order to dismiss the dialog with animation
         setOnKeyListener(new OnKeyListener() {
@@ -92,9 +88,6 @@ public class AnimatedDialog extends Dialog {
         lp.copyFrom(getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-        WindowManager wm = (WindowManager) context_.getSystemService(Context.WINDOW_SERVICE); // for activity use context instead of getActivity()
-        Display display = wm.getDefaultDisplay(); // getting the screen size of device
-        Point size = new Point();
         lp.gravity = Gravity.BOTTOM;
         lp.dimAmount = 0.8f;
         getWindow().setAttributes(lp);
@@ -110,8 +103,7 @@ public class AnimatedDialog extends Dialog {
         slideUp.setDuration(500);
         slideUp.setInterpolator(new AccelerateInterpolator());
         ((ViewGroup) getWindow().getDecorView()).getChildAt(0).startAnimation(slideUp);
-
-        AnimatedDialog.super.show();
+        super.show();
     }
 
     /**
@@ -119,6 +111,7 @@ public class AnimatedDialog extends Dialog {
      */
     private void slideClose() {
         if (!isClosing_) {
+            isClosing_ = true;
             TranslateAnimation slideDown = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1f);
             slideDown.setDuration(500);
             slideDown.setInterpolator(new DecelerateInterpolator());
@@ -127,13 +120,12 @@ public class AnimatedDialog extends Dialog {
             slideDown.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-                    isClosing_ = true;
+
                 }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    isClosing_ = false;
-                    AnimatedDialog.super.dismiss();
+                    dismiss();
                 }
 
                 @Override

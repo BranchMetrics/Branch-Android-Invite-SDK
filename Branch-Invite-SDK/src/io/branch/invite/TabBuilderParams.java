@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.widget.TextView;
 
 import java.util.HashMap;
 
@@ -70,6 +71,8 @@ public class TabBuilderParams {
     public final HashMap<String, InviteContactListView> customTabMap_;
     /* Message to show when there is no contact available */
     public String noContactAvailableMsg_;
+    /* Text view for setting a title for the sharing dialog */
+    public TextView titleTxtVew_;
 
 
     public TabBuilderParams(Context context) {
@@ -106,6 +109,8 @@ public class TabBuilderParams {
         customTabMap_ = new HashMap<>();
 
         noContactAvailableMsg_ = "No Contacts available";
+
+        titleTxtVew_ = null;
 
         callback_ = null;
     }
