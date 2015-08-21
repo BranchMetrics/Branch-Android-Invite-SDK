@@ -1,4 +1,4 @@
-package io.branch.invite;
+package io.branch.invite.util;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * <p>Utility class for Branch invite sdk</p>
  */
-class BranchInviteUtil {
+public class BranchInviteUtil {
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 
     /**

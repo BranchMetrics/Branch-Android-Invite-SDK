@@ -1,4 +1,4 @@
-package io.branch.invite;
+package io.branch.invite.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
@@ -26,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import io.branch.invite.InviteContactListView;
+import io.branch.invite.TabBuilderParams;
 import io.branch.referral.BranchError;
 
 /**
@@ -43,7 +44,7 @@ class InviteTabbedContentView extends LinearLayout {
     /* Callback for tab events */
     IContactTabViewEvents contactTabViewEventsCallback_;
     /* Builder params for the invite tabbed dialog */
-    InviteTabbedBuilderParams inviteBuilderParams_;
+    TabBuilderParams inviteBuilderParams_;
     /* Map for keeping the tabs added to the tabbed view */
     final Map<String, InviteContactListView> tabContentMap_;
 
@@ -51,9 +52,9 @@ class InviteTabbedContentView extends LinearLayout {
      * Creates a Invite content with action buttons and default tabs.
      *
      * @param context               A {@link Context} for the view
-     * @param IContactTabViewEvents Instance of {@link io.branch.invite.InviteTabbedContentView.IContactTabViewEvents} to update invite view events
+     * @param IContactTabViewEvents Instance of {@link InviteTabbedContentView.IContactTabViewEvents} to update invite view events
      */
-    public InviteTabbedContentView(Context context, IContactTabViewEvents IContactTabViewEvents, InviteTabbedBuilderParams inviteBuilderParams) {
+    public InviteTabbedContentView(Context context, IContactTabViewEvents IContactTabViewEvents, TabBuilderParams inviteBuilderParams) {
         super(context);
         context_ = context;
         setOrientation(VERTICAL);
@@ -70,7 +71,12 @@ class InviteTabbedContentView extends LinearLayout {
      * Initialise  the invite  view and setup the default tabs.
      */
     private void initTabView() {
-        //Add action buttons
+        // Add Title if specified
+        if (inviteBuilderParams_.titleTxtVew_ != null) {
+            this.addView(inviteBuilderParams_.titleTxtVew_, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+
+        // Add action buttons
         LinearLayout controlCover = new LinearLayout(context_);
         controlCover.setOrientation(HORIZONTAL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -182,7 +188,12 @@ class InviteTabbedContentView extends LinearLayout {
                 .query(uri, projection, null, null, null);
         ContactListAdapter adapter = new ContactListAdapterEmail(context_, queryCursor,
                 contactTabViewEventsCallback_, inviteBuilderParams_);
-        addTab(inviteBuilderParams_.emailTabText_, new ContactListView(context_, adapter, "Email", "com.google.android.gm"));
+
+        if (queryCursor != null && queryCursor.getCount() > 0) {
+            addTab(inviteBuilderParams_.emailTabText_, new ContactListView(context_, adapter, "Email", "com.google.android.gm"));
+        } else {
+            addTabForEmptyContactList(inviteBuilderParams_.emailTabText_);
+        }
     }
 
     /**
@@ -208,7 +219,29 @@ class InviteTabbedContentView extends LinearLayout {
         ContactListAdapter adapter = new ContactListAdapterPhone(context_, queryCursor,
                 contactTabViewEventsCallback_, inviteBuilderParams_);
 
-        addTab(inviteBuilderParams_.textTabText_, new ContactListView(context_, adapter, "Message", "vnd.android-dir/mms-sms"));
+        if (queryCursor != null && queryCursor.getCount() > 0) {
+            addTab(inviteBuilderParams_.textTabText_, new ContactListView(context_, adapter, "Message", "vnd.android-dir/mms-sms"));
+        } else {
+            addTabForEmptyContactList(inviteBuilderParams_.textTabText_);
+        }
+    }
+
+    private void addTabForEmptyContactList(String tabName) {
+        TabHost.TabSpec textTab = host_.newTabSpec(tabName).setIndicator(tabName).setContent(new TabHost.TabContentFactory() {
+            @SuppressLint("NewApi")
+            @Override
+            public View createTabContent(String tag) {
+                TextView noContactTxt = new TextView(context_);
+                noContactTxt.setText(inviteBuilderParams_.noContactAvailableMsg_);
+                noContactTxt.setTextAppearance(context_, android.R.style.TextAppearance_Medium);
+                noContactTxt.setTextColor(Color.GRAY);
+                noContactTxt.setGravity(Gravity.CENTER);
+                noContactTxt.setPadding(padding_, padding_ * 2, padding_, padding_);
+                return noContactTxt;
+            }
+        });
+
+        host_.addTab(textTab);
     }
 
     private void addTab(String tabName, final InviteContactListView listView) {
@@ -252,7 +285,7 @@ class InviteTabbedContentView extends LinearLayout {
         host_.getTabWidget().getChildAt(host_.getCurrentTab()).setBackgroundDrawable(inviteBuilderParams_.tabSelectedBackground_);// selected tab
     }
 
-    interface IContactTabViewEvents {
+    public interface IContactTabViewEvents {
         /* Called on user selecting the negative button */
         void onNegativeButtonClicked();
 

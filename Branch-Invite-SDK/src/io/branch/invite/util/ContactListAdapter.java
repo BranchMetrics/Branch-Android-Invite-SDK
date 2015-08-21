@@ -1,4 +1,4 @@
-package io.branch.invite;
+package io.branch.invite.util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +25,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+
+import io.branch.invite.TabBuilderParams;
 
 /**
  * Abstract class for contact list adapter. Handles the contact listing and selecting form the list.
@@ -54,7 +56,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
      * @param context a {@link Context} for creating the list
      * @param c       A {@link Cursor} for creating contact list
      */
-    public ContactListAdapter(Context context, Cursor c, InviteTabbedContentView.IContactTabViewEvents contactItemSelected, InviteTabbedBuilderParams inviteBuilderParams) {
+    public ContactListAdapter(Context context, Cursor c, InviteTabbedContentView.IContactTabViewEvents contactItemSelected, TabBuilderParams inviteBuilderParams) {
         super(context, c, false);
         context_ = context;
         defaultContactPic_ = inviteBuilderParams.defaultContactPic_;
@@ -94,12 +96,12 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
      * @param message          Message to be shared to the invitee
      * @return An {@link Intent} containing data to be shared with the selected applications.This intent will be used to invoke application for sending the invite.
      */
-    abstract Intent getInviteIntent(String referralUrl, ArrayList<String> selectedContacts, String subject, String message);
+    public abstract Intent getInviteIntent(String referralUrl, ArrayList<String> selectedContacts, String subject, String message);
 
     /**
      * Class for representing a contact item.
      */
-    class MyContact {
+    public class MyContact {
         /* Primary display name for the contact. */
         private String contactName = "";
         /* Primary contact info like email or phone number. */

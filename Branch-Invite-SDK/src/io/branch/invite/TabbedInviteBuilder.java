@@ -3,6 +3,9 @@ package io.branch.invite;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.widget.TextView;
+
+import io.branch.invite.util.TabbedViewHandler;
 
 /**
  * Builder for create a Tabbed invite dialog. This dialog has pre-populated contact list for
@@ -13,9 +16,9 @@ import android.graphics.drawable.Drawable;
  * {@see addCustomTab() method to see how to add a custom tab to the tabbed view}
  */
 public class TabbedInviteBuilder {
-    final InviteManager inviteManager_;
+    final TabbedViewHandler inviteManager_;
     final Context context_;
-    final InviteTabbedBuilderParams inviteBuilderParams_;
+    final TabBuilderParams inviteBuilderParams_;
 
     /**
      * <p>Create a builder for Tabbed invite dialog. This dialog has pre-populated contact list for
@@ -27,8 +30,8 @@ public class TabbedInviteBuilder {
      */
     public TabbedInviteBuilder(Context context, String userID, String userFullName) {
         context_ = context;
-        inviteManager_ = InviteManager.getInstance();
-        inviteBuilderParams_ = new InviteTabbedBuilderParams(context);
+        inviteManager_ = TabbedViewHandler.getInstance();
+        inviteBuilderParams_ = new TabBuilderParams(context);
         inviteBuilderParams_.userID_ = userID;
         inviteBuilderParams_.userFullName_ = userFullName;
     }
@@ -214,6 +217,29 @@ public class TabbedInviteBuilder {
         inviteBuilderParams_.defaultInvitationUrl_ = defaultUrl;
         return this;
     }
+
+    /**
+     * Set a message to be displayed when there is no contact available. Default message is "No Contacts available".
+     *
+     * @param noContactMsg Message to be displayed when there is no contact available to list.
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    public TabbedInviteBuilder setNoContactAvailableMessage(String noContactMsg) {
+        inviteBuilderParams_.noContactAvailableMsg_ = noContactMsg;
+        return this;
+    }
+
+    /**
+     * Sets a title for the invite dialog with the given Text View.
+     *
+     * @param titleView Text view for the title of the invite dialog.
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    public TabbedInviteBuilder setTitle(TextView titleView) {
+        inviteBuilderParams_.titleTxtVew_ = titleView;
+        return this;
+    }
+
 
     /**
      * Creates the invitation dialog with the arguments supplied in the builder.

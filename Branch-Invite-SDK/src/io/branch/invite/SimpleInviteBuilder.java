@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import io.branch.invite.util.Defines;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.referral.SharingHelper;

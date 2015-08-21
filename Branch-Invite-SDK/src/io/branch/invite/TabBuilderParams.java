@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.widget.TextView;
 
 import java.util.HashMap;
 
@@ -13,7 +14,7 @@ import java.util.HashMap;
  * This class represent all the features that user can set for a tabbed invite dialog.
  * </p>
  */
-class InviteTabbedBuilderParams {
+public class TabBuilderParams {
     /* Selected background for the tab */
     public Drawable tabSelectedBackground_;
     /* Unselected background for the tab */
@@ -68,9 +69,13 @@ class InviteTabbedBuilderParams {
     public InviteCallback callback_;
     /* Map to hold the custom Tabs */
     public final HashMap<String, InviteContactListView> customTabMap_;
+    /* Message to show when there is no contact available */
+    public String noContactAvailableMsg_;
+    /* Text view for setting a title for the sharing dialog */
+    public TextView titleTxtVew_;
 
 
-    public InviteTabbedBuilderParams(Context context) {
+    public TabBuilderParams(Context context) {
         tabSelectedBackground_ = new ColorDrawable(Color.parseColor("#FF000088")); //Default selected color for the tabs
         tabUnselectedBackground_ = new ColorDrawable(Color.parseColor("#FF0000DD"));//Default non-selected color for the tabs
 
@@ -102,6 +107,10 @@ class InviteTabbedBuilderParams {
 
         customDataMap_ = new HashMap<>();
         customTabMap_ = new HashMap<>();
+
+        noContactAvailableMsg_ = "No Contacts available";
+
+        titleTxtVew_ = null;
 
         callback_ = null;
     }
