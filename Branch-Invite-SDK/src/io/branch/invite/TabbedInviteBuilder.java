@@ -218,6 +218,17 @@ public class TabbedInviteBuilder {
     }
 
     /**
+     * Set a message to be displayed when there is no contact available. Default message is "No Contacts available".
+     *
+     * @param noContactMsg Message to be displayed when there is no contact available to list.
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    public TabbedInviteBuilder setNoContactAvailableMessage(String noContactMsg) {
+        inviteBuilderParams_.noContactAvailableMsg_ = noContactMsg;
+        return this;
+    }
+
+    /**
      * Creates the invitation dialog with the arguments supplied in the builder.
      */
     public Dialog showInviteDialog() {

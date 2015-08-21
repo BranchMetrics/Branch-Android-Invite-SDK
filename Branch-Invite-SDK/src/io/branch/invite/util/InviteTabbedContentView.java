@@ -20,6 +20,8 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -183,7 +185,13 @@ class InviteTabbedContentView extends LinearLayout {
                 .query(uri, projection, null, null, null);
         ContactListAdapter adapter = new ContactListAdapterEmail(context_, queryCursor,
                 contactTabViewEventsCallback_, inviteBuilderParams_);
-        addTab(inviteBuilderParams_.emailTabText_, new ContactListView(context_, adapter, "Email", "com.google.android.gm"));
+
+        if (queryCursor != null && queryCursor.getCount() > 0) {
+            addTab(inviteBuilderParams_.emailTabText_, new ContactListView(context_, adapter, "Email", "com.google.android.gm"));
+        }
+        else{
+            addTabForEmptyContactList(inviteBuilderParams_.emailTabText_);
+        }
     }
 
     /**
@@ -209,7 +217,30 @@ class InviteTabbedContentView extends LinearLayout {
         ContactListAdapter adapter = new ContactListAdapterPhone(context_, queryCursor,
                 contactTabViewEventsCallback_, inviteBuilderParams_);
 
-        addTab(inviteBuilderParams_.textTabText_, new ContactListView(context_, adapter, "Message", "vnd.android-dir/mms-sms"));
+        if (queryCursor != null && queryCursor.getCount() > 0) {
+            addTab(inviteBuilderParams_.textTabText_, new ContactListView(context_, adapter, "Message", "vnd.android-dir/mms-sms"));
+        }
+        else{
+            addTabForEmptyContactList(inviteBuilderParams_.textTabText_);
+        }
+    }
+
+    private void addTabForEmptyContactList(String tabName) {
+        TabHost.TabSpec textTab = host_.newTabSpec(tabName).setIndicator(tabName).setContent(new TabHost.TabContentFactory() {
+            @SuppressLint("NewApi")
+            @Override
+            public View createTabContent(String tag) {
+                TextView noContactTxt =  new TextView(context_);
+                noContactTxt.setText(inviteBuilderParams_.noContactAvailableMsg_);
+                noContactTxt.setTextAppearance(context_, android.R.style.TextAppearance_Medium);
+                noContactTxt.setTextColor(Color.GRAY);
+                noContactTxt.setGravity(Gravity.CENTER);
+                noContactTxt.setPadding(padding_,padding_*2,padding_,padding_);
+                return noContactTxt;
+            }
+        });
+
+        host_.addTab(textTab);
     }
 
     private void addTab(String tabName, final InviteContactListView listView) {

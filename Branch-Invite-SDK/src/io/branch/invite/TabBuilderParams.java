@@ -68,6 +68,8 @@ public class TabBuilderParams {
     public InviteCallback callback_;
     /* Map to hold the custom Tabs */
     public final HashMap<String, InviteContactListView> customTabMap_;
+    /* Message to show when there is no contact available */
+    public String noContactAvailableMsg_;
 
 
     public TabBuilderParams(Context context) {
@@ -102,6 +104,8 @@ public class TabBuilderParams {
 
         customDataMap_ = new HashMap<>();
         customTabMap_ = new HashMap<>();
+
+        noContactAvailableMsg_ = "No Contacts available";
 
         callback_ = null;
     }
