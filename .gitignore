@@ -11,7 +11,7 @@ build/
 
 # Gradle
 .gradle/*
-*.properties
+#.properties
 .metadata/*
 .DS_Store
 /captures
