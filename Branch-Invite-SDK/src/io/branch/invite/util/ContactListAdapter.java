@@ -210,7 +210,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
 
             displayNameTxt_.setText(contactName);
             displayNameTxt_.setTextColor(Color.BLACK);
-            contactImg_.setBackgroundColor(Color.DKGRAY);
+            contactImg_.setBackgroundColor(Color.WHITE);
             if (contact.getPhotoURI() != null) {
                 contactImg_.setImageURI(Uri.parse(contact.getPhotoURI()));
             } else {

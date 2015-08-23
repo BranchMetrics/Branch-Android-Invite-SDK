@@ -90,7 +90,7 @@ public class TabBuilderParams {
         emailTabText_ = "Email";
         textTabText_ = "Text";
 
-        defaultContactPic_ = new ColorDrawable(Color.GRAY);
+        defaultContactPic_ = context.getResources().getDrawable(android.R.drawable.gallery_thumb);
         selectedIndicator_ = context.getResources().getDrawable(android.R.drawable.checkbox_on_background);
         nonSelectedIndicator_ = context.getResources().getDrawable(android.R.drawable.checkbox_off_background);
 
