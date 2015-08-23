@@ -3,7 +3,6 @@ package io.branch.invite.util;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.view.View;
@@ -51,7 +50,6 @@ class ContactListAdapterEmail extends ContactListAdapter {
 
         contact = new MyContact(id, displayName, emailAddress, contactType, photoURI);
 
-        view.setBackgroundColor(Color.WHITE);
         view.setTag(contact);
         ((contactListItem) view).updateView(contact);
         view.setOnClickListener(this);

@@ -5,8 +5,10 @@ import android.app.Activity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOError;
 import java.util.ArrayList;
 
+import io.branch.invite.util.BranchInviteUtil;
 import io.branch.invite.util.Defines;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -179,7 +181,7 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
      * Cancel the current active invitation dialog
      */
     public void cancelInviteDialog() {
-        Branch.getInstance().cancelShareLinkDialog();
+        Branch.getInstance().cancelShareLinkDialog(true);
     }
 
 
@@ -198,4 +200,19 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
             callback_.onInviteChannelSelected(channelName);
         }
     }
+
+    @Override
+     public void onShareLinkDialogDismissed() {
+        if (callback_ != null) {
+            callback_.onInviteDialogDismissed();
+        }
+    }
+
+    @Override
+    public void onShareLinkDialogLaunched() {
+        if (callback_ != null) {
+            callback_.onInviteDialogLaunched();
+        }
+    }
+
 }

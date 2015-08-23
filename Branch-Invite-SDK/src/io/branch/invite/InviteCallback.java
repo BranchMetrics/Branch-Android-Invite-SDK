@@ -31,6 +31,11 @@ public interface InviteCallback {
     void onInviteChannelSelected(String channelName);
 
     /**
+     * <p>Callback to notify that invitation dialog is launched.</p>
+     */
+    void onInviteDialogLaunched();
+
+    /**
      * <p>Callback to notify that invitation dialog is dismissed.</p>
      */
     void onInviteDialogDismissed();

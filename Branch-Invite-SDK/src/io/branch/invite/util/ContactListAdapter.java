@@ -67,7 +67,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
 
         //Initialise indexer
         mAlphabetIndexer = new AlphabetIndexer(c, c.getColumnIndex(getIndexerColumnName()),
-                "ABCDEFGHIJKLMNOPQRTSUVWXYZ");
+                " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         mAlphabetIndexer.setCursor(c);//Sets a new cursor as the data set and resets the cache of indices.
     }
 
@@ -269,6 +269,8 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
         }
         //Refresh the selected items.
         notifyDataSetChanged();
+
+
     }
 
 

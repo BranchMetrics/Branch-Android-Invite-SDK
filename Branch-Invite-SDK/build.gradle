@@ -1,8 +1,9 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'io.branch.sdk.android:library:1.8.+'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
 }
 
 android {

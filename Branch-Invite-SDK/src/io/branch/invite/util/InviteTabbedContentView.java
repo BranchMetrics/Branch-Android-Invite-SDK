@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
@@ -21,6 +22,7 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -185,12 +187,12 @@ class InviteTabbedContentView extends LinearLayout {
         }
 
         Cursor queryCursor = context_.getContentResolver()
-                .query(uri, projection, null, null, null);
+                .query(uri, projection, null, null, ContactsContract.CommonDataKinds.Email.DISPLAY_NAME + " ASC");
         ContactListAdapter adapter = new ContactListAdapterEmail(context_, queryCursor,
                 contactTabViewEventsCallback_, inviteBuilderParams_);
 
         if (queryCursor != null && queryCursor.getCount() > 0) {
-            addTab(inviteBuilderParams_.emailTabText_, new ContactListView(context_, adapter, "Email", "com.google.android.gm"));
+            addTab(inviteBuilderParams_.emailTabText_, addIndexViewToList(new ContactListView(context_, adapter, "Email", "com.google.android.gm")));
         } else {
             addTabForEmptyContactList(inviteBuilderParams_.emailTabText_);
         }
@@ -215,15 +217,29 @@ class InviteTabbedContentView extends LinearLayout {
                     ContactsContract.CommonDataKinds.Phone.TYPE};
         }
         Cursor queryCursor = context_.getContentResolver()
-                .query(uri, projection, null, null, null);
+                .query(uri, projection, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
         ContactListAdapter adapter = new ContactListAdapterPhone(context_, queryCursor,
                 contactTabViewEventsCallback_, inviteBuilderParams_);
 
         if (queryCursor != null && queryCursor.getCount() > 0) {
-            addTab(inviteBuilderParams_.textTabText_, new ContactListView(context_, adapter, "Message", "vnd.android-dir/mms-sms"));
+            addTab(inviteBuilderParams_.textTabText_, addIndexViewToList(new ContactListView(context_, adapter, "Message", "vnd.android-dir/mms-sms")));
+
         } else {
             addTabForEmptyContactList(inviteBuilderParams_.textTabText_);
         }
+    }
+
+    private void addTab(String tabName, final View v) {
+        TabHost.TabSpec textTab = host_.newTabSpec(tabName).setIndicator(tabName).setContent(new TabHost.TabContentFactory() {
+            @SuppressLint("NewApi")
+            @Override
+            public View createTabContent(String tag) {
+
+                return v;
+            }
+        });
+
+        host_.addTab(textTab);
     }
 
     private void addTabForEmptyContactList(String tabName) {
@@ -255,6 +271,19 @@ class InviteTabbedContentView extends LinearLayout {
         });
 
         host_.addTab(textTab);
+    }
+
+    private View addIndexViewToList(ContactListView contactListView) {
+        RelativeLayout layout = new RelativeLayout(context_);
+        String[] indexArray = (String[]) ((ContactListAdapter) contactListView.getAdapter()).getSections();
+        IndexList indexView = new IndexList(context_, new ArrayList<String>(Arrays.asList(indexArray)), contactListView);
+        RelativeLayout.LayoutParams indexViewParam = new RelativeLayout.LayoutParams(padding_ * 6, ViewGroup.LayoutParams.MATCH_PARENT);
+        indexViewParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+        layout.addView(indexView, indexViewParam);
+        layout.addView(contactListView, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        return layout;
     }
 
 
@@ -309,11 +338,13 @@ class InviteTabbedContentView extends LinearLayout {
             channelName_ = channelName;
             targetPackageName_ = targetPackage;
             setAdapter(adapter);
-            BranchInviteUtil.setViewBackground(this, inviteBuilderParams_.backgroundDrawable_);
+            BranchInviteUtil.setViewBackground(this, new ColorDrawable(Color.TRANSPARENT));
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 this.setFastScrollAlwaysVisible(true);
             }
             this.setFastScrollEnabled(true);
+
+
         }
 
         @Override
@@ -336,6 +367,7 @@ class InviteTabbedContentView extends LinearLayout {
         public Intent getInviteIntent(String referralUrl, ArrayList<String> selectedUsers, String subject, String message) {
             return listAdapter_.getInviteIntent(referralUrl, selectedUsers, subject, message);
         }
+
 
     }
 
