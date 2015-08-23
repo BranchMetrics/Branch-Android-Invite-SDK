@@ -49,6 +49,8 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
 
     /* Alphabet indexer for the list view */
     AlphabetIndexer mAlphabetIndexer;
+    /* Color for the selected item in contact list */
+    final int selectedItemColor_;
 
     /**
      * Create an instance and initialises the list params
@@ -60,10 +62,9 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
         super(context, c, false);
         context_ = context;
         defaultContactPic_ = inviteBuilderParams.defaultContactPic_;
-        selectedIndicator_ = inviteBuilderParams.selectedIndicator_;
-        nonSelectedIndicator_ = inviteBuilderParams.nonSelectedIndicator_;
         contactItemSelectedCallBack_ = contactItemSelected;
         selectedContactMap_ = new HashMap<String, MyContact>();
+        selectedItemColor_ = inviteBuilderParams.selectedItemBackGroundColor_;
 
         //Initialise indexer
         mAlphabetIndexer = new AlphabetIndexer(c, c.getColumnIndex(getIndexerColumnName()),
@@ -165,6 +166,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
         ImageView contactImg_;
         /* Image to highlight selected item */
         ImageView selectedImage_;
+        LinearLayout coverLayout_;
 
         /**
          * Creates a view for the contact list item.
@@ -173,30 +175,36 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
          */
         public contactListItem(Context context) {
             super(context);
-            setOrientation(HORIZONTAL);
+            coverLayout_ = new LinearLayout(context_);
+            coverLayout_.setOrientation(HORIZONTAL);
             int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics());
 
             contactImg_ = new ImageView(context);
             contactImg_.setScaleType(ImageView.ScaleType.FIT_CENTER);
             int contactPicSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(contactPicSize, contactPicSize);
-            this.addView(contactImg_, layoutParams);
+            coverLayout_.addView(contactImg_, layoutParams);
 
             displayNameTxt_ = new TextView(context);
             layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             displayNameTxt_.setPadding(padding * 3, padding, padding, padding);
             displayNameTxt_.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-            this.addView(displayNameTxt_, layoutParams);
+            coverLayout_.addView(displayNameTxt_, layoutParams);
 
             selectedImage_ = new ImageView(context);
             selectedImage_.setScaleType(ImageView.ScaleType.FIT_CENTER);
             int selectedPicSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
             layoutParams = new LinearLayout.LayoutParams(selectedPicSize, selectedPicSize);
             layoutParams.setMargins(0, 0, padding * 3, 0);
-            this.addView(selectedImage_, layoutParams);
+            coverLayout_.addView(selectedImage_, layoutParams);
 
             int alphabetIndexerSpacing = padding * 5;
-            this.setPadding(0, padding, padding + alphabetIndexerSpacing, padding);
+            this.setPadding(0, 0, padding + alphabetIndexerSpacing, 0);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            coverLayout_.setPadding(0,padding,0,padding);
+            this.addView(coverLayout_ ,params );
+
         }
 
         public void updateView(MyContact contact) {
@@ -218,9 +226,12 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
             }
 
             if (selectedContactMap_.containsKey(contact.contactID)) {
-                displayNameTxt_.setCompoundDrawablesWithIntrinsicBounds(null, null, selectedIndicator_, null);
+                //this.setBackgroundColor(selectedItemColor_);
+                coverLayout_.setBackgroundColor(selectedItemColor_);
+                //displayNameTxt_.setCompoundDrawablesWithIntrinsicBounds(null, null, selectedIndicator_, null);
             } else {
-                displayNameTxt_.setCompoundDrawablesWithIntrinsicBounds(null, null, nonSelectedIndicator_, null);
+                coverLayout_.setBackgroundColor(Color.TRANSPARENT);
+                //displayNameTxt_.setCompoundDrawablesWithIntrinsicBounds(null, null, nonSelectedIndicator_, null);
             }
         }
     }

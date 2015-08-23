@@ -42,10 +42,6 @@ public class TabBuilderParams {
 
     /* Drawable to show when there is no profile picture */
     public Drawable defaultContactPic_;
-    /* Drawable mark list item selected */
-    public Drawable selectedIndicator_;
-    /* Drawable to mark list item unselected */
-    public Drawable nonSelectedIndicator_;
     /* Denote whether single selection enabled or not */
     public boolean isSingleSelect_;
     /* Message to send to the invitee */
@@ -73,6 +69,10 @@ public class TabBuilderParams {
     public String noContactAvailableMsg_;
     /* Text view for setting a title for the sharing dialog */
     public TextView titleTxtVew_;
+    /* Background color for selected items in the list view */
+    public int selectedItemBackGroundColor_;
+
+
 
 
     public TabBuilderParams(Context context) {
@@ -86,14 +86,12 @@ public class TabBuilderParams {
         positiveBtnBackground = new ColorDrawable(Color.TRANSPARENT);
         negativeBtnBackground = new ColorDrawable(Color.TRANSPARENT);
         backgroundDrawable_ = new ColorDrawable(Color.WHITE);
+        selectedItemBackGroundColor_ = Color.parseColor("#FF99FFCC");
 
         emailTabText_ = "Email";
         textTabText_ = "Text";
 
         defaultContactPic_ = context.getResources().getDrawable(android.R.drawable.gallery_thumb);
-        selectedIndicator_ = context.getResources().getDrawable(android.R.drawable.checkbox_on_background);
-        nonSelectedIndicator_ = context.getResources().getDrawable(android.R.drawable.checkbox_off_background);
-
         isSingleSelect_ = false;
         String appLabel = context.getApplicationInfo().loadLabel(context.getPackageManager()).toString();
         invitationSubject_ = "Check out " + appLabel + "!";

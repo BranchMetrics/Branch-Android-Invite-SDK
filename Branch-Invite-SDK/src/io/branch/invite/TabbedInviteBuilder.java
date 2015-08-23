@@ -124,15 +124,13 @@ public class TabbedInviteBuilder {
     }
 
     /**
-     * <p>Set the icons for for showing selection state for the contact.</p>
+     * <p>Set highlighting color for the selected contacts in the contact list.</p>
      *
-     * @param selectedIcon     Drawable icon to highlight a contact as selected.
-     * @param nonSelectedIcons Drawable icon to highlight a contact as non selected.
+     * @param selectedItemColor Highlight color for the selected item in the contact list.
      * @return This Builder object to allow for chaining of calls to set methods.
      */
-    public TabbedInviteBuilder setContactListItemStyle(Drawable selectedIcon, Drawable nonSelectedIcons) {
-        inviteBuilderParams_.selectedIndicator_ = selectedIcon;
-        inviteBuilderParams_.nonSelectedIndicator_ = nonSelectedIcons;
+    public TabbedInviteBuilder setSelectedItemColor(int selectedItemColor) {
+        inviteBuilderParams_.selectedItemBackGroundColor_ = selectedItemColor;
         return this;
     }
 
