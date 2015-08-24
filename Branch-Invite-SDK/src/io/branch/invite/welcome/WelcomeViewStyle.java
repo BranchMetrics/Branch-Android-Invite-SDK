@@ -2,6 +2,7 @@ package io.branch.invite.welcome;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
 import io.branch.invite.util.Defines;
@@ -31,7 +32,7 @@ public class WelcomeViewStyle {
         invitationMessageText_ = Defines.FULL_NAME_SUB.getKey() + " has invited you to use " + appLabel;
         welcomeMessageText_ = "Welcome to " + appLabel + "! You've been invited to join " + appLabel + " by another user " + Defines.SHORT_NAME_SUB.getKey();
         proceedToAppText_ = "Press to join " + Defines.SHORT_NAME_SUB.getKey();
-        defaultContactImg_ = context.getResources().getDrawable(android.R.drawable.gallery_thumb);
+        defaultContactImg_ = new ColorDrawable(Color.parseColor("#FFEFEFEF"));
     }
 
     /**

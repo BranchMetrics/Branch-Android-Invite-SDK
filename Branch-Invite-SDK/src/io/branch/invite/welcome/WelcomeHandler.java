@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import io.branch.invite.util.CircularImageView;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import io.branch.invite.util.AnimatedDialog;
@@ -125,16 +126,16 @@ class WelcomeHandler {
      * Create and show an invitation dialog with the given options.
      */
     private void createInvitationHandlerDialog() {
-        RelativeLayout invitationCoverlayout = new RelativeLayout(context_);
-        invitationCoverlayout.setBackgroundColor(Color.TRANSPARENT);
+        RelativeLayout invitationCoverLayout = new RelativeLayout(context_);
+        invitationCoverLayout.setBackgroundColor(Color.TRANSPARENT);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        invitationCoverlayout.addView(invitationView_, params);
-        invitationCoverlayout.setBackgroundColor(Color.WHITE);
+        invitationCoverLayout.addView(invitationView_, params);
+        invitationCoverLayout.setBackgroundColor(Color.WHITE);
         if (invitationHandlerDialog_ != null && invitationHandlerDialog_.isShowing()) {
             invitationHandlerDialog_.cancel();
         }
         invitationHandlerDialog_ = new AnimatedDialog(context_);
-        invitationHandlerDialog_.setContentView(invitationCoverlayout);
+        invitationHandlerDialog_.setContentView(invitationCoverLayout);
         invitationHandlerDialog_.show();
 
         if (callback_ != null) {
@@ -154,7 +155,7 @@ class WelcomeHandler {
             }
         });
 
-        invitationCoverlayout.setOnClickListener(new View.OnClickListener() {
+        invitationCoverLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (invitationHandlerDialog_ != null && invitationHandlerDialog_.isShowing()) {
@@ -174,7 +175,7 @@ class WelcomeHandler {
         int contactPicSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
         int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
 
-        ImageView contactImg_;
+        CircularImageView contactImg_;
         TextView inviterInfoText_;
         TextView welcomeMsgText_;
         TextView proceedToAppText;
@@ -189,7 +190,7 @@ class WelcomeHandler {
             inviterInfoLayout.setBackgroundColor(inviterInfoBackground_);
             inviterInfoLayout.setPadding(padding, padding, padding, padding);
 
-            contactImg_ = new ImageView(context);
+            contactImg_ = new CircularImageView(context);
             contactImg_.setId(BranchInviteUtil.generateViewId());
             contactImg_.setScaleType(ImageView.ScaleType.FIT_CENTER);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(contactPicSize, contactPicSize);
@@ -280,13 +281,13 @@ class WelcomeHandler {
      * Asynchronous task for downloading image specified by the URL
      */
     private class LoadBitmapFromUrlTask extends AsyncTask<Void, Void, Bitmap> {
-        final ImageView imageView_;
+        final CircularImageView imageView_;
         final String url_;
 
-        LoadBitmapFromUrlTask(ImageView imgView, String url, Drawable defaultImage) {
+        LoadBitmapFromUrlTask(CircularImageView imgView, String url, Drawable defaultImage) {
             imageView_ = imgView;
             url_ = url;
-            imageView_.setImageDrawable(defaultImage);
+            imageView_.setCircularDrawable(defaultImage);
         }
 
         @Override
@@ -304,7 +305,7 @@ class WelcomeHandler {
         protected void onPostExecute(Bitmap image) {
             super.onPostExecute(image);
             if (image != null) {
-                imageView_.setImageBitmap(image);
+                imageView_.setCircularBitmap(image);
             }
         }
     }
