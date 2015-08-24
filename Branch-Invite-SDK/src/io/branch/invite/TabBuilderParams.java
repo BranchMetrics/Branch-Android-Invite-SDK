@@ -91,7 +91,7 @@ public class TabBuilderParams {
         emailTabText_ = "Email";
         textTabText_ = "Text";
 
-        defaultContactPic_ = context.getResources().getDrawable(android.R.drawable.gallery_thumb);
+        defaultContactPic_ = new ColorDrawable(Color.parseColor("#FFEFEFEF"));
         isSingleSelect_ = false;
         String appLabel = context.getApplicationInfo().loadLabel(context.getPackageManager()).toString();
         invitationSubject_ = "Check out " + appLabel + "!";

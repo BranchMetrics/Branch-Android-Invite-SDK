@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -163,7 +165,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
         /* Text view for  contact primary display name */
         TextView displayNameTxt_;
         /* ImageView for contact profile pic */
-        ImageView contactImg_;
+        CircularImageView contactImg_;
         /* Image to highlight selected item */
         ImageView selectedImage_;
         LinearLayout coverLayout_;
@@ -179,7 +181,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
             coverLayout_.setOrientation(HORIZONTAL);
             int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics());
 
-            contactImg_ = new ImageView(context);
+            contactImg_ = new CircularImageView(context);
             contactImg_.setScaleType(ImageView.ScaleType.FIT_CENTER);
             int contactPicSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(contactPicSize, contactPicSize);
@@ -220,9 +222,13 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
             displayNameTxt_.setTextColor(Color.BLACK);
             contactImg_.setBackgroundColor(Color.WHITE);
             if (contact.getPhotoURI() != null) {
-                contactImg_.setImageURI(Uri.parse(contact.getPhotoURI()));
+                try {
+                    contactImg_.setCircularBitmap(MediaStore.Images.Media.getBitmap(context_.getContentResolver(), Uri.parse(contact.getPhotoURI())));
+                } catch (IOException ex) {
+                    contactImg_.setCircularDrawable(defaultContactPic_);
+                }
             } else {
-                contactImg_.setImageDrawable(defaultContactPic_);
+                contactImg_.setCircularDrawable(defaultContactPic_);
             }
 
             if (selectedContactMap_.containsKey(contact.contactID)) {
