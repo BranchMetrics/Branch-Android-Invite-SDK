@@ -234,9 +234,11 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
             if (selectedContactMap_.containsKey(contact.contactID)) {
                 //this.setBackgroundColor(selectedItemColor_);
                 coverLayout_.setBackgroundColor(selectedItemColor_);
+                contactImg_.setBackgroundColor(selectedItemColor_);
                 //displayNameTxt_.setCompoundDrawablesWithIntrinsicBounds(null, null, selectedIndicator_, null);
             } else {
                 coverLayout_.setBackgroundColor(Color.TRANSPARENT);
+                contactImg_.setBackgroundColor(Color.TRANSPARENT);
                 //displayNameTxt_.setCompoundDrawablesWithIntrinsicBounds(null, null, nonSelectedIndicator_, null);
             }
         }
