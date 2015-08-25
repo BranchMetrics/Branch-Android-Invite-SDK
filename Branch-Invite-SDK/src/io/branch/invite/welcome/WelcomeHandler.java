@@ -172,7 +172,6 @@ class WelcomeHandler {
         }
         invitationHandlerDialog_ = new AnimatedDialog(context_);
         invitationHandlerDialog_.setContentView(invitationCoverLayout);
-        invitationHandlerDialog_.show();
 
         if (callback_ != null) {
             callback_.onWelcomeDialogLaunched();

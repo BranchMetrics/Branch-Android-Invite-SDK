@@ -9,14 +9,10 @@ import android.view.View;
 
 import org.json.JSONObject;
 
-import io.branch.invite.SimpleInviteBuilder;
 import io.branch.invite.TabbedInviteBuilder;
 import io.branch.invite.welcome.WelcomeBuilder;
-import io.branch.invite.welcome.WelcomeCallback;
-import io.branch.invite.welcome.WelcomeViewStyle;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
-import io.branch.referral.SharingHelper;
 
 
 /**
@@ -37,23 +33,25 @@ public class InviteDemoActivity extends Activity {
             public void onClick(View view) {
 
                 //-----------  Simple invite View -------------------------------//
-                 //new SimpleInviteBuilder(InviteDemoActivity.this, "123456", "Sojan Razallian").showInviteDialog();
+                //new SimpleInviteBuilder(InviteDemoActivity.this, "123456", "Dalu james").showInviteDialog();
 
                 //-- Here is how to Customise simple invite view ----------------------------------------//
 
-                 /*new SimpleInviteBuilder(InviteDemoActivity.this, "123456", "Sojan Razallian")
+                /*SimpleInviteBuilder simpleInviteBuilder = new SimpleInviteBuilder(InviteDemoActivity.this, "123456", "Dalu James")
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.EMAIL)
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.FACEBOOK)
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.TWITTER)
                         .addPreferredInviteChannel(SharingHelper.SHARE_WITH.MESSAGE)
                         .setInviterImageUrl("https://s3-us-west-1.amazonaws.com/branchhost/mosaic_og.png")
-                        .addCustomParams("Custom_Param1", "Custom_Param1_value")
-                        .showInviteDialog();
-                  */
+                        .addCustomParams("Custom_Param1", "Custom_Param1_value");
+
+                simpleInviteBuilder.showInviteDialog();*/
 
 
                 //----------------- Tabbed invite view ---------------------------------//
-                new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name").showInviteDialog();
+                Dialog inviteDlg = new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name").create();
+                inviteDlg.show();
+
 
                 //-- Here is how to customise tabbed invite view------------------------------------//
 
@@ -87,24 +85,24 @@ public class InviteDemoActivity extends Activity {
                 }
 
                 //----  Branch default welcome screen----------------//
-                final Dialog dialog = new WelcomeBuilder(InviteDemoActivity.this).show();
+                welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this).create();
+                welcomeDialog_.show();
 
                 //----  Here is how to customise your Branch welcome screen---------------//
 
-                /* new WelcomeBuilder(InviteDemoActivity.this)
-                        .setWelcomeViewStyle(new WelcomeViewStyle(InviteDemoActivity.this)
+                /*welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
+                                .setWelcomeViewStyle(new WelcomeViewStyle(InviteDemoActivity.this)
                                 .setDefaultUserImage(getResources().getDrawable(R.drawable.contact_default))
                                 .setInvitationMessage("You are invited to this app by $FULL_NAME")
                                 .setWelcomeMessage("Welcome to this cool app. Have fun with your friend $SHORT_NAME")
                                 .setProceedToAppMessage("Click me to proceed"))
-                        .show();
-                  */
-
+                        .create();
+                welcomeDialog_.show();*/
 
 
                 //----  Here is how to add a custom welcome view---------------------//
 
-                /* welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
+                /*welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
                         .setWelcomeViewCallback(new WelcomeCallback() {
                             @Override
                             public View getCustomInvitationView(String userID, String inviterFullName, String inviterShortName, String userImageUrl, JSONObject customParameters) {
@@ -112,17 +110,19 @@ public class InviteDemoActivity extends Activity {
                             }
 
                             @Override
-                            public void onWelcomeDialogLaunched() {}
+                            public void onWelcomeDialogLaunched() {
+                            }
 
                             @Override
-                            public void onWelcomeDialogDismissed() {}
+                            public void onWelcomeDialogDismissed() {
+                            }
 
                             @Override
-                            public void onBranchError(BranchError error) {}
+                            public void onBranchError(BranchError error) {
+                            }
                         })
-                        .show();
-                     */
-
+                        .create();
+                welcomeDialog_.show();*/
 
 
             }

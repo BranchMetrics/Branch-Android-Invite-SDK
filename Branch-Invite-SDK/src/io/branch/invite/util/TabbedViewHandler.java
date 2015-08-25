@@ -56,12 +56,12 @@ public class TabbedViewHandler implements DialogInterface.OnDismissListener {
     //-------------------- Public Methods ---------------------------//
 
     /**
-     * Create and opens a new invitation dialog.
+     * Creates a new invitation dialog.
      *
      * @param context       Context for the dialog
      * @param builderParams {@link TabbedInviteBuilder} instance.
      */
-    public Dialog showDialog(Context context, TabBuilderParams builderParams) {
+    public Dialog createDialog(Context context, TabBuilderParams builderParams) {
         context_ = context;
         inviteBuilderParams_ = builderParams;
         createInviteDialog(builderParams);
@@ -97,7 +97,6 @@ public class TabbedViewHandler implements DialogInterface.OnDismissListener {
         }
         inviteDialog_ = new AnimatedDialog(context_);
         inviteDialog_.setContentView(tabbedViewCover);
-        inviteDialog_.show();
     }
 
 

@@ -242,7 +242,7 @@ public class TabbedInviteBuilder {
     /**
      * Creates the invitation dialog with the arguments supplied in the builder.
      */
-    public Dialog showInviteDialog() {
-        return inviteManager_.showDialog(context_, inviteBuilderParams_);
+    public Dialog create() {
+        return inviteManager_.createDialog(context_, inviteBuilderParams_);
     }
 }

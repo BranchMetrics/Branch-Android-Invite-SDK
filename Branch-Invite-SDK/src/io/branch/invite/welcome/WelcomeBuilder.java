@@ -122,7 +122,7 @@ public class WelcomeBuilder {
     }
 
     /**
-     * <p>Creates an WelcomeDialog with the arguments supplied to this builder and immediately displays the dialog.
+     * <p>Creates an WelcomeDialog with the arguments supplied to this builder.
      * Please make sure your Branch session is initialised before calling this method. {@link WelcomeCallback#onBranchError(BranchError)} will be
      * called back with {@link io.branch.referral.BranchError} in case branch is not initialised. </p>
      * <p/>
@@ -131,7 +131,7 @@ public class WelcomeBuilder {
      *
      * @return {@link Dialog} instance for the welcome dialog if invitation params are available. Null if there is no invitation parameters available.
      */
-    public Dialog show() {
+    public Dialog create() {
         return WelcomeHandler.HandleInvitations(context_, invitationStyle_, callback_, inviteLookUpKeys_, fullNameKey_, shortNameKey_, imageUrlKey_);
     }
 
