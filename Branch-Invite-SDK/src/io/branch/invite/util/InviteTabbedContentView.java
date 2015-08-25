@@ -229,13 +229,13 @@ class InviteTabbedContentView extends LinearLayout {
         }
     }
 
-    private void addTab(String tabName, final View v) {
+    private void addTab(String tabName, final View view) {
         TabHost.TabSpec textTab = host_.newTabSpec(tabName).setIndicator(tabName).setContent(new TabHost.TabContentFactory() {
             @SuppressLint("NewApi")
             @Override
             public View createTabContent(String tag) {
-
-                return v;
+                tabContentMap_.put(tag, (ContactListView)view.getTag());
+                return view;
             }
         });
 
@@ -282,7 +282,7 @@ class InviteTabbedContentView extends LinearLayout {
 
         layout.addView(indexView, indexViewParam);
         layout.addView(contactListView, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
+        layout.setTag(contactListView);
         return layout;
     }
 
@@ -407,5 +407,6 @@ class InviteTabbedContentView extends LinearLayout {
     private InviteContactListView getContactListView() {
         return tabContentMap_.get(host_.getCurrentTabTag());
     }
+
 
 }

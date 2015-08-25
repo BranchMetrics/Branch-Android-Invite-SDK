@@ -1,5 +1,6 @@
 package io.branch.invite.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -9,8 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.widget.ImageView;
 
 /**
@@ -43,6 +42,7 @@ public class CircularImageView extends ImageView {
             if (canvas.getHeight() < canvasSize)
                 canvasSize = canvas.getHeight();
 
+            @SuppressLint("DrawAllocation")
             BitmapShader shader = new BitmapShader(Bitmap.createScaledBitmap(
                     image, canvasSize, canvasSize, false),
                     Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);

@@ -42,10 +42,6 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
     protected InviteTabbedContentView.IContactTabViewEvents contactItemSelectedCallBack_;
     /* Drawable to show when there is no profile picture. */
     Drawable defaultContactPic_;
-    /* Drawable mark list item selected. */
-    Drawable selectedIndicator_;
-    /* Drawable to mark list item unselected. */
-    Drawable nonSelectedIndicator_;
     /* List of contact selected. */
     private HashMap<String, MyContact> selectedContactMap_;
 
@@ -65,7 +61,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
         context_ = context;
         defaultContactPic_ = inviteBuilderParams.defaultContactPic_;
         contactItemSelectedCallBack_ = contactItemSelected;
-        selectedContactMap_ = new HashMap<String, MyContact>();
+        selectedContactMap_ = new HashMap<>();
         selectedItemColor_ = inviteBuilderParams.selectedItemBackGroundColor_;
 
         //Initialise indexer
@@ -75,7 +71,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
     }
 
     public ArrayList<String> getSelectedContacts() {
-        ArrayList<String> selectedContactArray = new ArrayList<String>();
+        ArrayList<String> selectedContactArray = new ArrayList<>();
         Set<String> keys = selectedContactMap_.keySet();
         for (String key : keys) {
             selectedContactArray.add(selectedContactMap_.get(key).getContactInfo());
@@ -124,10 +120,6 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
             photoURI_ = photoURI;
         }
 
-        public String getContactID() {
-            return contactID;
-        }
-
         public String getContactInfo() {
             return contactInfo;
         }
@@ -142,22 +134,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
 
         public String getPhotoURI() {
             return photoURI_;
-        }
 
-        public void setContactInfo(String contactInfo) {
-            this.contactInfo = contactInfo;
-        }
-
-        public void setContactName(String contactName) {
-            this.contactName = contactName;
-        }
-
-        public void setContactType(int contactType) {
-            this.contactType = contactType;
-        }
-
-        public void setPhotoURI(String photoURI) {
-            this.photoURI_ = photoURI;
         }
     }
 
@@ -204,8 +181,8 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
             this.setPadding(0, 0, padding + alphabetIndexerSpacing, 0);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            coverLayout_.setPadding(0,padding,0,padding);
-            this.addView(coverLayout_ ,params );
+            coverLayout_.setPadding(0, padding, 0, padding);
+            this.addView(coverLayout_, params);
 
         }
 

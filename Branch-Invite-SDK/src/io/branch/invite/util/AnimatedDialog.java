@@ -23,17 +23,7 @@ public class AnimatedDialog extends Dialog {
 
     public AnimatedDialog(Context context) {
         super(context);
-        init(context);
-    }
-
-    public AnimatedDialog(Context context, int theme) {
-        super(context, theme);
-        init(context);
-    }
-
-    public AnimatedDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
-        init(context);
+        init();
     }
 
     //--------------------- Public  methods -------------//
@@ -62,7 +52,7 @@ public class AnimatedDialog extends Dialog {
 
 
     //------------------Private methods------------------//
-    private void init(Context context) {
+    private void init() {
         setDialogWindowAttributes();
         // Listen for the backpress in order to dismiss the dialog with animation
         setOnKeyListener(new OnKeyListener() {
