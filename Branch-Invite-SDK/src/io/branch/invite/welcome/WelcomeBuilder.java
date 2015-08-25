@@ -38,7 +38,7 @@ public class WelcomeBuilder {
         context_ = context;
         invitationStyle_ = new WelcomeViewStyle(context);
         callback_ = null;
-        inviteLookUpKeys_ = new ArrayList<String>();
+        inviteLookUpKeys_ = new ArrayList<>();
 
         fullNameKey_ = Defines.INVITE_USER_FULLNAME.getKey();
         shortNameKey_ = Defines.INVITE_USER_SHORT_NAME.getKey();
@@ -52,6 +52,7 @@ public class WelcomeBuilder {
      * @param invitationStyle Instance of {@link WelcomeViewStyle } with desired styling parameters.
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public WelcomeBuilder setWelcomeViewStyle(WelcomeViewStyle invitationStyle) {
         invitationStyle_ = invitationStyle;
         return this;
@@ -65,6 +66,7 @@ public class WelcomeBuilder {
      * @param callback Instance of {@link WelcomeCallback}
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public WelcomeBuilder setWelcomeViewCallback(WelcomeCallback callback) {
         callback_ = callback;
         return this;
@@ -77,6 +79,7 @@ public class WelcomeBuilder {
      *
      * @param lookUpKey A {@link String} to look up the link prams to launch the welcome dialog.
      */
+    @SuppressWarnings("unused")
     public WelcomeBuilder addCustomLookupKeys(String lookUpKey) {
         inviteLookUpKeys_.add(lookUpKey);
         return this;
@@ -90,6 +93,7 @@ public class WelcomeBuilder {
      * @param key custom key used for adding the user full name while creating the invitation link.
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public WelcomeBuilder setCustomFullNameKey(String key) {
         fullNameKey_ = key;
         return this;
@@ -103,6 +107,7 @@ public class WelcomeBuilder {
      * @param key custom key used for adding the user short name while creating the invitation link.
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public WelcomeBuilder setCustomShortNameKey(String key) {
         shortNameKey_ = key;
         return this;
@@ -116,6 +121,7 @@ public class WelcomeBuilder {
      * @param key custom key used for adding the user image url while creating the invitation link.
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public WelcomeBuilder setCustomImageUrlKey(String key) {
         imageUrlKey_ = key;
         return this;
@@ -131,6 +137,7 @@ public class WelcomeBuilder {
      *
      * @return {@link Dialog} instance for the welcome dialog if invitation params are available. Null if there is no invitation parameters available.
      */
+    @SuppressWarnings("unused")
     public Dialog create() {
         return WelcomeHandler.HandleInvitations(context_, invitationStyle_, callback_, inviteLookUpKeys_, fullNameKey_, shortNameKey_, imageUrlKey_);
     }

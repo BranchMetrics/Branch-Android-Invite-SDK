@@ -20,14 +20,17 @@ public abstract class InviteContactListView extends ListView {
         super(context);
     }
 
+    @SuppressWarnings("unused")
     public InviteContactListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    @SuppressWarnings("unused")
     public InviteContactListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
+    @SuppressWarnings("unused")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public InviteContactListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);

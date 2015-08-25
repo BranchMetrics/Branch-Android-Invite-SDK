@@ -1,5 +1,6 @@
 package io.branch.invite.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -16,10 +17,10 @@ import java.util.ArrayList;
 /**
  * Class fo adding index list to the contact list. This adds an alphabet index on the right side of the contact list.
  */
-public class IndexList extends ListView {
+@SuppressLint("ViewConstructor")
+class IndexList extends ListView {
     final ArrayList<String> indexSessions_;
     final Context context_;
-    int parentHeight_ = 0;
     int itemHeight_ = 0;
     /* Minimum height for the index */
     int itemMinimumHeight = 50;

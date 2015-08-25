@@ -42,6 +42,7 @@ public class WelcomeViewStyle {
      * @param welcomeTextColor    Text color for the welcome message
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public WelcomeViewStyle setColorTheme(int invitationTextColor, int welcomeTextColor) {
         inviteTextColor_ = invitationTextColor;
         welcomeTextColor_ = welcomeTextColor;
@@ -54,6 +55,7 @@ public class WelcomeViewStyle {
      * @param defaultImage Default image for the inviter
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public WelcomeViewStyle setDefaultUserImage(Drawable defaultImage) {
         defaultContactImg_ = defaultImage;
         return this;
@@ -68,6 +70,7 @@ public class WelcomeViewStyle {
      * @param invitationMessage A {@link String } for invitation message with place holders for names [$FULL_NAME,$SHORT_NAME]
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public WelcomeViewStyle setInvitationMessage(String invitationMessage) {
         invitationMessageText_ = invitationMessage;
         return this;
@@ -82,6 +85,7 @@ public class WelcomeViewStyle {
      * @param welcomeMessage A {@link String } for welcome message with place holders for names [$FULL_NAME,$SHORT_NAME]
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public WelcomeViewStyle setWelcomeMessage(String welcomeMessage) {
         welcomeMessageText_ = welcomeMessage;
         return this;
@@ -96,6 +100,7 @@ public class WelcomeViewStyle {
      * @param proceedToAppMessage A {@link String } for displaying with the text field for closing the welcome dialog with place holders for names[$FULL_NAME,$SHORT_NAME]
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public WelcomeViewStyle setProceedToAppMessage(String proceedToAppMessage) {
         proceedToAppText_ = proceedToAppMessage;
         return this;

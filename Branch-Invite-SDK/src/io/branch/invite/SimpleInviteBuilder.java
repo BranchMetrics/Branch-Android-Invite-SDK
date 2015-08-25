@@ -5,10 +5,6 @@ import android.app.Activity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOError;
-import java.util.ArrayList;
-
-import io.branch.invite.util.BranchInviteUtil;
 import io.branch.invite.util.Defines;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -27,13 +23,6 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
     final Activity activity_;
     /* Json parameters for link creation */
     final JSONObject params_;
-    /* Message to send to the invitee */
-    public String invitationMsg_;
-    /* Subject of invitation */
-    public String invitationSubject_;
-    /* Default url specified for invitation*/
-    public String defaultInvitationUrl_;
-
     /* User ID for the inviting person */
     public String userID_;
     /* Name of the inviting person */
@@ -44,8 +33,6 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
     public String userShortName_;
     /* Callback to notify the invite process status */
     public InviteCallback callback_;
-    /* Preferred option for sharing. */
-    final private ArrayList<SharingHelper.SHARE_WITH> preferredOptions_;
     /* Branch share link instance to share teh link created. */
     final Branch.ShareLinkBuilder shareLinkBuilder_;
 
@@ -63,7 +50,7 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
         userFullName_ = userFullName;
         userImageUrl_ = "";
         userShortName_ = "";
-        preferredOptions_ = new ArrayList<SharingHelper.SHARE_WITH>();
+
 
         // Set all default params first.
         String appLabel = activity.getApplicationInfo().loadLabel(activity.getPackageManager()).toString();
@@ -79,6 +66,7 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
      * @param inviterShortName A {@link String} with value of custom display name
      * @return This Builder object to allow for chaining of calls to set methods.
      */
+    @SuppressWarnings("unused")
     public SimpleInviteBuilder setInviterShortName(String inviterShortName) {
         userShortName_ = inviterShortName;
         return this;
@@ -90,6 +78,7 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
      * @param imageUrl A url for the user image.
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public SimpleInviteBuilder setInviterImageUrl(String imageUrl) {
         userImageUrl_ = imageUrl;
         return this;
@@ -102,6 +91,7 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
      * @param value A {@link String} value with the value for the custom param.
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public SimpleInviteBuilder addCustomParams(String key, String value) {
         try {
             params_.put(key, value);
@@ -117,6 +107,7 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
      * @param callback an instance of {@link InviteCallback } to notify the invite process status.
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public SimpleInviteBuilder setInvitationStatusCallback(InviteCallback callback) {
         callback_ = callback;
         return this;
@@ -129,6 +120,7 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
      * @param message {@link String} with value for the invite message body.
      * @return This Builder object to allow for chaining of calls to set methods
      */
+    @SuppressWarnings("unused")
     public SimpleInviteBuilder setInvitation(String subject, String message) {
         shareLinkBuilder_.setSubject(subject);
         shareLinkBuilder_.setMessage(subject);
@@ -144,6 +136,7 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
      *                        Preferred applications are defined in {@link io.branch.referral.SharingHelper.SHARE_WITH}.
      * @return A {@link io.branch.referral.Branch.ShareLinkBuilder} instance.
      */
+    @SuppressWarnings("unused")
     public SimpleInviteBuilder addPreferredInviteChannel(SharingHelper.SHARE_WITH preferredOption) {
         shareLinkBuilder_.addPreferredSharingOption(preferredOption);
         return this;
@@ -155,12 +148,16 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
      * @param defaultUrl Fallback url to share.
      * @return This Builder object to allow for chaining of calls to set methods.
      */
+    @SuppressWarnings("unused")
     public SimpleInviteBuilder setDefaultUrl(String defaultUrl) {
         shareLinkBuilder_.setDefaultURL(defaultUrl);
         return this;
     }
 
-
+    @SuppressWarnings("unused")
+    /**
+     * Creates and display a Simple invite dialog with the options set with the builder.
+     */
     public void showInviteDialog() {
         try {
             params_.put(Defines.INVITE_USER_ID.getKey(), userID_);
@@ -178,10 +175,16 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
     }
 
     /**
-     * Cancel the current active invitation dialog
+     * Cancel the current active invitation dialog.
+     *
+     * @param animateClose {@link Boolean} value to specify whether to close this dialog with an animation.
+     *                     if set to false the dialog will be closed immediately. onShareLinkDialogDismissed()
+     *                     method will get called when the dialog actually closes. Make sure the dialog is closed
+     *                     before finishing teh activity to avoid window leak.
      */
-    public void cancelInviteDialog() {
-        Branch.getInstance().cancelShareLinkDialog(true);
+    @SuppressWarnings("unused")
+    public void cancelInviteDialog(boolean animateClose) {
+        Branch.getInstance().cancelShareLinkDialog(animateClose);
     }
 
 

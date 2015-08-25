@@ -64,8 +64,7 @@ class ContactListAdapterEmail extends ContactListAdapter {
 
     @Override
     public Intent getInviteIntent(String referralUrl, ArrayList<String> selectedContacts, String subject, String message) {
-        Intent inviteIntent = new Intent();
-        inviteIntent = new Intent(Intent.ACTION_SEND);
+        Intent inviteIntent = new Intent(Intent.ACTION_SEND);
         inviteIntent.setType("text/plain");
         inviteIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
         inviteIntent.putExtra(android.content.Intent.EXTRA_TEXT, message + "\n\n" + referralUrl);

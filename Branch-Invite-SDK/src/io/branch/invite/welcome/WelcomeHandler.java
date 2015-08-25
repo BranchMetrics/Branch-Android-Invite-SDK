@@ -21,7 +21,6 @@ import android.widget.TextView;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -330,7 +329,7 @@ class WelcomeHandler {
             Bitmap bitmap = null;
             try {
                 bitmap = BitmapFactory.decodeStream(new URL(url_).openConnection().getInputStream());
-            } catch (MalformedURLException ignore) {
+
             } catch (IOException ignore) {
             }
             return bitmap;

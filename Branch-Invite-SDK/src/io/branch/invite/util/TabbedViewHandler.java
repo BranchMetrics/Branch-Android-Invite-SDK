@@ -34,6 +34,8 @@ public class TabbedViewHandler implements DialogInterface.OnDismissListener {
     /* Builder parameters for the tabbed view.*/
     private TabBuilderParams inviteBuilderParams_;
 
+    private InviteTabbedContentView inviteTabbedContentView_;
+
     /**
      * Singleton instance for this class
      */
@@ -69,16 +71,14 @@ public class TabbedViewHandler implements DialogInterface.OnDismissListener {
         return inviteDialog_;
     }
 
-    public void cancelInviteDialog() {
-        if (inviteDialog_ != null && inviteDialog_.isShowing()) {
-            inviteDialog_.cancel();
-        }
-    }
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
         if (inviteBuilderParams_.callback_ != null) {
             inviteBuilderParams_.callback_.onInviteDialogDismissed();
+        }
+        if(inviteTabbedContentView_ != null){
+            inviteTabbedContentView_.onClose();
         }
     }
 
@@ -90,7 +90,8 @@ public class TabbedViewHandler implements DialogInterface.OnDismissListener {
     private void createInviteDialog(TabBuilderParams builderParams) {
         RelativeLayout tabbedViewCover = new RelativeLayout(context_);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        tabbedViewCover.addView(new InviteTabbedContentView(context_, contactTabViewCallback_, builderParams), params);
+        inviteTabbedContentView_ = new InviteTabbedContentView(context_, contactTabViewCallback_, builderParams);
+        tabbedViewCover.addView(inviteTabbedContentView_, params);
         tabbedViewCover.setBackgroundColor(Color.WHITE);
         if (inviteDialog_ != null && inviteDialog_.isShowing()) {
             inviteDialog_.cancel();
@@ -200,7 +201,7 @@ public class TabbedViewHandler implements DialogInterface.OnDismissListener {
         intent.setType("text/plain");
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, inviteBuilderParams_.invitationSubject_);
         intent.putExtra(android.content.Intent.EXTRA_TEXT, inviteBuilderParams_.invitationMsg_ + "\n" + inviteUrl);
-        intent.putExtra(android.content.Intent.EXTRA_EMAIL, selectedContacts.toArray(new String[0]));
+        intent.putExtra(android.content.Intent.EXTRA_EMAIL, selectedContacts.toArray(new String[selectedContacts.size()]));
         intent.putExtra("address", BranchInviteUtil.formatListToCSV(selectedContacts));
         return intent;
     }

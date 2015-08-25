@@ -36,6 +36,7 @@ import io.branch.referral.BranchError;
  * The view contains a tab view and its content which is a list of contact. Also add top action button
  * for positive and negative actions.
  */
+@SuppressLint("ViewConstructor")
 class InviteTabbedContentView extends LinearLayout {
     /* Tab host for this tabbed view */
     TabHost host_;
@@ -50,6 +51,9 @@ class InviteTabbedContentView extends LinearLayout {
     /* Map for keeping the tabs added to the tabbed view */
     final Map<String, InviteContactListView> tabContentMap_;
 
+    Cursor emailCursor_;
+    Cursor phoneCursor_;
+
     /**
      * Creates a Invite content with action buttons and default tabs.
      *
@@ -63,12 +67,20 @@ class InviteTabbedContentView extends LinearLayout {
         inviteBuilderParams_ = inviteBuilderParams;
         BranchInviteUtil.setViewBackground(this, inviteBuilderParams_.backgroundDrawable_);
         contactTabViewEventsCallback_ = IContactTabViewEvents;
-        tabContentMap_ = new HashMap<String, InviteContactListView>();
+        tabContentMap_ = new HashMap<>();
 
         padding_ = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics());
         initTabView();
     }
 
+    public void onClose(){
+        if(phoneCursor_ != null) {
+            phoneCursor_.close();
+        }
+        if(emailCursor_ != null) {
+            emailCursor_.close();
+        }
+    }
     /**
      * Initialise  the invite  view and setup the default tabs.
      */
@@ -81,9 +93,9 @@ class InviteTabbedContentView extends LinearLayout {
         // Add action buttons
         LinearLayout controlCover = new LinearLayout(context_);
         controlCover.setOrientation(HORIZONTAL);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
-        controlCover.setPadding(padding_ * 2, padding_ * 1, padding_ * 2, padding_ * 1);
+        controlCover.setPadding(padding_ * 2, padding_, padding_ * 2, padding_);
 
         TextView negativeButton = new TextView(context_);
         negativeButton.setText(inviteBuilderParams_.negativeButtonText_);
@@ -185,16 +197,16 @@ class InviteTabbedContentView extends LinearLayout {
                     ContactsContract.Contacts.LOOKUP_KEY,
                     ContactsContract.CommonDataKinds.Email._ID,
                     ContactsContract.CommonDataKinds.Email.DISPLAY_NAME,
-                    ContactsContract.CommonDataKinds.Email.ADDRESS,
+                    ContactsContract.CommonDataKinds.Email.DATA,
                     ContactsContract.CommonDataKinds.Email.TYPE};
         }
 
-        Cursor queryCursor = context_.getContentResolver()
+        emailCursor_ = context_.getContentResolver()
                 .query(uri, projection, null, null, ContactsContract.CommonDataKinds.Email.DISPLAY_NAME + " ASC");
-        ContactListAdapter adapter = new ContactListAdapterEmail(context_, queryCursor,
+        ContactListAdapter adapter = new ContactListAdapterEmail(context_, emailCursor_,
                 contactTabViewEventsCallback_, inviteBuilderParams_);
 
-        if (queryCursor != null && queryCursor.getCount() > 0) {
+        if (emailCursor_ != null && emailCursor_.getCount() > 0) {
             addTab(inviteBuilderParams_.emailTabText_, addIndexViewToList(new ContactListView(context_, adapter, "Email", "com.google.android.gm")));
         } else {
             addTabForEmptyContactList(inviteBuilderParams_.emailTabText_);
@@ -223,12 +235,12 @@ class InviteTabbedContentView extends LinearLayout {
                     ContactsContract.CommonDataKinds.Phone.NUMBER,
                     ContactsContract.CommonDataKinds.Phone.TYPE};
         }
-        Cursor queryCursor = context_.getContentResolver()
+        phoneCursor_ = context_.getContentResolver()
                 .query(uri, projection, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
-        ContactListAdapter adapter = new ContactListAdapterPhone(context_, queryCursor,
+        ContactListAdapter adapter = new ContactListAdapterPhone(context_, phoneCursor_,
                 contactTabViewEventsCallback_, inviteBuilderParams_);
 
-        if (queryCursor != null && queryCursor.getCount() > 0) {
+        if (phoneCursor_ != null && phoneCursor_.getCount() > 0) {
             addTab(inviteBuilderParams_.textTabText_, addIndexViewToList(new ContactListView(context_, adapter, "Message", "vnd.android-dir/mms-sms")));
 
         } else {
@@ -283,7 +295,7 @@ class InviteTabbedContentView extends LinearLayout {
     private View addIndexViewToList(ContactListView contactListView) {
         RelativeLayout layout = new RelativeLayout(context_);
         String[] indexArray = (String[]) ((ContactListAdapter) contactListView.getAdapter()).getSections();
-        IndexList indexView = new IndexList(context_, new ArrayList<String>(Arrays.asList(indexArray)), contactListView);
+        IndexList indexView = new IndexList(context_, new ArrayList<>(Arrays.asList(indexArray)), contactListView);
         RelativeLayout.LayoutParams indexViewParam = new RelativeLayout.LayoutParams(padding_ * 6, ViewGroup.LayoutParams.MATCH_PARENT);
         indexViewParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
@@ -414,6 +426,7 @@ class InviteTabbedContentView extends LinearLayout {
     private InviteContactListView getContactListView() {
         return tabContentMap_.get(host_.getCurrentTabTag());
     }
+
 
 
 }

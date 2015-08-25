@@ -14,7 +14,7 @@ public interface InviteCallback {
      *
      * @param inviteLink    The link created to invite.
      * @param inviteChannel Channel selected for inviting. Email,Message,Facebook etc.
-     * @param inviteeList   A list of contacts invited valid only for {@list TabbedInviteBuilder} where channel is preselected. Value will be null for {@link SimpleInviteBuilder}
+     * @param inviteeList   A list of contacts invited valid only for {@link TabbedInviteBuilder} where channel is preselected. Value will be null for {@link SimpleInviteBuilder}
      * @param error         A {@link BranchError} to update errors, if there is any.
      */
     void onInviteFinished(String inviteLink, String inviteChannel, ArrayList<String> inviteeList, BranchError error);

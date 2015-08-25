@@ -46,15 +46,10 @@ class ContactListAdapterPhone extends ContactListAdapter {
                     cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))).toString();
         }
         contact = new MyContact(id, displayName, phoneNum, contactType, photoURI);
-        String ContactType = " (" + ContactsContract.CommonDataKinds.Phone.getTypeLabel(context_.getResources(), contact.getContactType(), "Other") + ") ";
         ((contactListItem) view).updateView(contact);
 
         view.setTag(contact);
         view.setOnClickListener(this);
-    }
-
-    public interface onContactItemSelectedCallback {
-        public void onContactItemSelected(String ContactName, String contactInfo, int contactType);
     }
 
     @Override
