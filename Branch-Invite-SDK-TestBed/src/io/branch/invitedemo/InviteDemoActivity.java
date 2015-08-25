@@ -86,7 +86,9 @@ public class InviteDemoActivity extends Activity {
 
                 //----  Branch default welcome screen----------------//
                 welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this).create();
-                welcomeDialog_.show();
+                if(welcomeDialog_ != null) {
+                    welcomeDialog_.show();
+                }
 
                 //----  Here is how to customise your Branch welcome screen---------------//
 

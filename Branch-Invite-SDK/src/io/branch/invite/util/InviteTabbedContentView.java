@@ -180,7 +180,10 @@ class InviteTabbedContentView extends LinearLayout {
                     ContactsContract.CommonDataKinds.Email.TYPE,
                     ContactsContract.CommonDataKinds.Email.PHOTO_THUMBNAIL_URI};
         } else {
-            projection = new String[]{ContactsContract.CommonDataKinds.Email._ID,
+            projection = new String[]{
+                    ContactsContract.Contacts._ID,
+                    ContactsContract.Contacts.LOOKUP_KEY,
+                    ContactsContract.CommonDataKinds.Email._ID,
                     ContactsContract.CommonDataKinds.Email.DISPLAY_NAME,
                     ContactsContract.CommonDataKinds.Email.ADDRESS,
                     ContactsContract.CommonDataKinds.Email.TYPE};
@@ -205,13 +208,17 @@ class InviteTabbedContentView extends LinearLayout {
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         String[] projection;
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            projection = new String[]{ContactsContract.CommonDataKinds.Phone._ID,
+            projection = new String[]{
+                    ContactsContract.CommonDataKinds.Phone._ID,
                     ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                     ContactsContract.CommonDataKinds.Phone.NUMBER,
                     ContactsContract.CommonDataKinds.Phone.TYPE,
                     ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI};
         } else {
-            projection = new String[]{ContactsContract.CommonDataKinds.Phone._ID,
+            projection = new String[]{
+                    ContactsContract.Contacts._ID,
+                    ContactsContract.Contacts.LOOKUP_KEY,
+                    ContactsContract.CommonDataKinds.Phone._ID,
                     ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                     ContactsContract.CommonDataKinds.Phone.NUMBER,
                     ContactsContract.CommonDataKinds.Phone.TYPE};
