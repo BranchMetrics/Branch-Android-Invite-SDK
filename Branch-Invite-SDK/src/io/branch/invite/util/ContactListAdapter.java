@@ -49,6 +49,8 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
     AlphabetIndexer mAlphabetIndexer;
     /* Color for the selected item in contact list */
     final int selectedItemColor_;
+    /* Selection mode */
+    private final boolean isSingleSelect_;
 
     /**
      * Create an instance and initialises the list params
@@ -60,6 +62,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
         super(context, c, false);
         context_ = context;
         defaultContactPic_ = inviteBuilderParams.defaultContactPic_;
+        isSingleSelect_ = inviteBuilderParams.isSingleSelect_;
         contactItemSelectedCallBack_ = contactItemSelected;
         selectedContactMap_ = new HashMap<>();
         selectedItemColor_ = inviteBuilderParams.selectedItemBackGroundColor_;
@@ -261,6 +264,9 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
         if (selectedContactMap_.containsKey(selectedContact.contactID)) {
             selectedContactMap_.remove(selectedContact.contactID);
         } else {
+            if(isSingleSelect_){
+                selectedContactMap_.clear();
+            }
             selectedContactMap_.put(selectedContact.contactID, selectedContact);
         }
         //Refresh the selected items.
