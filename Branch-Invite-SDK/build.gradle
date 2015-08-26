@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 
+//File name for out put jar created
+def jarFileName
+
 dependencies {
     compile 'io.branch.sdk.android:library:1.8.+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -15,6 +18,8 @@ android {
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(project.VERSION_CODE)
+        jarFileName ='BranchInvite-'+project.VERSION_NAME+'.jar'
+
     }
     sourceSets {
         main {
@@ -40,6 +45,24 @@ android {
         release.setRoot('build-types/release')
     }
 }
+android {
+    lintOptions {
+        abortOnError false
+    }
+}
+// This is the actual solution, as in http://stackoverflow.com/a/19037807/1002054
+task clearJar(type: Delete) {
+    delete 'build/libs/'+ jarFileName
+}
+
+task makeJar(type: Copy) {
+    from('build/intermediates/bundles/release/')
+    into('build/libs/')
+    include('classes.jar')
+    rename ('classes.jar', 'BranchInvite-'+project.VERSION_NAME+'.jar')
+}
+
+makeJar.dependsOn(clearJar, build)
 
 apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
 
