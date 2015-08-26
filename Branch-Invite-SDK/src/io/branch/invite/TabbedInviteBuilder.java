@@ -51,6 +51,20 @@ public class TabbedInviteBuilder {
     }
 
     /**
+     * <p>Set the selected and non selected drawables for the tab. This will be shown as the tab background depending on the selected state.</p>
+     *
+     * @param selectedTabDrawableResId    Resource ID for drawable background for a selected tab.
+     * @param nonSelectedTabDrawableResId Resource ID for drawable background for a non selected tab.
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder setTabStyle(int selectedTabDrawableResId, int nonSelectedTabDrawableResId) {
+        inviteBuilderParams_.tabSelectedBackground_ = context_.getResources().getDrawable(selectedTabDrawableResId);
+        inviteBuilderParams_.tabUnselectedBackground_ = context_.getResources().getDrawable(nonSelectedTabDrawableResId);
+        return this;
+    }
+
+    /**
      * <p>Set the positive action button (Done button by default) background and text.</p>
      *
      * @param btnBackground Drawable background for the positive action button.
@@ -63,6 +77,22 @@ public class TabbedInviteBuilder {
         inviteBuilderParams_.positiveBtnBackground = btnBackground;
         inviteBuilderParams_.positiveButtonText_ = btnText;
         inviteBuilderParams_.positiveBtnTextColor = textColor;
+        return this;
+    }
+
+    /**
+     * <p>Set the positive action button (Done button by default) background and text.</p>
+     *
+     * @param btnBackgroundResId Resource ID for drawable background for the positive action button.
+     * @param btnTextResId       Resource ID for positive action button text.
+     * @param textColorResId     Resource Id for positive button text color.
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder setPositiveButtonStyle(int btnBackgroundResId, int btnTextResId, int textColorResId) {
+        inviteBuilderParams_.positiveBtnBackground = context_.getResources().getDrawable(btnBackgroundResId);
+        inviteBuilderParams_.positiveButtonText_ = context_.getResources().getString(btnTextResId);
+        inviteBuilderParams_.positiveBtnTextColor = context_.getResources().getColor(textColorResId);
         return this;
     }
 
@@ -83,6 +113,22 @@ public class TabbedInviteBuilder {
     }
 
     /**
+     * <p>Set the negative action button (Cancel button by default) background and text.</p>
+     *
+     * @param btnBackgroundResId Resource ID for the drawable background for the negative action button.
+     * @param btnTextResId       Resource id for negative action button text.
+     * @param textColorResId     Resource ID for negative button text color.
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder setNegativeButtonStyle(int btnBackgroundResId, int btnTextResId, int textColorResId) {
+        inviteBuilderParams_.negativeBtnBackground = context_.getResources().getDrawable(btnBackgroundResId);
+        inviteBuilderParams_.negativeButtonText_ = context_.getResources().getString(btnTextResId);
+        inviteBuilderParams_.negativeBtnTextColor = context_.getResources().getColor(textColorResId);
+        return this;
+    }
+
+    /**
      * <p>Set a custom text for Email contact tab. Default text will be  "Email"</p>
      *
      * @param emailTabText A {@link String} value for Email tab text.
@@ -91,6 +137,18 @@ public class TabbedInviteBuilder {
     @SuppressWarnings("unused")
     public TabbedInviteBuilder setEmailTabText(String emailTabText) {
         inviteBuilderParams_.emailTabText_ = emailTabText;
+        return this;
+    }
+
+    /**
+     * <p>Set a custom text for Email contact tab. Default text will be  "Email"</p>
+     *
+     * @param emailTabTextResId Resource id for Email tab text.
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder setEmailTabText(int emailTabTextResId) {
+        inviteBuilderParams_.emailTabText_ = context_.getResources().getString(emailTabTextResId);
         return this;
     }
 
@@ -107,7 +165,19 @@ public class TabbedInviteBuilder {
     }
 
     /**
-     * <p>Specifies whether contact selection model is  single select lor multi select.</p>
+     * <p>Set a custom text for Phone contact tab. Default text will be  "Text"</p>
+     *
+     * @param phoneTabTextResId Resource ID for phone tab text.
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder setPhoneTabText(int phoneTabTextResId) {
+        inviteBuilderParams_.textTabText_ = context_.getResources().getString(phoneTabTextResId);
+        return this;
+    }
+
+    /**
+     * <p>Specifies whether contact selection model is  single select or multi select.</p>
      * Calling this method will set the contact selection to single select.
      *
      * @return This Builder object to allow for chaining of calls to set methods.
@@ -131,14 +201,38 @@ public class TabbedInviteBuilder {
     }
 
     /**
+     * <p>Set the background drawable for the tabbed contact view.</p>
+     *
+     * @param backgroundDrawableResId Resource id for the drawable background for the tabbed contact view
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder setBackground(int backgroundDrawableResId) {
+        inviteBuilderParams_.backgroundDrawable_ = context_.getResources().getDrawable(backgroundDrawableResId);
+        return this;
+    }
+
+    /**
      * <p>Set highlighting color for the selected contacts in the contact list.</p>
      *
-     * @param selectedItemColor Highlight color for the selected item in the contact list.
+     * @param selectedItemColor Highlight color for the selected item in the contact list. A single color value in the form 0xAARRGGBB.
      * @return This Builder object to allow for chaining of calls to set methods.
      */
     @SuppressWarnings("unused")
     public TabbedInviteBuilder setSelectedItemColor(int selectedItemColor) {
         inviteBuilderParams_.selectedItemBackGroundColor_ = selectedItemColor;
+        return this;
+    }
+
+    /**
+     * <p>Set highlighting color for the selected contacts in the contact list.</p>
+     *
+     * @param selectedItemColorResID Color resource id for highlighting  selected item in the contact list.
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder setSelectedItemColorResourceId(int selectedItemColorResID) {
+        inviteBuilderParams_.selectedItemBackGroundColor_ = context_.getResources().getColor(selectedItemColorResID);
         return this;
     }
 
@@ -153,6 +247,20 @@ public class TabbedInviteBuilder {
     public TabbedInviteBuilder setInvitationText(String subject, String message) {
         inviteBuilderParams_.invitationSubject_ = subject;
         inviteBuilderParams_.invitationMsg_ = message;
+        return this;
+    }
+
+    /**
+     * <p>Set body and title to for the invitation message.</p>
+     *
+     * @param subjectResId String resource id for Title or subject for the invitation message
+     * @param messageResId String resource id for Invitation message body
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder setInvitationText(int subjectResId, int messageResId) {
+        inviteBuilderParams_.invitationSubject_ = context_.getResources().getString(subjectResId);
+        inviteBuilderParams_.invitationMsg_ = context_.getResources().getString(messageResId);
         return this;
     }
 
@@ -220,6 +328,20 @@ public class TabbedInviteBuilder {
     }
 
     /**
+     * Adds a custom tab to the list of contact tabs. All custom tabs should provide a {@link InviteContactListView} instance
+     * which is set as the content view of the tab. The content view should handle all the contact selection and and sharing functions.
+     *
+     * @param channelNameResID String resource identifier for channel name.
+     * @param contactListView  A {@link InviteContactListView} instance which will be set as the content view for the tab.
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder addCustomTab(int channelNameResID, InviteContactListView contactListView) {
+        inviteBuilderParams_.customTabMap_.put(context_.getResources().getString(channelNameResID), contactListView);
+        return this;
+    }
+
+    /**
      * Set the fallback back url to send to the invitees in case Branch Invite URL generation fails.
      *
      * @param defaultUrl Fallback url to share.
@@ -240,6 +362,18 @@ public class TabbedInviteBuilder {
     @SuppressWarnings("unused")
     public TabbedInviteBuilder setNoContactAvailableMessage(String noContactMsg) {
         inviteBuilderParams_.noContactAvailableMsg_ = noContactMsg;
+        return this;
+    }
+
+    /**
+     * Set a message to be displayed when there is no contact available. Default message is "No Contacts available".
+     *
+     * @param noContactMsgResId A String resource id for message to be displayed when there is no contact available to list.
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder setNoContactAvailableMessage(int noContactMsgResId) {
+        inviteBuilderParams_.noContactAvailableMsg_ = context_.getResources().getString(noContactMsgResId);
         return this;
     }
 

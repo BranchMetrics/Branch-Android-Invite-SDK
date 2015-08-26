@@ -17,6 +17,7 @@ public class WelcomeViewStyle {
     private String welcomeMessageText_;
     private String proceedToAppText_;
     private Drawable defaultContactImg_;
+    private Context context_;
 
 
     /**
@@ -25,6 +26,7 @@ public class WelcomeViewStyle {
      * @param context Context for showing the welcome dialog
      */
     public WelcomeViewStyle(Context context) {
+        context_ = context;
         /*Setting default values for welcome dialog style */
         inviteTextColor_ = Color.WHITE;
         welcomeTextColor_ = Color.BLUE;
@@ -38,14 +40,28 @@ public class WelcomeViewStyle {
     /**
      * <p>Set the color theme for the welcome Dialog</p>
      *
-     * @param invitationTextColor Text color for the inviter info
-     * @param welcomeTextColor    Text color for the welcome message
+     * @param invitationTextColor Text color for the inviter info. A single ARGB color value
+     * @param welcomeTextColor    Text color for the welcome message. A single ARGB color value
      * @return This Builder object to allow for chaining of calls to set methods
      */
     @SuppressWarnings("unused")
     public WelcomeViewStyle setColorTheme(int invitationTextColor, int welcomeTextColor) {
         inviteTextColor_ = invitationTextColor;
         welcomeTextColor_ = welcomeTextColor;
+        return this;
+    }
+
+    /**
+     * <p>Set the color theme for the welcome Dialog</p>
+     *
+     * @param invitationTextColorResId Resource ID for inviter info text color
+     * @param welcomeTextColorResId    Resource ID for welcome message text color
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    @SuppressWarnings("unused")
+    public WelcomeViewStyle setColorThemeWithResource(int invitationTextColorResId, int welcomeTextColorResId) {
+        inviteTextColor_ = context_.getResources().getColor(invitationTextColorResId);
+        welcomeTextColor_ = context_.getResources().getColor(welcomeTextColorResId);
         return this;
     }
 
@@ -58,6 +74,18 @@ public class WelcomeViewStyle {
     @SuppressWarnings("unused")
     public WelcomeViewStyle setDefaultUserImage(Drawable defaultImage) {
         defaultContactImg_ = defaultImage;
+        return this;
+    }
+
+    /**
+     * <p>Set an default image to be displayed for the inviter if there is no image url specified for the inviter</p>
+     *
+     * @param defaultImageResId Resource ID for Default image for the inviter
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    @SuppressWarnings("unused")
+    public WelcomeViewStyle setDefaultUserImage(int defaultImageResId) {
+        defaultContactImg_ = context_.getResources().getDrawable(defaultImageResId);
         return this;
     }
 
@@ -77,6 +105,21 @@ public class WelcomeViewStyle {
     }
 
     /**
+     * <p> Set the invitation message to be displayed.
+     * Any occurrence of '$FULL_NAME' will be replaced by user full name provided with the link
+     * Any occurrence of '$SHORT_NAME' will be replaced by user short name provided with the link
+     * </p>
+     *
+     * @param invitationMessageResId Resource ID for invitation message string with place holders for names [$FULL_NAME,$SHORT_NAME]
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    @SuppressWarnings("unused")
+    public WelcomeViewStyle setInvitationMessage(int invitationMessageResId) {
+        invitationMessageText_ = context_.getString(invitationMessageResId);
+        return this;
+    }
+
+    /**
      * <p> Set the welcome message to be displayed.
      * Any occurrence of '$FULL_NAME' will be replaced by user full name provided with the link
      * Any occurrence of '$SHORT_NAME' will be replaced by user short name provided with the link
@@ -92,6 +135,22 @@ public class WelcomeViewStyle {
     }
 
     /**
+     * <p> Set the welcome message to be displayed.
+     * Any occurrence of '$FULL_NAME' will be replaced by user full name provided with the link
+     * Any occurrence of '$SHORT_NAME' will be replaced by user short name provided with the link
+     * </p>
+     *
+     * @param welcomeMessageResId Resource ID for welcome message string with place holders for names [$FULL_NAME,$SHORT_NAME]
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    @SuppressWarnings("unused")
+    public WelcomeViewStyle setWelcomeMessage(int welcomeMessageResId) {
+        welcomeMessageText_ = context_.getResources().getString(welcomeMessageResId);
+        return this;
+    }
+
+
+    /**
      * <p> Set the text for proceed to app TextView.
      * Any occurrence of '$FULL_NAME' will be replaced by user full name provided with the link
      * Any occurrence of '$SHORT_NAME' will be replaced by user short name provided with the link
@@ -103,6 +162,21 @@ public class WelcomeViewStyle {
     @SuppressWarnings("unused")
     public WelcomeViewStyle setProceedToAppMessage(String proceedToAppMessage) {
         proceedToAppText_ = proceedToAppMessage;
+        return this;
+    }
+
+    /**
+     * <p> Set the text for proceed to app TextView.
+     * Any occurrence of '$FULL_NAME' will be replaced by user full name provided with the link
+     * Any occurrence of '$SHORT_NAME' will be replaced by user short name provided with the link
+     * </p>
+     *
+     * @param proceedToAppMessageResId Resource Id for string to be displayed with the text field for closing the welcome dialog with place holders for names[$FULL_NAME,$SHORT_NAME]
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    @SuppressWarnings("unused")
+    public WelcomeViewStyle setProceedToAppMessage(int proceedToAppMessageResId) {
+        proceedToAppText_ = context_.getResources().getString(proceedToAppMessageResId);
         return this;
     }
 

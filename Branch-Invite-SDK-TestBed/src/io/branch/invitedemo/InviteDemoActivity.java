@@ -37,7 +37,7 @@ public class InviteDemoActivity extends Activity {
             public void onClick(View view) {
 
                 //-----------  Simple invite View -------------------------------//
-                new SimpleInviteBuilder(InviteDemoActivity.this, "123456", "Dalu james").showInviteDialog();
+                //new SimpleInviteBuilder(InviteDemoActivity.this, "123456", "Dalu james").showInviteDialog();
 
                 //-- Here is how to Customise simple invite view ----------------------------------------//
 
@@ -54,7 +54,7 @@ public class InviteDemoActivity extends Activity {
 
 
                 //----------------- Tabbed invite view ---------------------------------//
-               //new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name").create().show();
+               new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name").create().show();
 
 
 

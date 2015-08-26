@@ -123,7 +123,21 @@ public class SimpleInviteBuilder implements Branch.BranchLinkShareListener {
     @SuppressWarnings("unused")
     public SimpleInviteBuilder setInvitation(String subject, String message) {
         shareLinkBuilder_.setSubject(subject);
-        shareLinkBuilder_.setMessage(subject);
+        shareLinkBuilder_.setMessage(message);
+        return this;
+    }
+
+    /**
+     * Set the title and body for the invitation to send.
+     *
+     * @param subjectResId Resource ID for invite message title.
+     * @param messageResId Resource ID for the invite message body.
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    @SuppressWarnings("unused")
+    public SimpleInviteBuilder setInvitation(int subjectResId, int messageResId) {
+        shareLinkBuilder_.setSubject(activity_.getResources().getString(subjectResId));
+        shareLinkBuilder_.setMessage(activity_.getResources().getString(messageResId));
         return this;
     }
 
