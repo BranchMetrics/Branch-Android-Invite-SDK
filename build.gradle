@@ -2,6 +2,10 @@
 buildscript {
     repositories {
         mavenCentral()
+        // Not everything is available in a Maven/Gradle repository.  Use a local 'libs/' directory for these.
+        flatDir {
+            dirs 'libs'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.+'

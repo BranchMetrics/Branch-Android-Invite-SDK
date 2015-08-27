@@ -54,8 +54,7 @@ public class InviteDemoActivity extends Activity {
 
 
                 //----------------- Tabbed invite view ---------------------------------//
-               new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name").create().show();
-
+                new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name").create().show();
 
 
                 //-- Here is how to customise tabbed invite view------------------------------------//
@@ -79,28 +78,21 @@ public class InviteDemoActivity extends Activity {
         });
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
         branch = branch.getInstance();
 
-        branch.initSession(new Branch.BranchReferralInitListener() {
-            @Override
-            public void onInitFinished(JSONObject referringParams,
-                                       BranchError error) {
-                if (error != null) {
-                    Log.i("BranchInviteTestBed", "branch init failed. Caused by -" + error.getMessage());
-                } else {
-                    Log.i("BranchInviteTestBed", "Latest Referring params!" + branch.getLatestReferringParams());
-                }
+        // Note :Initialise Branch here if you are not using Branch Auto session (ie extending your Application class with BranchApp)
 
-                //----  Branch default welcome screen----------------//
-                welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this).create();
-                if(welcomeDialog_ != null) {
-                    welcomeDialog_.show();
-                }
+        //----  Branch default welcome screen----------------//
+        welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this).create();
+        if (welcomeDialog_ != null) {
+            welcomeDialog_.show();
+        }
 
-                //----  Here is how to customise your Branch welcome screen---------------//
+        //----  Here is how to customise your Branch welcome screen---------------//
 
                 /*welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
                                 .setWelcomeViewStyle(new WelcomeViewStyle(InviteDemoActivity.this)
@@ -114,7 +106,7 @@ public class InviteDemoActivity extends Activity {
                 };*/
 
 
-                //----  Here is how to add a custom welcome view---------------------//
+        //----  Here is how to add a custom welcome view---------------------//
 
                 /*welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
                         .setWelcomeViewCallback(new WelcomeCallback() {
@@ -140,15 +132,6 @@ public class InviteDemoActivity extends Activity {
                     welcomeDialog_.show();
                 };*/
 
-
-
-            }
-        }, this.getIntent().getData(), this);
-    }
-
-    @Override
-    public void onNewIntent(Intent intent) {
-        this.setIntent(intent);
     }
 
 
