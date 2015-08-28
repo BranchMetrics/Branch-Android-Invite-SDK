@@ -29,6 +29,7 @@ dependencies {
 ```
 
 Or you can also find the .jar file for the sdk from https://s3-us-west-1.amazonaws.com/branchhost/Branch-Android-Invite-SDK.zip if you want to use the .jar file
+Also you can download the testbed project here The testbed project: https://s3-us-west-1.amazonaws.com/branchhost/Branch-Android-Invite-TestBed.zip
 
 ## Add permissions
 Add Internet permission in your application manifest
