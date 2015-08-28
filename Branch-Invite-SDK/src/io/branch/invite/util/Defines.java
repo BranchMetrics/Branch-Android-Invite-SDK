@@ -1,13 +1,12 @@
-package io.branch.invite;
+package io.branch.invite.util;
 
 /**
  * <p>
  * Defines all Json keys associated with branch invite parameters.
  * </p>
  */
-enum Defines {
+public enum Defines {
 
-    Feature("feature"),
     INVITE_USER_ID("BRANCH_INVITE_USER_ID_KEY"),
     INVITE_USER_FULLNAME("BRANCH_INVITE_USER_FULLNAME_KEY"),
     INVITE_USER_SHORT_NAME("BRANCH_INVITE_USER_SHORT_NAME_KEY"),
@@ -17,7 +16,7 @@ enum Defines {
 
     private String key = "";
 
-    private Defines(String key) {
+    Defines(String key) {
         this.key = key;
     }
 

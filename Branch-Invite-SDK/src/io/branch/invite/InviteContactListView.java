@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import io.branch.referral.BranchError;
 
 /**
- * <p>Abstract class for invite contact list view. This class provides teh view for tab when using a {@link TabbedInviteBuilder}.
+ * <p>Abstract class for invite contact list view. This class provides the view for tab when using a {@link TabbedInviteBuilder}.
  * All custom tabs added to the {@link TabbedInviteBuilder} should provide an implementation of this class. </p>
  */
 public abstract class InviteContactListView extends ListView {
@@ -20,14 +20,17 @@ public abstract class InviteContactListView extends ListView {
         super(context);
     }
 
+    @SuppressWarnings("unused")
     public InviteContactListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    @SuppressWarnings("unused")
     public InviteContactListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
+    @SuppressWarnings("unused")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public InviteContactListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);

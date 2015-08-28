@@ -11,17 +11,22 @@ build/
 
 # Gradle
 .gradle/*
-#.properties
+
 .metadata/*
-.DS_Store
-/captures
 
 *.gen
 bin/
 gen/
 
+# Mac stuff
+.DS_Store
+/captures
+
+# Branch
 Branch-Invite-SDK-TestBed/gradle/wrapper/gradle-wrapper.jar
 Branch-invite-SDK-TestBed/gradlew
 Branch-Invite-SDK-TestBed/gradlew.bat
 
 
+
+Branch-Invite-SDK/project.properties

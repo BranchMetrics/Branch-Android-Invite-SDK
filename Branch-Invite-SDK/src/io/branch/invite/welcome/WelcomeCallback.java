@@ -1,4 +1,4 @@
-package io.branch.invite;
+package io.branch.invite.welcome;
 
 import android.view.View;
 

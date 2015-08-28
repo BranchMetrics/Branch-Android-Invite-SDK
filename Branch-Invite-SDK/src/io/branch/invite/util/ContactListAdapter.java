@@ -1,4 +1,4 @@
-package io.branch.invite;
+package io.branch.invite.util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -22,9 +23,12 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+
+import io.branch.invite.TabBuilderParams;
 
 /**
  * Abstract class for contact list adapter. Handles the contact listing and selecting form the list.
@@ -38,15 +42,15 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
     protected InviteTabbedContentView.IContactTabViewEvents contactItemSelectedCallBack_;
     /* Drawable to show when there is no profile picture. */
     Drawable defaultContactPic_;
-    /* Drawable mark list item selected. */
-    Drawable selectedIndicator_;
-    /* Drawable to mark list item unselected. */
-    Drawable nonSelectedIndicator_;
     /* List of contact selected. */
     private HashMap<String, MyContact> selectedContactMap_;
 
     /* Alphabet indexer for the list view */
     AlphabetIndexer mAlphabetIndexer;
+    /* Color for the selected item in contact list */
+    final int selectedItemColor_;
+    /* Selection mode */
+    private final boolean isSingleSelect_;
 
     /**
      * Create an instance and initialises the list params
@@ -54,23 +58,23 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
      * @param context a {@link Context} for creating the list
      * @param c       A {@link Cursor} for creating contact list
      */
-    public ContactListAdapter(Context context, Cursor c, InviteTabbedContentView.IContactTabViewEvents contactItemSelected, InviteTabbedBuilderParams inviteBuilderParams) {
+    public ContactListAdapter(Context context, Cursor c, InviteTabbedContentView.IContactTabViewEvents contactItemSelected, TabBuilderParams inviteBuilderParams) {
         super(context, c, false);
         context_ = context;
         defaultContactPic_ = inviteBuilderParams.defaultContactPic_;
-        selectedIndicator_ = inviteBuilderParams.selectedIndicator_;
-        nonSelectedIndicator_ = inviteBuilderParams.nonSelectedIndicator_;
+        isSingleSelect_ = inviteBuilderParams.isSingleSelect_;
         contactItemSelectedCallBack_ = contactItemSelected;
-        selectedContactMap_ = new HashMap<String, MyContact>();
+        selectedContactMap_ = new HashMap<>();
+        selectedItemColor_ = inviteBuilderParams.selectedItemBackGroundColor_;
 
         //Initialise indexer
         mAlphabetIndexer = new AlphabetIndexer(c, c.getColumnIndex(getIndexerColumnName()),
-                "ABCDEFGHIJKLMNOPQRTSUVWXYZ");
+                " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         mAlphabetIndexer.setCursor(c);//Sets a new cursor as the data set and resets the cache of indices.
     }
 
     public ArrayList<String> getSelectedContacts() {
-        ArrayList<String> selectedContactArray = new ArrayList<String>();
+        ArrayList<String> selectedContactArray = new ArrayList<>();
         Set<String> keys = selectedContactMap_.keySet();
         for (String key : keys) {
             selectedContactArray.add(selectedContactMap_.get(key).getContactInfo());
@@ -94,12 +98,12 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
      * @param message          Message to be shared to the invitee
      * @return An {@link Intent} containing data to be shared with the selected applications.This intent will be used to invoke application for sending the invite.
      */
-    abstract Intent getInviteIntent(String referralUrl, ArrayList<String> selectedContacts, String subject, String message);
+    public abstract Intent getInviteIntent(String referralUrl, ArrayList<String> selectedContacts, String subject, String message);
 
     /**
      * Class for representing a contact item.
      */
-    class MyContact {
+    public class MyContact {
         /* Primary display name for the contact. */
         private String contactName = "";
         /* Primary contact info like email or phone number. */
@@ -119,10 +123,6 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
             photoURI_ = photoURI;
         }
 
-        public String getContactID() {
-            return contactID;
-        }
-
         public String getContactInfo() {
             return contactInfo;
         }
@@ -137,22 +137,7 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
 
         public String getPhotoURI() {
             return photoURI_;
-        }
 
-        public void setContactInfo(String contactInfo) {
-            this.contactInfo = contactInfo;
-        }
-
-        public void setContactName(String contactName) {
-            this.contactName = contactName;
-        }
-
-        public void setContactType(int contactType) {
-            this.contactType = contactType;
-        }
-
-        public void setPhotoURI(String photoURI) {
-            this.photoURI_ = photoURI;
         }
     }
 
@@ -160,9 +145,10 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
         /* Text view for  contact primary display name */
         TextView displayNameTxt_;
         /* ImageView for contact profile pic */
-        ImageView contactImg_;
+        CircularImageView contactImg_;
         /* Image to highlight selected item */
         ImageView selectedImage_;
+        LinearLayout coverLayout_;
 
         /**
          * Creates a view for the contact list item.
@@ -171,30 +157,36 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
          */
         public contactListItem(Context context) {
             super(context);
-            setOrientation(HORIZONTAL);
+            coverLayout_ = new LinearLayout(context_);
+            coverLayout_.setOrientation(HORIZONTAL);
             int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics());
 
-            contactImg_ = new ImageView(context);
+            contactImg_ = new CircularImageView(context);
             contactImg_.setScaleType(ImageView.ScaleType.FIT_CENTER);
             int contactPicSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(contactPicSize, contactPicSize);
-            this.addView(contactImg_, layoutParams);
+            coverLayout_.addView(contactImg_, layoutParams);
 
             displayNameTxt_ = new TextView(context);
             layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             displayNameTxt_.setPadding(padding * 3, padding, padding, padding);
             displayNameTxt_.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-            this.addView(displayNameTxt_, layoutParams);
+            coverLayout_.addView(displayNameTxt_, layoutParams);
 
             selectedImage_ = new ImageView(context);
             selectedImage_.setScaleType(ImageView.ScaleType.FIT_CENTER);
             int selectedPicSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
             layoutParams = new LinearLayout.LayoutParams(selectedPicSize, selectedPicSize);
             layoutParams.setMargins(0, 0, padding * 3, 0);
-            this.addView(selectedImage_, layoutParams);
+            coverLayout_.addView(selectedImage_, layoutParams);
 
             int alphabetIndexerSpacing = padding * 5;
-            this.setPadding(0, padding, padding + alphabetIndexerSpacing, padding);
+            this.setPadding(0, 0, padding + alphabetIndexerSpacing, 0);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            coverLayout_.setPadding(0, padding, 0, padding);
+            this.addView(coverLayout_, params);
+
         }
 
         public void updateView(MyContact contact) {
@@ -208,17 +200,26 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
 
             displayNameTxt_.setText(contactName);
             displayNameTxt_.setTextColor(Color.BLACK);
-            contactImg_.setBackgroundColor(Color.DKGRAY);
+            contactImg_.setBackgroundColor(Color.WHITE);
             if (contact.getPhotoURI() != null) {
-                contactImg_.setImageURI(Uri.parse(contact.getPhotoURI()));
+                try {
+                    contactImg_.setCircularBitmap(MediaStore.Images.Media.getBitmap(context_.getContentResolver(), Uri.parse(contact.getPhotoURI())));
+                } catch (IOException ex) {
+                    contactImg_.setCircularDrawable(defaultContactPic_);
+                }
             } else {
-                contactImg_.setImageDrawable(defaultContactPic_);
+                contactImg_.setCircularDrawable(defaultContactPic_);
             }
 
             if (selectedContactMap_.containsKey(contact.contactID)) {
-                displayNameTxt_.setCompoundDrawablesWithIntrinsicBounds(null, null, selectedIndicator_, null);
+                //this.setBackgroundColor(selectedItemColor_);
+                coverLayout_.setBackgroundColor(selectedItemColor_);
+                contactImg_.setBackgroundColor(selectedItemColor_);
+                //displayNameTxt_.setCompoundDrawablesWithIntrinsicBounds(null, null, selectedIndicator_, null);
             } else {
-                displayNameTxt_.setCompoundDrawablesWithIntrinsicBounds(null, null, nonSelectedIndicator_, null);
+                coverLayout_.setBackgroundColor(Color.TRANSPARENT);
+                contactImg_.setBackgroundColor(Color.TRANSPARENT);
+                //displayNameTxt_.setCompoundDrawablesWithIntrinsicBounds(null, null, nonSelectedIndicator_, null);
             }
         }
     }
@@ -263,10 +264,15 @@ abstract class ContactListAdapter extends CursorAdapter implements View.OnClickL
         if (selectedContactMap_.containsKey(selectedContact.contactID)) {
             selectedContactMap_.remove(selectedContact.contactID);
         } else {
+            if(isSingleSelect_){
+                selectedContactMap_.clear();
+            }
             selectedContactMap_.put(selectedContact.contactID, selectedContact);
         }
         //Refresh the selected items.
         notifyDataSetChanged();
+
+
     }
 
 
