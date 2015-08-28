@@ -20,11 +20,11 @@ For more information please see [Installing Branch Android SDK ](https://github.
 Following section describes the easy few steps to get started with Branch Invite SDK to your project.
 
 ## Add SDK to your project
-if you are using the gradle build system simply add compile `io.branch.invite.android:library:1.+` to the dependencies section of your build.gradle file.
+if you are using the gradle build system simply add compile `compile 'io.branch.invite.sdk.android:library:0.1.+'` to the dependencies section of your build.gradle file.
 ``` xml
 dependencies {
     compile 'io.branch.sdk.android:library:1.8.+'
-    compile 'io.branch.invite.android:library:1.8.+'
+    compile 'io.branch.invite.sdk.android:library:0.1.+'
 }
 ```
 
