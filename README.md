@@ -7,6 +7,14 @@ invitation link it will take them to the welcome screen.
 
 There will still be some configuration on the dashboard, but the goal is to provide the most extensible, yet simple to use, full invite feature SDK. To see the basics of setting up an app with Branch, check out [the Branch Android SDK readme](https://github.com/BranchMetrics/Android-Deferred-Deep-Linking-SDK).
 
+# Invite Flow
+In your app, there will be a trigger to open the Invite UI. This will show a list of contacts and allow the user to select friends they want to invite to join them.When the the shared link clicked it will open the welcome screen
+
+![Invite](https://s3-us-west-1.amazonaws.com/branchhost/invite_android.png)<br><br>![Welcome](https://s3-us-west-1.amazonaws.com/branchhost/welcome_android.png)
+
+
+
+
 # Dependency
 You need to have [the Branch Android SDK ](https://github.com/BranchMetrics/Android-Deferred-Deep-Linking-SDK) as a compiler dependency before using this Invite SDK
 ``` xml
