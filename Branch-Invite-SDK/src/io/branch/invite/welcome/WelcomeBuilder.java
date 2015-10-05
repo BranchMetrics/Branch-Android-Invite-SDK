@@ -139,7 +139,7 @@ public class WelcomeBuilder {
      */
     @SuppressWarnings("unused")
     public Dialog create() {
-        return WelcomeHandler.HandleInvitations(context_, invitationStyle_, callback_, inviteLookUpKeys_, fullNameKey_, shortNameKey_, imageUrlKey_);
+        return WelcomeHandler.handleInvitations(context_, invitationStyle_, callback_, inviteLookUpKeys_, fullNameKey_, shortNameKey_, imageUrlKey_);
     }
 
 

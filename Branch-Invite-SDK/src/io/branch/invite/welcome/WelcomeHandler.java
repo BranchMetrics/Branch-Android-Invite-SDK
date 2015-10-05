@@ -73,7 +73,7 @@ class WelcomeHandler {
      * @param callback        {@link WelcomeCallback} instance to callback the UI events
      * @return A Dialog instance if a welcome dialog is created. Null if invitation parameters are not available or in case of error
      */
-    public static Dialog HandleInvitations(Context context, WelcomeViewStyle invitationStyle, WelcomeCallback callback, ArrayList<String> additionalLookUpKeys,
+    public static Dialog handleInvitations(Context context, WelcomeViewStyle invitationStyle, WelcomeCallback callback, ArrayList<String> additionalLookUpKeys,
                                            String fullNameKey, String shortNameKey, String imageUrlKey) {
         if (thisInstance_ == null) {
             thisInstance_ = new WelcomeHandler(fullNameKey, shortNameKey, imageUrlKey);
