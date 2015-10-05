@@ -5,9 +5,12 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 
+import org.json.JSONObject;
+
 import io.branch.invite.TabbedInviteBuilder;
 import io.branch.invite.welcome.WelcomeBuilder;
 import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 
 
 /**
@@ -73,55 +76,64 @@ public class InviteDemoActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        branch = branch.getInstance();
+        branch = Branch.getInstance();
 
-        // Note :Initialise Branch here if you are not using Branch Auto session (ie extending your Application class with BranchApp)
+        //Note: Initialise Branch before using any welcome or invite feature
+        branch.initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject jsonObject, BranchError branchError) {
+                if (branchError == null) {
 
-        //----  Branch default welcome screen----------------//
-        welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this).create();
-        if (welcomeDialog_ != null) {
-            welcomeDialog_.show();
-        }
+                    //----  Branch default welcome screen----------------//
+                    welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this).create();
+                    if (welcomeDialog_ != null) {
+                        welcomeDialog_.show();
+                    }
 
-        //----  Here is how to customise your Branch welcome screen---------------//
+                    //----  Here is how to customise your Branch welcome screen---------------//
 
-                /*welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
-                                .setWelcomeViewStyle(new WelcomeViewStyle(InviteDemoActivity.this)
-                                .setDefaultUserImage(getResources().getDrawable(R.drawable.contact_default))
-                                .setInvitationMessage("You are invited to this app by $FULL_NAME")
-                                .setWelcomeMessage("Welcome to this cool app. Have fun with your friend $SHORT_NAME")
-                                .setProceedToAppMessage("Click me to proceed"))
-                        .create();
-                if(welcomeDialog_ != null) {
-                    welcomeDialog_.show();
-                };*/
+                    /*welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
+                                    .setWelcomeViewStyle(new WelcomeViewStyle(InviteDemoActivity.this)
+                                    .setDefaultUserImage(getResources().getDrawable(R.drawable.contact_default))
+                                    .setInvitationMessage("You are invited to this app by $FULL_NAME")
+                                    .setWelcomeMessage("Welcome to this cool app. Have fun with your friend $SHORT_NAME")
+                                    .setProceedToAppMessage("Click me to proceed"))
+                            .create();
+                    if(welcomeDialog_ != null) {
+                        welcomeDialog_.show();
+                    };*/
 
 
-        //----  Here is how to add a custom welcome view---------------------//
+                        //----  Here is how to add a custom welcome view---------------------//
 
-                /*welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
-                        .setWelcomeViewCallback(new WelcomeCallback() {
-                            @Override
-                            public View getCustomInvitationView(String userID, String inviterFullName, String inviterShortName, String userImageUrl, JSONObject customParameters) {
-                                return getCustomView(inviterFullName);
-                            }
+                    /*welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
+                            .setWelcomeViewCallback(new WelcomeCallback() {
+                                @Override
+                                public View getCustomInvitationView(String userID, String inviterFullName, String inviterShortName, String userImageUrl, JSONObject customParameters) {
+                                    return getCustomView(inviterFullName);
+                                }
 
-                            @Override
-                            public void onWelcomeDialogLaunched() {
-                            }
+                                @Override
+                                public void onWelcomeDialogLaunched() {
+                                }
 
-                            @Override
-                            public void onWelcomeDialogDismissed() {
-                            }
+                                @Override
+                                public void onWelcomeDialogDismissed() {
+                                }
 
-                            @Override
-                            public void onBranchError(BranchError error) {
-                            }
-                        })
-                        .create();
-                if(welcomeDialog_ != null) {
-                    welcomeDialog_.show();
-                };*/
+                                @Override
+                                public void onBranchError(BranchError error) {
+                                }
+                            })
+                            .create();
+                    if(welcomeDialog_ != null) {
+                        welcomeDialog_.show();
+                    };*/
+                }
+            }
+        }, this.getIntent().getData(), this);
+
+
 
     }
 
