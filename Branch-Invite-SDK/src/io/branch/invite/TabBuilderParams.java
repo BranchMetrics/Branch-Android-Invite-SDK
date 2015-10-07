@@ -71,6 +71,8 @@ public class TabBuilderParams {
     public TextView titleTxtVew_;
     /* Background color for selected items in the list view */
     public int selectedItemBackGroundColor_;
+    /* Sets the background for title bar (The bar which contains positive and negative buttons*/
+    public Drawable titleBarBackground_;
 
 
 
@@ -81,12 +83,13 @@ public class TabBuilderParams {
 
         positiveButtonText_ = "Done";
         negativeButtonText_ = "Cancel";
-        negativeBtnTextColor = Color.BLUE;
-        positiveBtnTextColor = Color.BLUE;
+        negativeBtnTextColor = 0xFF1111ED;
+        positiveBtnTextColor = 0xFF1111ED;
         positiveBtnBackground = new ColorDrawable(Color.TRANSPARENT);
         negativeBtnBackground = new ColorDrawable(Color.TRANSPARENT);
         backgroundDrawable_ = new ColorDrawable(Color.WHITE);
         selectedItemBackGroundColor_ = Color.parseColor("#FF99FFCC");
+        titleBarBackground_ = new ColorDrawable(Color.TRANSPARENT);
 
         emailTabText_ = "Email";
         textTabText_ = "Text";

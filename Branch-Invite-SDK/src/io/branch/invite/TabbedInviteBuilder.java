@@ -389,6 +389,31 @@ public class TabbedInviteBuilder {
         return this;
     }
 
+    /**
+     * Sets a Drawable background for the Control button bar (The control bar with positive and negative buttons)
+     *
+     * @param drawable {@link Drawable} for control button bar background
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder setControlButtonBarBackground(Drawable drawable) {
+        inviteBuilderParams_.titleBarBackground_ = drawable;
+        return this;
+    }
+
+    /**
+     * Sets a Drawable background for the Control button bar (The control bar with positive and negative buttons)
+     *
+     * @param drawableResId Resource Id for the drawable to set for control bar background
+     * @return This Builder object to allow for chaining of calls to set methods.
+     */
+    @SuppressWarnings("unused")
+    public TabbedInviteBuilder setControlButtonBarBackground(int drawableResId) {
+        inviteBuilderParams_.titleBarBackground_ = context_.getResources().getDrawable(drawableResId);
+        return this;
+    }
+
+
 
     /**
      * Creates the invitation dialog with the arguments supplied in the builder.

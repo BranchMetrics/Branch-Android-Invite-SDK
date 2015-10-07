@@ -53,20 +53,22 @@ public class InviteDemoActivity extends Activity {
 
                 //-- Here is how to customise tabbed invite view------------------------------------//
 
-                /*new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name")
-                        .setTabStyle(getDrawable(R.drawable.tab_on), getDrawable(R.drawable.tab_off))
-                        .setPositiveButtonStyle(new ColorDrawable(Color.TRANSPARENT),"Invite", Color.BLUE)
+               /* new TabbedInviteBuilder(InviteDemoActivity.this, "My userID", "My Name")
+                        //.setTabStyle(getDrawable(R.drawable.tab_on), getDrawable(R.drawable.tab_off))
+                        .setPositiveButtonStyle(new ColorDrawable(Color.TRANSPARENT), "Invite", Color.BLUE)
                         .setNegativeButtonStyle(new ColorDrawable(Color.TRANSPARENT),"Close", Color.MAGENTA)
                         .setInviterImageUrl("https://s3-us-west-1.amazonaws.com/branchhost/mosaic_og.png")
                         .setInvitationText("Invitation Title", "Invitation Message")
                         .setPhoneTabText("Message")
                         .setEmailTabText("E-mail")
-                        .setTitle("Invite a friend")
-                        .setSelectedItemColor(Color.parseColor("##FF0000FF"))
+                        //.setTitle(myCustomTestView)
+                        .setSelectedItemColor(Color.parseColor("#FF0000FF"))
                         .addCustomParams("Custom_Param", "This is a custom param")
-                        .addCustomTab("Facebook",inv)
+                        //.addCustomTab("Facebook", inv)
+                        .setControlButtonBarBackground(new ColorDrawable(Color.RED))
                         .create().show();
-                  */
+                        */
+
 
             }
         });
