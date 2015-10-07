@@ -259,9 +259,11 @@ class WelcomeHandler {
             inviteMsgLayout.addView(welcomeMsgText_, layoutParams);
 
             proceedToAppText = new TextView(context_);
-            proceedToAppText.setBackgroundColor(inviteMsgBackground_);
+            BranchInviteUtil.setViewBackground(proceedToAppText, invitationStyle_.getProceedToAppBackGround());
             proceedToAppText.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
             proceedToAppText.setTextAppearance(context_, android.R.style.TextAppearance_Small);
+            proceedToAppText.setTextColor(invitationStyle_.getProceedToAppTextColor());
+            proceedToAppText.setPadding(padding, padding, padding, padding);
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             welcomeMsgText_.setTextColor(inviterInfoBackground_);

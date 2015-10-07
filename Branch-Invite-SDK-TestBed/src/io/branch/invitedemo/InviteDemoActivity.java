@@ -92,16 +92,18 @@ public class InviteDemoActivity extends Activity {
 
                     //----  Here is how to customise your Branch welcome screen---------------//
 
-                    /*welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
+                    /* welcomeDialog_ = new WelcomeBuilder(InviteDemoActivity.this)
                                     .setWelcomeViewStyle(new WelcomeViewStyle(InviteDemoActivity.this)
-                                    .setDefaultUserImage(getResources().getDrawable(R.drawable.contact_default))
-                                    .setInvitationMessage("You are invited to this app by $FULL_NAME")
-                                    .setWelcomeMessage("Welcome to this cool app. Have fun with your friend $SHORT_NAME")
-                                    .setProceedToAppMessage("Click me to proceed"))
+                                            .setDefaultUserImage(getResources().getDrawable(R.drawable.contact_default))
+                                            .setInvitationMessage("You are invited to this app by $FULL_NAME")
+                                            .setWelcomeMessage("Welcome to this cool app. Have fun with your friend $SHORT_NAME")
+                                            .setProceedToAppMessage("Click me to proceed")
+                                            .setProceedToAppButtonStyle(new ColorDrawable(Color.WHITE), Color.BLUE))
+
                             .create();
                     if(welcomeDialog_ != null) {
                         welcomeDialog_.show();
-                    };*/
+                    }; */
 
 
                         //----  Here is how to add a custom welcome view---------------------//

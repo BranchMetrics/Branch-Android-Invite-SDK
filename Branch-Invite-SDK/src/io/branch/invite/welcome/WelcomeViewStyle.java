@@ -18,7 +18,11 @@ public class WelcomeViewStyle {
     private String proceedToAppText_;
     private Drawable defaultContactImg_;
     private Context context_;
+    private Drawable proceedToAppBackGround_;
+    private int proceedToAppTextColor_;
 
+    /* Color value when unspecified by user. */
+    private final int COLOR_UNSPECIFIED = -1;
 
     /**
      * <p>Create an instance of the builder to set Welcome view styling parameters.</p>
@@ -35,6 +39,8 @@ public class WelcomeViewStyle {
         welcomeMessageText_ = "Welcome to " + appLabel + "! You've been invited to join " + appLabel + " by another user " + Defines.SHORT_NAME_SUB.getKey();
         proceedToAppText_ = "Press to join " + Defines.SHORT_NAME_SUB.getKey();
         defaultContactImg_ = new ColorDrawable(Color.parseColor("#FFEFEFEF"));
+        proceedToAppBackGround_ = null;
+        proceedToAppTextColor_ = COLOR_UNSPECIFIED;
     }
 
     /**
@@ -180,6 +186,34 @@ public class WelcomeViewStyle {
         return this;
     }
 
+    /**
+     * <p>Set the text color and background drawable for the proceed to app button</p>
+     *
+     * @param backgroundDrawable Drawable background for proceed to app button
+     * @param textColor          Text color for the proceed to app button. A single ARGB color value
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    @SuppressWarnings("unused")
+    public WelcomeViewStyle setProceedToAppButtonStyle(Drawable backgroundDrawable, int textColor) {
+        proceedToAppBackGround_ = backgroundDrawable;
+        proceedToAppTextColor_ = textColor;
+        return this;
+    }
+
+    /**
+     * <p>Set the text color and background drawable for the proceed to app button</p>
+     *
+     * @param backgroundDrawableResId Resource ID for proceed to app button background
+     * @param textColorResId          Resource ID for proceed to app button text color
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    @SuppressWarnings("unused")
+    public WelcomeViewStyle setProceedToAppButtonStyle(int backgroundDrawableResId, int textColorResId) {
+        proceedToAppBackGround_ = context_.getResources().getDrawable(backgroundDrawableResId);
+        proceedToAppTextColor_ = context_.getResources().getColor(textColorResId);
+        return this;
+    }
+
     public Drawable getDefaultContactImg() {
         return defaultContactImg_;
     }
@@ -202,6 +236,14 @@ public class WelcomeViewStyle {
 
     public String getProceedToAppText() {
         return proceedToAppText_;
+    }
+
+    public int getProceedToAppTextColor() {
+        return proceedToAppTextColor_ == COLOR_UNSPECIFIED ? inviteTextColor_ : proceedToAppTextColor_;
+    }
+
+    public Drawable getProceedToAppBackGround() {
+        return proceedToAppBackGround_ == null ? new ColorDrawable(welcomeTextColor_) : proceedToAppBackGround_;
     }
 
 }
