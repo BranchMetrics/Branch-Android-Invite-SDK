@@ -4,7 +4,7 @@ apply plugin: 'com.android.library'
 def jarFileName
 
 dependencies {
-    compile 'io.branch.sdk.android:library:1.8.8'
+    compile 'io.branch.sdk.android:library:1.8.+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
 }

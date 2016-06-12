@@ -73,7 +73,7 @@ class WelcomeHandler {
      * @param callback        {@link WelcomeCallback} instance to callback the UI events
      * @return A Dialog instance if a welcome dialog is created. Null if invitation parameters are not available or in case of error
      */
-    public static Dialog HandleInvitations(Context context, WelcomeViewStyle invitationStyle, WelcomeCallback callback, ArrayList<String> additionalLookUpKeys,
+    public static Dialog handleInvitations(Context context, WelcomeViewStyle invitationStyle, WelcomeCallback callback, ArrayList<String> additionalLookUpKeys,
                                            String fullNameKey, String shortNameKey, String imageUrlKey) {
         if (thisInstance_ == null) {
             thisInstance_ = new WelcomeHandler(fullNameKey, shortNameKey, imageUrlKey);
@@ -259,9 +259,11 @@ class WelcomeHandler {
             inviteMsgLayout.addView(welcomeMsgText_, layoutParams);
 
             proceedToAppText = new TextView(context_);
-            proceedToAppText.setBackgroundColor(inviteMsgBackground_);
+            BranchInviteUtil.setViewBackground(proceedToAppText, invitationStyle_.getProceedToAppBackGround());
             proceedToAppText.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
             proceedToAppText.setTextAppearance(context_, android.R.style.TextAppearance_Small);
+            proceedToAppText.setTextColor(invitationStyle_.getProceedToAppTextColor());
+            proceedToAppText.setPadding(padding, padding, padding, padding);
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             welcomeMsgText_.setTextColor(inviterInfoBackground_);

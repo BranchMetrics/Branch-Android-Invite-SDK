@@ -96,6 +96,7 @@ class InviteTabbedContentView extends LinearLayout {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
         controlCover.setPadding(padding_ * 2, padding_, padding_ * 2, padding_);
+        BranchInviteUtil.setViewBackground(controlCover, inviteBuilderParams_.titleBarBackground_);
 
         TextView negativeButton = new TextView(context_);
         negativeButton.setText(inviteBuilderParams_.negativeButtonText_);
@@ -103,6 +104,7 @@ class InviteTabbedContentView extends LinearLayout {
         negativeButton.setTextAppearance(context_, android.R.style.TextAppearance_Large);
         negativeButton.setTypeface(null, Typeface.BOLD);
         negativeButton.setGravity(Gravity.CENTER);
+        negativeButton.setPadding(padding_, padding_ / 2, padding_, padding_ / 2);
         negativeButton.setTextColor(inviteBuilderParams_.negativeBtnTextColor);
         BranchInviteUtil.setViewBackground(negativeButton, inviteBuilderParams_.negativeBtnBackground);
 
@@ -115,7 +117,7 @@ class InviteTabbedContentView extends LinearLayout {
         positiveButton.setTextAppearance(context_, android.R.style.TextAppearance_Large);
         positiveButton.setTypeface(null, Typeface.BOLD);
         positiveButton.setGravity(Gravity.CENTER);
-
+        positiveButton.setPadding(padding_,padding_/2,padding_,padding_/2);
         positiveButton.setTextColor(inviteBuilderParams_.positiveBtnTextColor);
         BranchInviteUtil.setViewBackground(positiveButton, inviteBuilderParams_.positiveBtnBackground);
 
